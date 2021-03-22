@@ -5,7 +5,7 @@ import { faHome } from '@fortawesome/free-solid-svg-icons';
 class SideBar extends Component {
     render() {
         return (
-            <div className="sidebar hide-on-tablet hide-on-mobile">
+            <div className="sidebar hide">
                 <div className="sidebar__header">
                     <a href="/" className="">
                         <img src={"./images/logos/logo.svg"} alt="logo-app" />
