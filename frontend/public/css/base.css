@@ -3,8 +3,9 @@
     --text-color: #495057;
     --bg-sidebar-color: #f8f9fa;
     --bg-main-content-color: #fff;
-    --main-color: #753fdc;
-    --bg-active: #ebe6f8;
+    --main-color: #f14170;
+    --bg-active: #f1417025;
+    --shadow-color: #00000026;
 }
 
 * {

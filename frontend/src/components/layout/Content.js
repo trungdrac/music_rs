@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import Header from './Header';
 import Home from '../homepage/Home';
-import AudioPlayer from './AudioPlayer';
+import Player from './Player';
 
 class Content extends Component {
     render() {
@@ -9,7 +9,7 @@ class Content extends Component {
             <div className="content">
                 <Header />
                 <Home />
-                <AudioPlayer />
+                <Player />
             </div>
         );
     }
