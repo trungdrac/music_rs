@@ -1,10 +1,10 @@
-import React, { Component } from 'react';
+import React, { Component } from "react";
 
 class Home extends Component {
-    render() {
-        return (
-            <div className="home">
-                {/* <div className="heading">
+  render() {
+    return (
+      <div className="home">
+        {/* <div className="heading">
                     <div className="d-flex flex-wrap align-items-end">
                         <div className="flex-grow-1">
                             <h4>Top Charts</h4>
@@ -24,9 +24,9 @@ class Home extends Component {
                         </div>
                     </div>
                 </div> */}
-            </div>
-        );
-    }
+      </div>
+    );
+  }
 }
 
 export default Home;

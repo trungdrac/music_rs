@@ -1,56 +1,58 @@
 :root {
-    --white-color: #fff;
-    --text-color: #495057;
-    --bg-sidebar-color: #f8f9fa;
-    --bg-main-content-color: #fff;
-    --main-color: #f14170;
-    --bg-active: #f1417025;
-    --shadow-color: #00000026;
+  --white-color: #fff;
+  --text-color: #495057;
+  --bg-sidebar-color: #f8f9fa;
+  --bg-main-content-color: #fff;
+  --main-color: #f14170;
+  --bg-active: #f1417025;
+  --shadow-color: #00000026;
 }
 
 * {
-    box-sizing: inherit;
+  box-sizing: inherit;
 }
 
 html {
-    font-size: 100%;
-    line-height: 1rem;
-    font-family: 'Roboto', sans-serif;
-    box-sizing: border-box;
+  font-size: 100%;
+  line-height: 1rem;
+  font-family: "Roboto", sans-serif;
+  box-sizing: border-box;
 }
 
 p {
-    margin-bottom: 1rem;
+  margin-bottom: 1rem;
 }
 
 p:last-child {
-    margin-bottom: 0;
+  margin-bottom: 0;
 }
 
 a {
-    text-decoration: none;
-    color: var(--text-color);
-    -webkit-transition: 0.4s all ease-in;
-    -o-transition: 0.4s all ease-in;
-    transition: 0.4s all ease-in;
+  text-decoration: none;
+  color: var(--text-color);
+  -webkit-transition: 0.4s all ease-in;
+  -o-transition: 0.4s all ease-in;
+  transition: 0.4s all ease-in;
 }
 
-a:hover, a:focus, a:active {
-    text-decoration: none;
-    outline: none;
-    color: var(--main-color);
+a:hover,
+a:focus,
+a:active {
+  text-decoration: none;
+  outline: none;
+  color: var(--main-color);
 }
 
 img {
-    max-width: 100%;
+  max-width: 100%;
 }
 
 .overlay {
-    position: fixed;
-    top: 0;
-    right: 0;
-    bottom: 0;
-    left: 0;
-    background-color: rgba(0, 0, 0, 0.3);
-    display: none;
+  position: fixed;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  background-color: rgba(0, 0, 0, 0.3);
+  display: none;
 }

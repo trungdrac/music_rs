@@ -1,6 +1,6 @@
-import React, { Component } from 'react';
-import Content from './components/layout/Content';
-import SideBar from './components/layout/SideBar';
+import React, { Component } from "react";
+import Content from "./components/layout/Content";
+import SideBar from "./components/layout/SideBar";
 
 class App extends Component {
   render() {

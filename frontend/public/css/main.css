@@ -1,204 +1,211 @@
 .app {
-    display: flex;
+  display: flex;
 }
 
 /* Side bar start */
 
 .sidebar {
-    position: fixed;
-    top: 0;
-    bottom: 0;
-    left: 0;
-    width: 17.5rem;
-    background-color: var(--bg-sidebar-color);
-    -webkit-transition: 0.4s all ease-in;
-    -moz-transition: 0.4s all ease-in;
-    transition: 0.4s all ease-in;
+  position: fixed;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  width: 17.5rem;
+  background-color: var(--bg-sidebar-color);
+  -webkit-transition: 0.4s all ease-in;
+  -moz-transition: 0.4s all ease-in;
+  transition: 0.4s all ease-in;
 }
 
 .sidebar__header {
-    text-align: center;
-    padding: 1rem;
+  text-align: center;
+  padding: 1rem;
 }
 
 .sidebar__nav {
-    margin-top: 2.5rem;
-    margin-bottom: 1rem;
+  margin-top: 2.5rem;
+  margin-bottom: 1rem;
 }
 
 .narbar-nav {
-    display: block;
-    width: 100%;
+  display: block;
+  width: 100%;
 }
 
 .navbar-nav .nav-header {
-    padding: 1rem 1.5rem 0.5rem 1.5rem;
-    font-size: 0.75rem;
-    text-transform: uppercase;
-    letter-spacing: 3px;
-    font-weight: 500;
-    color: var(--text-color);
+  padding: 1rem 1.5rem 0.5rem 1.5rem;
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 3px;
+  font-weight: 500;
+  color: var(--text-color);
 }
 
 .navbar-nav .nav-link {
-    width: 100%;
-    padding: 0.625rem 2rem;
+  width: 100%;
+  padding: 0.625rem 2rem;
 }
 
-.navbar-nav .nav-item:hover, .navbar-nav .nav-link:focus {
-    font-weight: 600;
+.navbar-nav .nav-item:hover,
+.navbar-nav .nav-link:focus {
+  font-weight: 600;
 }
 
 .navbar-nav .nav-item.active {
-    position: relative;
-    font-weight: 600;
-    background-color: var(--bg-active);
-    color: var(--main-color);
+  position: relative;
+  font-weight: 600;
+  background-color: var(--bg-active);
+  color: var(--main-color);
 }
 
 .nav-item.active .nav-link {
-    color: var(--main-color);
+  color: var(--main-color);
 }
 
 .navbar-nav .nav-link span {
-    padding-left: .5rem;
+  padding-left: 0.5rem;
 }
 
 .sidebar__footer {
-    padding-right: 1.5rem;
-    padding-left: 1.5rem;
+  padding-right: 1.5rem;
+  padding-left: 1.5rem;
 }
 
 /* Side bar end */
 
 .content {
-    margin-left: 17.5rem;
-    flex-grow: 1;
-    padding: 0 2rem;
-    -webkit-transition: 0.4s all ease-in;
-    -moz-transition: 0.4s all ease-in;
-    transition: 0.4s all ease-in;
+  margin-left: 17.5rem;
+  flex-grow: 1;
+  padding: 0 2rem;
+  -webkit-transition: 0.4s all ease-in;
+  -moz-transition: 0.4s all ease-in;
+  transition: 0.4s all ease-in;
 }
 
 /* Header start */
 
 .header {
-    position: relative;
+  position: relative;
 }
 
 .header__content {
-    position: fixed;
-    top: 0rem;
-    right: 0rem;
-    left: 17.5rem;
-    height: 3rem;
-    background-color: var(--main-color);
-    color: var(--white-color);
-    z-index: 1;
-    padding: 0 1.25rem;
-    display: flex;
-    align-items: center;
-    -webkit-transition: 0.4s all ease-in;
-    -moz-transition: 0.4s all ease-in;
-    transition: 0.4s all ease-in;
+  position: fixed;
+  top: 0rem;
+  right: 0rem;
+  left: 17.5rem;
+  height: 3rem;
+  background-color: var(--main-color);
+  color: var(--white-color);
+  z-index: 1;
+  padding: 0 1.25rem;
+  display: flex;
+  align-items: center;
+  -webkit-transition: 0.4s all ease-in;
+  -moz-transition: 0.4s all ease-in;
+  transition: 0.4s all ease-in;
 }
 
 .header__content--sidebar-icon {
-    padding: 0.4rem;
-    cursor: pointer;
-    font-size: 1.3rem;
-    margin-right: 0.8rem;
-    margin-bottom: 0;
-    display: none;
+  padding: 0.4rem;
+  cursor: pointer;
+  font-size: 1.3rem;
+  margin-right: 0.8rem;
+  margin-bottom: 0;
+  display: none;
 }
 
-.sidebar-input:checked~.overlay {
-    display: block;
+.sidebar-input:checked ~ .overlay {
+  display: block;
 }
 
-.sidebar-input:checked~.sidebar {
-    transform: translateX(0%);
+.sidebar-input:checked ~ .sidebar {
+  transform: translateX(0%);
 }
 
 .header__content--search {
-    flex: 1;
-    display: flex;
-    height: 100%;
+  flex: 1;
+  display: flex;
+  height: 100%;
 }
 
 .search-icon {
-    border: none;
-    background-color: transparent;
-    font-size: 1.2rem;
-    color: var(--white-color);
-    padding: 0.4rem;
+  border: none;
+  background-color: transparent;
+  font-size: 1.2rem;
+  color: var(--white-color);
+  padding: 0.4rem;
 }
 
 .search-input {
-    background-color: transparent;
-    border: none;
-    outline: none;
-    color: var(--white-color);
-    flex: 1;
+  background-color: transparent;
+  border: none;
+  outline: none;
+  color: var(--white-color);
+  flex: 1;
 }
 
 .search-input::placeholder {
-    color: var(--white-color);
+  color: var(--white-color);
 }
 
 .avatar {
-    border-radius: 0.325rem;
-    overflow: hidden;
-    border-radius: 50%;
-    width: 2rem;
-    height: 2rem;
+  border-radius: 0.325rem;
+  overflow: hidden;
+  border-radius: 50%;
+  width: 2rem;
+  height: 2rem;
 }
 
 .auth-link {
-    color: var(--white-color);
-    display: block;
-    padding: 0.4rem 1rem;
-    cursor: pointer;
-    white-space: nowrap;
-    margin-right: 0;
+  color: var(--white-color);
+  display: block;
+  padding: 0.4rem 1rem;
+  cursor: pointer;
+  white-space: nowrap;
+  margin-right: 0;
 }
 
 .auth-link:hover {
-    font-weight: 700;
-    color: var(--white-color);
+  font-weight: 700;
+  color: var(--white-color);
 }
 
 .header__banner {
-    background-image: url("../images/banner/home-banner.jpeg");
-    background-size: cover;
-    background-position: center center;
-    height: 20rem;
-    margin: 0 -2rem;
-    position: relative;
-    z-index: 0;
+  background-image: url("../images/banner/home-banner.jpeg");
+  background-size: cover;
+  background-position: center center;
+  height: 20rem;
+  margin: 0 -2rem;
+  position: relative;
+  z-index: 0;
 }
 
-.header__banner:before, .header__banner:after {
-    content: '';
-    display: block;
+.header__banner:before,
+.header__banner:after {
+  content: "";
+  display: block;
 }
 
 .header__banner:before {
-    position: absolute;
-    top: 0;
-    right: 0;
-    bottom: 0;
-    left: 0;
-    background-color: rgba(255, 255, 255, 0.3);
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  background-color: rgba(255, 255, 255, 0.3);
 }
 
 .header__banner:after {
-    position: absolute;
-    right: 0;
-    bottom: 0;
-    left: 0;
-    height: 10rem;
-    background: linear-gradient(to bottom, rgba(255, 255, 255, 0) 0%, white 78%, white 100%);
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  height: 10rem;
+  background: linear-gradient(
+    to bottom,
+    rgba(255, 255, 255, 0) 0%,
+    white 78%,
+    white 100%
+  );
 }
 
 /* Header end */
@@ -206,157 +213,169 @@
 /* Audio player start */
 
 .player {
-    position: fixed;
-    bottom: 0.5rem;
-    right: 1rem;
-    left: 18.5rem;
-    height: 5rem;
-    background-color: var(--bg-sidebar-color);
-    border-radius: 1rem;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    -webkit-box-shadow: 0 .1rem .8rem .1rem var(--shadow-color);
-    -moz-box-shadow: 0 .1rem .8rem .1rem var(--shadow-color);
-    box-shadow: 0 .1rem .8rem .1rem var(--shadow-color);
-    -webkit-transition: 0.4s all ease-in;
-    -moz-transition: 0.4s all ease-in;
-    transition: 0.4s all ease-in;
+  position: fixed;
+  bottom: 0.5rem;
+  right: 1rem;
+  left: 18.5rem;
+  height: 5rem;
+  background-color: var(--bg-sidebar-color);
+  border-radius: 1rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  -webkit-box-shadow: 0 0.1rem 0.8rem 0.1rem var(--shadow-color);
+  -moz-box-shadow: 0 0.1rem 0.8rem 0.1rem var(--shadow-color);
+  box-shadow: 0 0.1rem 0.8rem 0.1rem var(--shadow-color);
+  -webkit-transition: 0.4s all ease-in;
+  -moz-transition: 0.4s all ease-in;
+  transition: 0.4s all ease-in;
 }
 
 .player__song {
-    display: flex;
-    align-items: center;
+  display: flex;
+  align-items: center;
 }
 
 .player__song--img {
-    width: 3.8rem;
-    height: 3.8rem;
-    border-radius: 50%;
-    margin: 0 0.5rem 0 0.8rem;
-    background-size: cover;
-    -webkit-animation: spin 10s linear infinite;
-    -moz-animation: spin 10s linear infinite;
-    animation: spin 10s linear infinite;
-    animation-play-state: paused;
+  width: 3.8rem;
+  height: 3.8rem;
+  border-radius: 50%;
+  margin: 0 0.5rem 0 0.8rem;
+  background-size: cover;
+  -webkit-animation: spin 10s linear infinite;
+  -moz-animation: spin 10s linear infinite;
+  animation: spin 10s linear infinite;
+  animation-play-state: paused;
 }
 
 .player__song--img.spin {
-    animation-play-state: running;
+  animation-play-state: running;
 }
 
 .player-song-title {
-    font-size: 0.8rem;
-    font-weight: 700;
-    text-overflow: ellipsis;
-    overflow: hidden;
-    white-space: nowrap;
-    width: 13rem;
+  font-size: 0.8rem;
+  font-weight: 700;
+  text-overflow: ellipsis;
+  overflow: hidden;
+  white-space: nowrap;
+  width: 13rem;
 }
 
 .player-song-artist {
-    font-size: 0.75rem;
+  font-size: 0.75rem;
 }
 
 .player__controls {
-    min-width: 15rem;
-    margin: 0 0.5rem;
+  width: 25rem;
+  min-width: 15rem;
+  margin: 0 0.5rem;
 }
 
-.control {
-    display: flex;
-    align-items: center;
-    justify-content: space-around;
-    margin-bottom: 0.6rem;
+.control-wrapper {
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
+  margin: 0.4rem 0 0.2rem;
 }
 
 .control__btn {
-    color: var(--text-color);
-    padding: 0.4rem;
-    font-size: 1.2rem;
-    cursor: pointer;
+  color: var(--text-color);
+  padding: 0.4rem;
+  font-size: 1.2rem;
+  cursor: pointer;
 }
 
 .control__btn.active {
-    color: var(--main-color);
+  color: var(--main-color);
 }
 
 .btn-toggle-play {
-    width: 2.5rem;
-    height: 2.5rem;
-    border-radius: 50%;
-    font-size: 1.5rem;
-    color: var(--white-color);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    background-color: var(--main-color);
+  width: 2.5rem;
+  height: 2.5rem;
+  border-radius: 50%;
+  font-size: 1.5rem;
+  color: var(--white-color);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: var(--main-color);
+}
+
+.progress-wrapper {
+  display: flex;
+  align-items: center;
 }
 
 .progress {
-    width: 100%;
-    height: 6px;
-    outline: none;
-    cursor: pointer; 
-    opacity: 0.7;
-    color: var(--main-color);
-    -webkit-transition: all 0.2s;
-    -moz-transition: all 0.2s;
-    transition: all 0.2s;
+  flex: 1;
+  margin: 0.1rem 0.2rem 0;
+  height: 0.35rem;
+  outline: none;
+  cursor: pointer;
+  opacity: 0.7;
+  color: var(--main-color);
+  -webkit-transition: all 0.2s;
+  -moz-transition: all 0.2s;
+  transition: all 0.2s;
+}
+
+.progress-time {
+  font-size: 0.9rem;
+  color: var(--text-color);
+  opacity: 0.8;
 }
 
 .player__options {
-    display: flex;
+  display: flex;
 }
 
 .option-btn {
-    color: var(--text-color);
-    padding: 0.4rem;
-    font-size: 1.2rem;
-    cursor: pointer;
-    margin-right: 1rem;
+  color: var(--text-color);
+  padding: 0.4rem;
+  font-size: 1.2rem;
+  cursor: pointer;
+  margin-right: 1rem;
 }
 
 .option-btn.btn-music {
-    margin-right: 2rem;
+  margin-right: 2rem;
 }
 
 /* Audio player end */
 
 @-moz-keyframes spin {
-    100% {
-        -moz-transform: rotate(360deg);
-    }
+  100% {
+    -moz-transform: rotate(360deg);
+  }
 }
 
 @-webkit-keyframes spin {
-    100% {
-        -webkit-transform: rotate(360deg);
-    }
+  100% {
+    -webkit-transform: rotate(360deg);
+  }
 }
 
 @keyframes spin {
-    100% {
-        -webkit-transform: rotate(360deg);
-        transform: rotate(360deg);
-    }
+  100% {
+    -webkit-transform: rotate(360deg);
+    transform: rotate(360deg);
+  }
 }
 
-@media(max-width: 1023px) {
-    .translate-on-md {
-        transform: translateX(-100%);
-    }
-    .content {
-        margin-left: 0;
-    }
-    .header__content {
-        left: 0;
-    }
-    .player {
-        left: 1rem;
-    }
-    .header__content--sidebar-icon {
-        display: block;
-    }
+@media (max-width: 1023px) {
+  .translate-on-md {
+    transform: translateX(-100%);
+  }
+  .content {
+    margin-left: 0;
+  }
+  .header__content {
+    left: 0;
+  }
+  .player {
+    left: 1rem;
+  }
+  .header__content--sidebar-icon {
+    display: block;
+  }
 }
-
