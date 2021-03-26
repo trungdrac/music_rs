@@ -2,7 +2,7 @@ import React, { Component } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faHome } from "@fortawesome/free-solid-svg-icons";
 
-class SideBar extends Component {
+class Sidebar extends Component {
   render() {
     return (
       <div className="sidebar translate-on-md">
@@ -77,4 +77,4 @@ class SideBar extends Component {
   }
 }
 
-export default SideBar;
+export default Sidebar;

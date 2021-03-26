@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faBars, faSearch } from "@fortawesome/free-solid-svg-icons";
-import SideBar from "./SideBar";
+import Sidebar from "./Sidebar";
 
 class Header extends Component {
   render() {
@@ -21,7 +21,7 @@ class Header extends Component {
             id="sidebar-checkbox"
           />
           <label htmlFor="sidebar-checkbox" className="overlay"></label>
-          <SideBar />
+          <Sidebar />
           <div className="header__content--search">
             <button className="search-icon">
               <FontAwesomeIcon icon={faSearch} />

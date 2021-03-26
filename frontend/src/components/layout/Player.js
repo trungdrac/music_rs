@@ -15,34 +15,43 @@ class Player extends Component {
   constructor(props) {
     super(props);
     this.state = {
+      isFirstSong: false,
       isPlaying: false,
+      isRandom: false,
+      isRepeat: false,
       currentIndex: 0,
       progressPercent: 0,
+      loadedSongs: [],
+      config: JSON.parse(localStorage.getItem("musicRS")) || {},
+    };
+    this.setConfig = (key, value) => {
+      this.state.config[key] = value;
+      localStorage.setItem("musicRS", JSON.stringify(this.state.config));
     };
     this.songs = [
       {
-        title: "I love you Mummy",
+        title: "I love you Mummy 0",
         artist: "Gerrina Linda",
         path: "./audio/ringtone-1.mp3",
         image:
           "https://photo-resize-zmp3.zadn.vn/w240_r1x1_jpeg/avatars/5/1/b/8/51b83f6216d3752b5251159c930dcb8d.jpg",
       },
       {
-        title: "Kill this love",
+        title: "Kill this love 1",
         artist: "Black Pink",
         path: "./audio/ringtone-2.mp3",
         image:
           "https://photo-resize-zmp3.zadn.vn/w240_r1x1_jpeg/avatars/5/1/b/8/51b83f6216d3752b5251159c930dcb8d.jpg",
       },
       {
-        title: "Do it your way (female)",
+        title: "Do it your way (female) 2",
         artist: "Zunira Willy & Nutty Nina",
         path: "./audio/ringtone-3.mp3",
         image:
           "https://photo-resize-zmp3.zadn.vn/w240_r1x1_jpeg/avatars/5/1/b/8/51b83f6216d3752b5251159c930dcb8d.jpg",
       },
       {
-        title: "Say yes",
+        title: "Say yes 3",
         artist: "Johnny Marro",
         path: "./audio/ringtone-4.mp3",
         image:
@@ -52,6 +61,8 @@ class Player extends Component {
     this.audioRef = React.createRef();
     this.songImgRef = React.createRef();
     this.progressRef = React.createRef();
+    this.repeatRef = React.createRef();
+    this.randomRef = React.createRef();
   }
 
   componentDidMount() {
@@ -72,6 +83,20 @@ class Player extends Component {
           break;
       }
     };
+    //load current song to loadedSongs
+    this.setState({ loadedSongs: [this.state.currentIndex] });
+
+    //load config
+    this.setState(
+      {
+        isRepeat: this.state.config.isRepeat,
+        isRandom: this.state.config.isRandom,
+      },
+      () => {
+        this.repeatRef.current.classList.toggle("active", this.state.isRepeat);
+        this.randomRef.current.classList.toggle("active", this.state.isRandom);
+      }
+    );
   }
 
   handlePlayPause = () => {
@@ -95,17 +120,18 @@ class Player extends Component {
 
   handleTimeUpdate = () => {
     const audio = this.audioRef.current;
-    let progressPercent = 0;
+    let newPercent = 0;
     //update current time and progress
-    const currentTime = new Date(audio.currentTime * 1000)
+    const newTime = new Date(audio.currentTime * 1000)
       .toISOString()
       .substr(14, 5);
     if (audio.duration) {
-      progressPercent = Math.ceil((audio.currentTime / audio.duration) * 100);
+      newPercent = Math.ceil((audio.currentTime / audio.duration) * 100);
     }
-    this.setState({ currentTime, progressPercent });
+    this.setState({ currentTime: newTime, progressPercent: newPercent });
   };
 
+  //for seeking
   handleChange = () => {
     const audio = this.audioRef.current;
     const progress = this.progressRef.current;
@@ -117,38 +143,78 @@ class Player extends Component {
     const audio = this.audioRef.current;
 
     //get current time and duration
-    const currentTime = new Date(audio.currentTime * 1000)
+    const newTime = new Date(audio.currentTime * 1000)
       .toISOString()
       .substr(14, 5);
-    const duration = new Date(audio.duration * 1000)
+    const newDuration = new Date(audio.duration * 1000)
       .toISOString()
       .substr(14, 5);
-    this.setState({ currentTime, duration, progressPercent: 0 });
+    this.setState({ currentTime: newTime, duration: newDuration });
 
-    //for next and prev
-    if (this.state.isPlaying === true) {
-      audio.play();
+    // disabled & active prev button
+    if (this.state.loadedSongs.length === 1) {
+      this.setState({ isFirstSong: true });
+    } else {
+      this.setState({ isFirstSong: false });
     }
   };
 
   handlePrev = () => {
-    const currentIndex =
-      (this.state.currentIndex - 1 + this.songs.length) % this.songs.length;
-    this.setState({ currentIndex });
-    this.handleLoadedData();
+    let loadedIndexs = this.state.loadedSongs;
+    loadedIndexs.pop();
+    const newIndex = loadedIndexs[loadedIndexs.length - 1];
+    this.setState({ currentIndex: newIndex, loadedSongs: loadedIndexs }, () => {
+      this.audioRef.current.play();
+      // console.log(this.state.loadedSongs);
+    });
   };
 
   handleNext = () => {
-    const currentIndex = (this.state.currentIndex + 1) % this.songs.length;
-    this.setState({ currentIndex });
+    const loadedIndexs = this.state.loadedSongs;
+    if (this.state.isRandom) {
+      this.playRandom();
+    } else {
+      const newIndex = (this.state.currentIndex + 1) % this.songs.length;
+      this.setState({ currentIndex: newIndex }, () => {
+        this.audioRef.current.play();
+        loadedIndexs.push(this.state.currentIndex);
+      });
+    }
+    this.setState({ loadedSongs: loadedIndexs });
   };
 
-  handleRepeat = (e) => {
-    e.currentTarget.classList.toggle("active");
+  handleRepeat = () => {
+    this.setState({ isRepeat: !this.state.isRepeat }, () => {
+      this.repeatRef.current.classList.toggle("active", this.state.isRepeat);
+      this.setConfig("isRepeat", this.state.isRepeat);
+    });
   };
 
-  handleRandom = (e) => {
-    e.currentTarget.classList.toggle("active");
+  handleRandom = () => {
+    this.setState({ isRandom: !this.state.isRandom }, () => {
+      this.randomRef.current.classList.toggle("active", this.state.isRandom);
+      this.setConfig("isRandom", this.state.isRandom);
+    });
+  };
+
+  playRandom = () => {
+    let loadedIndexs = this.state.loadedSongs;
+    let newIndex;
+    do {
+      newIndex = Math.floor(Math.random() * this.songs.length);
+    } while (newIndex === this.state.currentIndex);
+    this.setState({ currentIndex: newIndex }, () => {
+      this.audioRef.current.play();
+      loadedIndexs.push(this.state.currentIndex);
+    });
+  };
+
+  handleEnded = () => {
+    if (this.state.isRepeat) {
+      this.audioRef.current.play();
+    } else {
+      this.handleNext();
+    }
   };
 
   render() {
@@ -179,30 +245,35 @@ class Player extends Component {
         <div className="player__controls">
           <div className="control-wrapper">
             <div
-              className="control__btn btn-repeat"
-              onClick={(e) => this.handleRepeat(e)}
+              className="control__btn"
+              ref={this.repeatRef}
+              onClick={this.handleRepeat}
             >
               <FontAwesomeIcon icon={faRedo} />
             </div>
-            <div className="control__btn btn-prev" onClick={this.handlePrev}>
-              <FontAwesomeIcon icon={faStepBackward} />
-            </div>
-            <div
-              className="control__btn btn-toggle-play"
-              onClick={this.handlePlayPause}
-            >
+            {this.state.isFirstSong ? (
+              <div className="control__btn disabled">
+                <FontAwesomeIcon icon={faStepBackward} />
+              </div>
+            ) : (
+              <div className="control__btn" onClick={this.handlePrev}>
+                <FontAwesomeIcon icon={faStepBackward} />
+              </div>
+            )}
+            <div className="btn-toggle-play" onClick={this.handlePlayPause}>
               {this.state.isPlaying ? (
                 <FontAwesomeIcon icon={faPause} />
               ) : (
                 <FontAwesomeIcon icon={faPlay} />
               )}
             </div>
-            <div className="control__btn btn-next" onClick={this.handleNext}>
+            <div className="control__btn" onClick={this.handleNext}>
               <FontAwesomeIcon icon={faStepForward} />
             </div>
             <div
-              className="control__btn btn-random"
-              onClick={(e) => this.handleRandom(e)}
+              className="control__btn"
+              ref={this.randomRef}
+              onClick={this.handleRandom}
             >
               <FontAwesomeIcon icon={faRandom} />
             </div>
@@ -215,6 +286,7 @@ class Player extends Component {
               onPlay={this.handlePlay}
               onPause={this.handlePause}
               onTimeUpdate={this.handleTimeUpdate}
+              onEnded={this.handleEnded}
             />
             <div className="progress-time">{this.state.currentTime}</div>
             <input
@@ -231,10 +303,10 @@ class Player extends Component {
           </div>
         </div>
         <div className="player__options d-none d-md-flex">
-          <div className="option-btn btn-ellipsis">
+          <div className="option__btn">
             <FontAwesomeIcon icon={faEllipsisV} />
           </div>
-          <div className="option-btn btn-music">
+          <div className="option__btn">
             <FontAwesomeIcon icon={faMusic} />
           </div>
         </div>
