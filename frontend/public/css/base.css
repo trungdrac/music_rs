@@ -20,10 +20,6 @@ html {
 }
 
 p {
-  margin-bottom: 1rem;
-}
-
-p:last-child {
   margin-bottom: 0;
 }
 
@@ -31,7 +27,7 @@ a {
   text-decoration: none;
   color: var(--text-color);
   -webkit-transition: 0.4s all ease-in;
-  -o-transition: 0.4s all ease-in;
+  -moz-transition: 0.4s all ease-in;
   transition: 0.4s all ease-in;
 }
 

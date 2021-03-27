@@ -12,62 +12,62 @@ class Sidebar extends Component {
           </a>
         </div>
         <nav className="sidebar__nav">
-          <ul className="navbar-nav">
-            <li className="nav-item nav-header">Browse Music</li>
-            <li className="nav-item active" aria-current="true">
-              <a href="/" className="nav-link">
+          <ul className="list-group">
+            <li className="sidebar__nav--item sidebar__nav--header">Browse Music</li>
+            <li className="sidebar__nav--item active" aria-current="true">
+              <a href="/" className="sidebar__nav--link">
                 <FontAwesomeIcon icon={faHome} />
                 <span>Trang chủ</span>
               </a>
             </li>
-            <li className="nav-item">
-              <a href="/" className="nav-link">
+            <li className="sidebar__nav--item">
+              <a href="/" className="sidebar__nav--link">
                 <FontAwesomeIcon icon={faHome} />
                 <span>Home</span>
               </a>
             </li>
-            <li className="nav-item">
-              <a href="/" className="nav-link">
+            <li className="sidebar__nav--item">
+              <a href="/" className="sidebar__nav--link">
                 <FontAwesomeIcon icon={faHome} />
                 <span>Home</span>
               </a>
             </li>
-            <li className="nav-item">
-              <a href="/" className="nav-link">
+            <li className="sidebar__nav--item">
+              <a href="/" className="sidebar__nav--link">
                 <FontAwesomeIcon icon={faHome} />
                 <span>Home</span>
               </a>
             </li>
-            <li className="nav-item nav-header">Music Events</li>
-            <li className="nav-item">
-              <a href="/" className="nav-link">
+            <li className="sidebar__nav--item sidebar__nav--header">Music Events</li>
+            <li className="sidebar__nav--item">
+              <a href="/" className="sidebar__nav--link">
                 <span>Events</span>
               </a>
             </li>
-            <li className="nav-item">
-              <a href="/" className="nav-link">
+            <li className="sidebar__nav--item">
+              <a href="/" className="sidebar__nav--link">
                 <span>Event Details</span>
               </a>
             </li>
-            <li className="nav-item">
-              <a href="/" className="nav-link">
+            <li className="sidebar__nav--item">
+              <a href="/" className="sidebar__nav--link">
                 <span>Add Event</span>
               </a>
             </li>
-            <li className="nav-item nav-header">Extra Pages</li>
-            <li className="nav-item">
-              <a href="/" className="nav-link load-page">
+            <li className="sidebar__nav--item sidebar__nav--header">Extra Pages</li>
+            <li className="sidebar__nav--item">
+              <a href="/" className="sidebar__nav--link load-page">
                 <span>Error</span>
               </a>
             </li>
-            <li className="nav-item">
-              <a href="/" className="nav-link">
+            <li className="sidebar__nav--item">
+              <a href="/" className="sidebar__nav--link">
                 <span>Blank</span>
               </a>
             </li>
           </ul>
         </nav>
-        <div className="sidebar__footer">
+        <div className="sidebar__nav--footer">
           <a href="/" className="btn btn-block btn-danger">
             <span>Thêm nhạc</span>
           </a>

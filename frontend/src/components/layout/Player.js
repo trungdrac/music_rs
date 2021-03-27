@@ -1,4 +1,5 @@
 import React, { Component } from "react";
+import RightSidebar from "./RightSidebar";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faStepBackward,
@@ -234,12 +235,12 @@ class Player extends Component {
             ></div>
           </a>
           <div className="player__song--info d-none d-sm-block">
-            <div className="player-song-title">
-              <a href="/">{this.songs[this.state.currentIndex].title}</a>
-            </div>
-            <div className="player-song-artist">
-              <a href="/">{this.songs[this.state.currentIndex].artist}</a>
-            </div>
+            <p className="player-song-title">
+              {this.songs[this.state.currentIndex].title}
+            </p>
+            <p className="player-song-artist">
+              {this.songs[this.state.currentIndex].artist}
+            </p>
           </div>
         </div>
         <div className="player__controls">
@@ -306,9 +307,16 @@ class Player extends Component {
           <div className="option__btn">
             <FontAwesomeIcon icon={faEllipsisV} />
           </div>
-          <div className="option__btn">
+          <label htmlFor="list-songs-checkbox" className="option__btn">
             <FontAwesomeIcon icon={faMusic} />
-          </div>
+          </label>
+          <input
+            type="checkbox"
+            hidden
+            className="list-songs-input"
+            id="list-songs-checkbox"
+          />
+          <RightSidebar />
         </div>
       </div>
     );

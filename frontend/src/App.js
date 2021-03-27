@@ -1,6 +1,5 @@
 import React, { Component } from "react";
 import Content from "./components/layout/Content";
-import RightSIdebar from "./components/layout/RightSIdebar";
 import Sidebar from "./components/layout/Sidebar";
 
 class App extends Component {
@@ -9,7 +8,6 @@ class App extends Component {
       <div className="app">
         <Sidebar />
         <Content />
-        <RightSIdebar />
       </div>
     );
   }
