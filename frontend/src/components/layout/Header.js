@@ -1,4 +1,5 @@
 import React, { Component } from "react";
+import { Link } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faBars, faSearch } from "@fortawesome/free-solid-svg-icons";
 import Sidebar from "./Sidebar";
@@ -33,9 +34,9 @@ class Header extends Component {
             />
           </div>
           <div className="header__content--auth">
-            <a href="/" className="auth-link">
+            <Link to="/login" className="auth-link">
               Đăng nhập
-            </a>
+            </Link>
           </div>
         </div>
         <div className="header__banner"></div>

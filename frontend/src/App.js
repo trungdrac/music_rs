@@ -1,14 +1,17 @@
 import React, { Component } from "react";
-import Content from "./components/layout/Content";
-import Sidebar from "./components/layout/Sidebar";
+import { BrowserRouter as Router, Route } from "react-router-dom";
+import Home from "./components/homepage/Home";
+import Login from "./components/user/Login";
+import Register from "./components/user/Register";
 
 class App extends Component {
   render() {
     return (
-      <div className="app">
-        <Sidebar />
-        <Content />
-      </div>
+      <Router>
+          <Route exact path="/" component={Home} />
+          <Route exact path="/login" component={Login} />
+          <Route exact path="/register" component={Register} />
+      </Router>
     );
   }
 }

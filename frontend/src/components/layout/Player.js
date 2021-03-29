@@ -84,20 +84,33 @@ class Player extends Component {
           break;
       }
     };
-    //load current song to loadedSongs
-    this.setState({ loadedSongs: [this.state.currentIndex] });
 
-    //load config
-    this.setState(
-      {
-        isRepeat: this.state.config.isRepeat,
-        isRandom: this.state.config.isRandom,
-      },
-      () => {
-        this.repeatRef.current.classList.toggle("active", this.state.isRepeat);
-        this.randomRef.current.classList.toggle("active", this.state.isRandom);
-      }
-    );
+    //load first song to loadedSongs
+    if (this.state.loadedSongs.length === 0) {
+      this.setState({ loadedSongs: [this.state.currentIndex] });
+    }
+
+    // load config
+    if (Object.keys(this.state.config).length !== 0) {
+      this.setState(
+        {
+          loadedSongs: this.state.config.loadedSongs,
+          currentIndex: this.state.config.currentIndex,
+          isRepeat: this.state.config.isRepeat,
+          isRandom: this.state.config.isRandom,
+        },
+        () => {
+          this.repeatRef.current.classList.toggle(
+            "active",
+            this.state.isRepeat
+          );
+          this.randomRef.current.classList.toggle(
+            "active",
+            this.state.isRandom
+          );
+        }
+      );
+    }
   }
 
   handlePlayPause = () => {
@@ -142,6 +155,7 @@ class Player extends Component {
 
   handleLoadedData = () => {
     const audio = this.audioRef.current;
+    this.setConfig("currentIndex", this.state.currentIndex);
 
     //get current time and duration
     const newTime = new Date(audio.currentTime * 1000)
@@ -162,12 +176,18 @@ class Player extends Component {
 
   handlePrev = () => {
     let loadedIndexs = this.state.loadedSongs;
-    loadedIndexs.pop();
-    const newIndex = loadedIndexs[loadedIndexs.length - 1];
-    this.setState({ currentIndex: newIndex, loadedSongs: loadedIndexs }, () => {
-      this.audioRef.current.play();
-      // console.log(this.state.loadedSongs);
-    });
+    let newIndex;
+    if (loadedIndexs.length > 1) {
+      loadedIndexs.pop();
+      newIndex = loadedIndexs[loadedIndexs.length - 1];
+      this.setState(
+        { currentIndex: newIndex, loadedSongs: loadedIndexs },
+        () => {
+          this.audioRef.current.play();
+          // console.log(this.state.loadedSongs);
+        }
+      );
+    }
   };
 
   handleNext = () => {
@@ -181,7 +201,9 @@ class Player extends Component {
         loadedIndexs.push(this.state.currentIndex);
       });
     }
-    this.setState({ loadedSongs: loadedIndexs });
+    this.setState({ loadedSongs: loadedIndexs }, () => {
+      this.setConfig("loadedSongs", this.state.loadedSongs);
+    });
   };
 
   handleRepeat = () => {
@@ -219,7 +241,6 @@ class Player extends Component {
   };
 
   render() {
-    // console.log(this.songs.length);
     return (
       <div className="player">
         <div className="player__song">
