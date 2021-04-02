@@ -1,4 +1,7 @@
 import React, { Component } from "react";
+import { connect } from "react-redux";
+import { msToISO } from "../../helpers/convertTime";
+import * as actions from "../../actions/playerAction";
 import RightSidebar from "./RightSidebar";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
@@ -15,20 +18,6 @@ import {
 class Player extends Component {
   constructor(props) {
     super(props);
-    this.state = {
-      isFirstSong: false,
-      isPlaying: false,
-      isRandom: false,
-      isRepeat: false,
-      currentIndex: 0,
-      progressPercent: 0,
-      loadedSongs: [],
-      config: JSON.parse(localStorage.getItem("musicRS")) || {},
-    };
-    this.setConfig = (key, value) => {
-      this.state.config[key] = value;
-      localStorage.setItem("musicRS", JSON.stringify(this.state.config));
-    };
     this.songs = [
       {
         title: "I love you Mummy 0",
@@ -85,37 +74,22 @@ class Player extends Component {
       }
     };
 
+    this.props.pauseAudio();
+
     //load first song to loadedSongs
-    if (this.state.loadedSongs.length === 0) {
-      this.setState({ loadedSongs: [this.state.currentIndex] });
+    if (this.props.loadedSongs.length === 0) {
+      this.props.setLoadedSongs([this.props.currentIndex]);
     }
 
     // load config
-    if (Object.keys(this.state.config).length !== 0) {
-      this.setState(
-        {
-          loadedSongs: this.state.config.loadedSongs,
-          currentIndex: this.state.config.currentIndex,
-          isRepeat: this.state.config.isRepeat,
-          isRandom: this.state.config.isRandom,
-        },
-        () => {
-          this.repeatRef.current.classList.toggle(
-            "active",
-            this.state.isRepeat
-          );
-          this.randomRef.current.classList.toggle(
-            "active",
-            this.state.isRandom
-          );
-        }
-      );
-    }
+    audio.currentTime = this.props.currentTime;
+    this.repeatRef.current.classList.toggle("active", this.props.isRepeat);
+    this.randomRef.current.classList.toggle("active", this.props.isRandom);
   }
 
   handlePlayPause = () => {
     const audio = this.audioRef.current;
-    if (this.state.isPlaying) {
+    if (this.props.isPlaying) {
       audio.pause();
     } else {
       audio.play();
@@ -123,26 +97,30 @@ class Player extends Component {
   };
 
   handlePlay = () => {
-    this.setState({ isPlaying: true });
-    this.songImgRef.current.classList.add("spin");
+    const promise = new Promise((resolve) => {
+      this.props.playAudio();
+      resolve();
+    });
+    promise.then(() => this.songImgRef.current.classList.add("spin"));
   };
 
   handlePause = () => {
-    this.setState({ isPlaying: false });
-    this.songImgRef.current.classList.remove("spin");
+    const promise = new Promise((resolve) => {
+      this.props.pauseAudio();
+      resolve();
+    });
+    promise.then(() => this.songImgRef.current.classList.remove("spin"));
   };
 
   handleTimeUpdate = () => {
     const audio = this.audioRef.current;
     let newPercent = 0;
     //update current time and progress
-    const newTime = new Date(audio.currentTime * 1000)
-      .toISOString()
-      .substr(14, 5);
     if (audio.duration) {
       newPercent = Math.ceil((audio.currentTime / audio.duration) * 100);
     }
-    this.setState({ currentTime: newTime, progressPercent: newPercent });
+    this.props.setCurrentTime(audio.currentTime);
+    this.props.setProgressPercent(newPercent);
   };
 
   //for seeking
@@ -155,85 +133,88 @@ class Player extends Component {
 
   handleLoadedData = () => {
     const audio = this.audioRef.current;
-    this.setConfig("currentIndex", this.state.currentIndex);
 
     //get current time and duration
-    const newTime = new Date(audio.currentTime * 1000)
-      .toISOString()
-      .substr(14, 5);
-    const newDuration = new Date(audio.duration * 1000)
-      .toISOString()
-      .substr(14, 5);
-    this.setState({ currentTime: newTime, duration: newDuration });
+    this.props.setCurrentTime(audio.currentTime);
+    this.props.setDuration(audio.duration);
 
     // disabled & active prev button
-    if (this.state.loadedSongs.length === 1) {
-      this.setState({ isFirstSong: true });
-    } else {
-      this.setState({ isFirstSong: false });
-    }
+    this.props.loadedSongs.length === 1
+      ? this.props.setIsFirstSongTrue()
+      : this.props.setIsFirstSongFalse();
   };
 
   handlePrev = () => {
-    let loadedIndexs = this.state.loadedSongs;
+    let newLoadedSongs = this.props.loadedSongs;
     let newIndex;
-    if (loadedIndexs.length > 1) {
-      loadedIndexs.pop();
-      newIndex = loadedIndexs[loadedIndexs.length - 1];
-      this.setState(
-        { currentIndex: newIndex, loadedSongs: loadedIndexs },
-        () => {
-          this.audioRef.current.play();
-          // console.log(this.state.loadedSongs);
-        }
-      );
+    if (newLoadedSongs.length > 1) {
+      newLoadedSongs.pop();
+      newIndex = newLoadedSongs[newLoadedSongs.length - 1];
+      const promise = new Promise((resolve) => {
+        this.props.setCurrentIndex(newIndex);
+        this.props.setLoadedSongs(newLoadedSongs);
+        resolve();
+      });
+      promise.then(() => this.audioRef.current.play());
     }
   };
 
   handleNext = () => {
-    const loadedIndexs = this.state.loadedSongs;
-    if (this.state.isRandom) {
+    const newLoadedSongs = this.props.loadedSongs;
+    if (this.props.isRandom) {
       this.playRandom();
     } else {
-      const newIndex = (this.state.currentIndex + 1) % this.songs.length;
-      this.setState({ currentIndex: newIndex }, () => {
+      const newIndex = (this.props.currentIndex + 1) % this.songs.length;
+      const promise = new Promise((resolve) => {
+        this.props.setCurrentIndex(newIndex);
+        resolve();
+      });
+      promise.then(() => {
         this.audioRef.current.play();
-        loadedIndexs.push(this.state.currentIndex);
+        newLoadedSongs.push(this.props.currentIndex);
       });
     }
-    this.setState({ loadedSongs: loadedIndexs }, () => {
-      this.setConfig("loadedSongs", this.state.loadedSongs);
-    });
+    this.props.setLoadedSongs(newLoadedSongs);
   };
 
   handleRepeat = () => {
-    this.setState({ isRepeat: !this.state.isRepeat }, () => {
-      this.repeatRef.current.classList.toggle("active", this.state.isRepeat);
-      this.setConfig("isRepeat", this.state.isRepeat);
+    const promise = new Promise((resolve) => {
+      this.props.toggleRepeat();
+      resolve();
     });
+    promise.then(() =>
+      this.repeatRef.current.classList.toggle("active", this.props.isRepeat)
+    );
   };
 
   handleRandom = () => {
-    this.setState({ isRandom: !this.state.isRandom }, () => {
-      this.randomRef.current.classList.toggle("active", this.state.isRandom);
-      this.setConfig("isRandom", this.state.isRandom);
+    const promise = new Promise((resolve) => {
+      this.props.toggleRandom();
+      resolve();
     });
+    promise.then(() =>
+      this.randomRef.current.classList.toggle("active", this.props.isRandom)
+    );
   };
 
   playRandom = () => {
-    let loadedIndexs = this.state.loadedSongs;
+    let newLoadedSongs = this.props.loadedSongs;
     let newIndex;
     do {
       newIndex = Math.floor(Math.random() * this.songs.length);
-    } while (newIndex === this.state.currentIndex);
-    this.setState({ currentIndex: newIndex }, () => {
+    } while (newIndex === this.props.currentIndex);
+    const promise = new Promise((resolve) => {
+      this.props.setCurrentIndex(newIndex);
+      resolve();
+    });
+    promise.then(() => {
       this.audioRef.current.play();
-      loadedIndexs.push(this.state.currentIndex);
+      newLoadedSongs.push(this.props.currentIndex);
     });
   };
 
   handleEnded = () => {
-    if (this.state.isRepeat) {
+    if (this.props.isRepeat) {
       this.audioRef.current.play();
     } else {
       this.handleNext();
@@ -250,17 +231,17 @@ class Player extends Component {
               ref={this.songImgRef}
               style={{
                 backgroundImage: `url(${
-                  this.songs[this.state.currentIndex].image
+                  this.songs[this.props.currentIndex].image
                 })`,
               }}
             ></div>
           </a>
           <div className="player__song--info d-none d-sm-block">
             <p className="player-song-title">
-              {this.songs[this.state.currentIndex].title}
+              {this.songs[this.props.currentIndex].title}
             </p>
             <p className="player-song-artist">
-              {this.songs[this.state.currentIndex].artist}
+              {this.songs[this.props.currentIndex].artist}
             </p>
           </div>
         </div>
@@ -273,7 +254,7 @@ class Player extends Component {
             >
               <FontAwesomeIcon icon={faRedo} />
             </div>
-            {this.state.isFirstSong ? (
+            {this.props.isFirstSong ? (
               <div className="control__btn disabled">
                 <FontAwesomeIcon icon={faStepBackward} />
               </div>
@@ -283,7 +264,7 @@ class Player extends Component {
               </div>
             )}
             <div className="btn-toggle-play" onClick={this.handlePlayPause}>
-              {this.state.isPlaying ? (
+              {this.props.isPlaying ? (
                 <FontAwesomeIcon icon={faPause} />
               ) : (
                 <FontAwesomeIcon icon={faPlay} />
@@ -303,25 +284,27 @@ class Player extends Component {
           <div className="progress-wrapper">
             <audio
               ref={this.audioRef}
-              src={this.songs[this.state.currentIndex].path}
+              src={this.songs[this.props.currentIndex].path}
               onLoadedData={this.handleLoadedData}
               onPlay={this.handlePlay}
               onPause={this.handlePause}
               onTimeUpdate={this.handleTimeUpdate}
               onEnded={this.handleEnded}
             />
-            <div className="progress-time">{this.state.currentTime}</div>
+            <div className="progress-time">
+              {msToISO(this.props.currentTime)}
+            </div>
             <input
               className="progress"
               type="range"
               ref={this.progressRef}
-              value={this.state.progressPercent}
+              value={this.props.progressPercent}
               step={1}
               min={0}
               max={100}
               onChange={this.handleChange}
             />
-            <div className="progress-time">{this.state.duration}</div>
+            <div className="progress-time">{msToISO(this.props.duration)}</div>
           </div>
         </div>
         <div className="player__options d-none d-md-flex">
@@ -344,4 +327,34 @@ class Player extends Component {
   }
 }
 
-export default Player;
+const mapStateToProps = (state) => ({
+  isFirstSong: state.player.isFirstSong,
+  isPlaying: state.player.isPlaying,
+  isRandom: state.player.isRandom,
+  isRepeat: state.player.isRepeat,
+  currentIndex: state.player.currentIndex,
+  progressPercent: state.player.progressPercent,
+  currentTime: state.player.currentTime,
+  duration: state.player.duration,
+  loadedSongs: state.player.loadedSongs,
+});
+
+const mapDispatchToProps = (dispatch) => {
+  return {
+    playAudio: () => dispatch(actions.playAudio()),
+    pauseAudio: () => dispatch(actions.pauseAudio()),
+    setCurrentTime: (newTime) => dispatch(actions.setCurrentTime(newTime)),
+    setProgressPercent: (newPercent) =>
+      dispatch(actions.setProgressPercent(newPercent)),
+    setCurrentIndex: (newIndex) => dispatch(actions.setCurrentIndex(newIndex)),
+    setDuration: (newDuration) => dispatch(actions.setDuration(newDuration)),
+    setIsFirstSongTrue: () => dispatch(actions.setIsFirstSongTrue()),
+    setIsFirstSongFalse: () => dispatch(actions.setIsFirstSongFalse()),
+    setLoadedSongs: (newLoadedSongs) =>
+      dispatch(actions.setLoadedSongs(newLoadedSongs)),
+    toggleRepeat: () => dispatch(actions.toggleRepeat()),
+    toggleRandom: () => dispatch(actions.toggleRandom()),
+  };
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(Player);
