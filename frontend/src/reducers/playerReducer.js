@@ -10,6 +10,7 @@ const initialState = {
   currentTime: 0,
   duration: 0,
   loadedSongs: [],
+  
 };
 const player = (state = initialState, action) => {
   switch (action.type) {

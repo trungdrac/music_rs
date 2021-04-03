@@ -1,13 +1,12 @@
 import React, { Component } from "react";
+import { connect } from "react-redux";
+import * as actions from "../../actions/playerAction";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faEllipsisH } from "@fortawesome/free-solid-svg-icons";
 
 class RightSidebar extends Component {
   constructor(props) {
     super(props);
-    this.state = {
-      currentIndex: 0,
-    };
     this.songs = [
       {
         title: "I love you Mummy 0",
@@ -39,16 +38,44 @@ class RightSidebar extends Component {
       },
     ];
   }
+  pickSong = (e) => {
+    const songNode = e.target.closest(".list-song__item:not(.active)");
+    const songOption = e.target.closest(".song-options");
+    if (songNode) {
+      const newLoadedSongs = this.props.loadedSongs;
+      const newIndex = Number(songNode.dataset.index);
+      const promise = new Promise((resolve) => {
+        this.props.setCurrentIndex(newIndex);
+        resolve();
+      });
+      promise.then(() => {
+        newLoadedSongs.push(this.props.currentIndex);
+        this.props.setLoadedSongs(newLoadedSongs);
+      });
+    }
+    if (songOption) {
+      console.log(songOption);
+    }
+  };
 
   render() {
     return (
       <div className="right-sidebar">
         <div className="right-sidebar__header">Danh sách phát</div>
-        <div className="right-sidebar__body" data-scrollable="true">
-          <ul className="list-group list-group-flush">
+        <div className="right-sidebar__body">
+          <ul
+            className="list-group list-group-flush"
+            onClick={(e) => this.pickSong(e)}
+          >
             {this.songs.map((song, index) => {
               return (
-                <li className="list-song__item list-group-item" key={index}>
+                <li
+                  className={`list-song__item list-group-item ${
+                    index === this.props.currentIndex ? "active" : ""
+                  }`}
+                  key={index}
+                  data-index={index}
+                >
                   <div className="song-inline">
                     <div
                       className="song-inline__img"
@@ -74,4 +101,17 @@ class RightSidebar extends Component {
   }
 }
 
-export default RightSidebar;
+const mapStateToProps = (state) => ({
+  currentIndex: state.player.currentIndex,
+  loadedSongs: state.player.loadedSongs,
+});
+
+const mapDispatchToProps = (dispatch) => {
+  return {
+    setCurrentIndex: (newIndex) => dispatch(actions.setCurrentIndex(newIndex)),
+    setLoadedSongs: (newLoadedSongs) =>
+      dispatch(actions.setLoadedSongs(newLoadedSongs)),
+  };
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(RightSidebar);

@@ -87,6 +87,12 @@ class Player extends Component {
     this.randomRef.current.classList.toggle("active", this.props.isRandom);
   }
 
+  componentDidUpdate(prevProps) {
+    if (prevProps.currentIndex !== this.props.currentIndex) {
+      this.audioRef.current.play();
+    }
+  }
+
   handlePlayPause = () => {
     const audio = this.audioRef.current;
     if (this.props.isPlaying) {
@@ -150,12 +156,8 @@ class Player extends Component {
     if (newLoadedSongs.length > 1) {
       newLoadedSongs.pop();
       newIndex = newLoadedSongs[newLoadedSongs.length - 1];
-      const promise = new Promise((resolve) => {
-        this.props.setCurrentIndex(newIndex);
-        this.props.setLoadedSongs(newLoadedSongs);
-        resolve();
-      });
-      promise.then(() => this.audioRef.current.play());
+      this.props.setCurrentIndex(newIndex);
+      this.props.setLoadedSongs(newLoadedSongs);
     }
   };
 
@@ -170,7 +172,6 @@ class Player extends Component {
         resolve();
       });
       promise.then(() => {
-        this.audioRef.current.play();
         newLoadedSongs.push(this.props.currentIndex);
       });
     }
@@ -208,7 +209,6 @@ class Player extends Component {
       resolve();
     });
     promise.then(() => {
-      this.audioRef.current.play();
       newLoadedSongs.push(this.props.currentIndex);
     });
   };
