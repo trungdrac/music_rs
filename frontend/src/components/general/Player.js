@@ -1,7 +1,9 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
 import { msToISO } from "../../helpers/convertTime";
-import * as actions from "../../actions/playerAction";
+import callAPI from "../../helpers/callAPI";
+import * as playerActions from "../../actions/playerAction";
+import * as playlistActions from "../../actions/playlistAction";
 import RightSidebar from "./RightSidebar";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
@@ -18,36 +20,6 @@ import {
 class Player extends Component {
   constructor(props) {
     super(props);
-    this.songs = [
-      {
-        title: "I love you Mummy 0",
-        artist: "Gerrina Linda",
-        path: "./audio/ringtone-1.mp3",
-        image:
-          "https://photo-resize-zmp3.zadn.vn/w240_r1x1_jpeg/avatars/5/1/b/8/51b83f6216d3752b5251159c930dcb8d.jpg",
-      },
-      {
-        title: "Kill this love 1",
-        artist: "Black Pink",
-        path: "./audio/ringtone-2.mp3",
-        image:
-          "https://photo-resize-zmp3.zadn.vn/w240_r1x1_jpeg/avatars/5/1/b/8/51b83f6216d3752b5251159c930dcb8d.jpg",
-      },
-      {
-        title: "Do it your way (female) 2",
-        artist: "Zunira Willy & Nutty Nina",
-        path: "./audio/ringtone-3.mp3",
-        image:
-          "https://photo-resize-zmp3.zadn.vn/w240_r1x1_jpeg/avatars/5/1/b/8/51b83f6216d3752b5251159c930dcb8d.jpg",
-      },
-      {
-        title: "Say yes 3",
-        artist: "Johnny Marro",
-        path: "./audio/ringtone-4.mp3",
-        image:
-          "https://photo-resize-zmp3.zadn.vn/w240_r1x1_jpeg/avatars/5/1/b/8/51b83f6216d3752b5251159c930dcb8d.jpg",
-      },
-    ];
     this.audioRef = React.createRef();
     this.songImgRef = React.createRef();
     this.progressRef = React.createRef();
@@ -56,6 +28,11 @@ class Player extends Component {
   }
 
   componentDidMount() {
+    // get playlist
+    callAPI("GET", "/playlist").then((res) => {
+      this.props.getPlaylist(res.data);
+    });
+
     const audio = this.audioRef.current;
     window.onkeydown = (e) => {
       switch (e.keyCode) {
@@ -74,6 +51,7 @@ class Player extends Component {
       }
     };
 
+    //audio pause when component did mount
     this.props.pauseAudio();
 
     //load first song to loadedSongs
@@ -166,7 +144,8 @@ class Player extends Component {
     if (this.props.isRandom) {
       this.playRandom();
     } else {
-      const newIndex = (this.props.currentIndex + 1) % this.songs.length;
+      const newIndex =
+        (this.props.currentIndex + 1) % this.props.playlist.length;
       const promise = new Promise((resolve) => {
         this.props.setCurrentIndex(newIndex);
         resolve();
@@ -202,7 +181,7 @@ class Player extends Component {
     let newLoadedSongs = this.props.loadedSongs;
     let newIndex;
     do {
-      newIndex = Math.floor(Math.random() * this.songs.length);
+      newIndex = Math.floor(Math.random() * this.props.playlist.length);
     } while (newIndex === this.props.currentIndex);
     const promise = new Promise((resolve) => {
       this.props.setCurrentIndex(newIndex);
@@ -231,17 +210,17 @@ class Player extends Component {
               ref={this.songImgRef}
               style={{
                 backgroundImage: `url(${
-                  this.songs[this.props.currentIndex].image
+                  this.props.playlist[this.props.currentIndex].image
                 })`,
               }}
             ></div>
           </a>
           <div className="player__song--info d-none d-sm-block">
             <p className="player-song-title">
-              {this.songs[this.props.currentIndex].title}
+              {this.props.playlist[this.props.currentIndex].title}
             </p>
             <p className="player-song-artist">
-              {this.songs[this.props.currentIndex].artist}
+              {this.props.playlist[this.props.currentIndex].artist}
             </p>
           </div>
         </div>
@@ -284,7 +263,7 @@ class Player extends Component {
           <div className="progress-wrapper">
             <audio
               ref={this.audioRef}
-              src={this.songs[this.props.currentIndex].path}
+              src={this.props.playlist[this.props.currentIndex].path}
               onLoadedData={this.handleLoadedData}
               onPlay={this.handlePlay}
               onPause={this.handlePause}
@@ -337,23 +316,31 @@ const mapStateToProps = (state) => ({
   currentTime: state.player.currentTime,
   duration: state.player.duration,
   loadedSongs: state.player.loadedSongs,
+  playlist: state.playlist,
 });
 
 const mapDispatchToProps = (dispatch) => {
   return {
-    playAudio: () => dispatch(actions.playAudio()),
-    pauseAudio: () => dispatch(actions.pauseAudio()),
-    setCurrentTime: (newTime) => dispatch(actions.setCurrentTime(newTime)),
+    //player
+    playAudio: () => dispatch(playerActions.playAudio()),
+    pauseAudio: () => dispatch(playerActions.pauseAudio()),
+    setCurrentTime: (newTime) =>
+      dispatch(playerActions.setCurrentTime(newTime)),
     setProgressPercent: (newPercent) =>
-      dispatch(actions.setProgressPercent(newPercent)),
-    setCurrentIndex: (newIndex) => dispatch(actions.setCurrentIndex(newIndex)),
-    setDuration: (newDuration) => dispatch(actions.setDuration(newDuration)),
-    setIsFirstSongTrue: () => dispatch(actions.setIsFirstSongTrue()),
-    setIsFirstSongFalse: () => dispatch(actions.setIsFirstSongFalse()),
+      dispatch(playerActions.setProgressPercent(newPercent)),
+    setCurrentIndex: (newIndex) =>
+      dispatch(playerActions.setCurrentIndex(newIndex)),
+    setDuration: (newDuration) =>
+      dispatch(playerActions.setDuration(newDuration)),
+    setIsFirstSongTrue: () => dispatch(playerActions.setIsFirstSongTrue()),
+    setIsFirstSongFalse: () => dispatch(playerActions.setIsFirstSongFalse()),
     setLoadedSongs: (newLoadedSongs) =>
-      dispatch(actions.setLoadedSongs(newLoadedSongs)),
-    toggleRepeat: () => dispatch(actions.toggleRepeat()),
-    toggleRandom: () => dispatch(actions.toggleRandom()),
+      dispatch(playerActions.setLoadedSongs(newLoadedSongs)),
+    toggleRepeat: () => dispatch(playerActions.toggleRepeat()),
+    toggleRandom: () => dispatch(playerActions.toggleRandom()),
+
+    //song
+    getPlaylist: (playlist) => dispatch(playlistActions.getPlaylist(playlist)),
   };
 };
 

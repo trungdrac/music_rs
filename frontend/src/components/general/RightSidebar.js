@@ -5,43 +5,10 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faEllipsisH } from "@fortawesome/free-solid-svg-icons";
 
 class RightSidebar extends Component {
-  constructor(props) {
-    super(props);
-    this.songs = [
-      {
-        title: "I love you Mummy 0",
-        artist: "Gerrina Linda",
-        path: "./audio/ringtone-1.mp3",
-        image:
-          "https://photo-resize-zmp3.zadn.vn/w240_r1x1_jpeg/avatars/5/1/b/8/51b83f6216d3752b5251159c930dcb8d.jpg",
-      },
-      {
-        title: "Kill this love 1",
-        artist: "Black Pink",
-        path: "./audio/ringtone-2.mp3",
-        image:
-          "https://photo-resize-zmp3.zadn.vn/w240_r1x1_jpeg/avatars/5/1/b/8/51b83f6216d3752b5251159c930dcb8d.jpg",
-      },
-      {
-        title: "Do it your way (female) 2",
-        artist: "Zunira Willy & Nutty Nina",
-        path: "./audio/ringtone-3.mp3",
-        image:
-          "https://photo-resize-zmp3.zadn.vn/w240_r1x1_jpeg/avatars/5/1/b/8/51b83f6216d3752b5251159c930dcb8d.jpg",
-      },
-      {
-        title: "Say yes 3",
-        artist: "Johnny Marro",
-        path: "./audio/ringtone-4.mp3",
-        image:
-          "https://photo-resize-zmp3.zadn.vn/w240_r1x1_jpeg/avatars/5/1/b/8/51b83f6216d3752b5251159c930dcb8d.jpg",
-      },
-    ];
-  }
   pickSong = (e) => {
     const songNode = e.target.closest(".list-song__item:not(.active)");
     const songOption = e.target.closest(".song-options");
-    if (songNode) {
+    if (songNode && !songOption) {
       const newLoadedSongs = this.props.loadedSongs;
       const newIndex = Number(songNode.dataset.index);
       const promise = new Promise((resolve) => {
@@ -67,7 +34,7 @@ class RightSidebar extends Component {
             className="list-group list-group-flush"
             onClick={(e) => this.pickSong(e)}
           >
-            {this.songs.map((song, index) => {
+            {this.props.playlist.map((song, index) => {
               return (
                 <li
                   className={`list-song__item list-group-item ${
@@ -104,6 +71,7 @@ class RightSidebar extends Component {
 const mapStateToProps = (state) => ({
   currentIndex: state.player.currentIndex,
   loadedSongs: state.player.loadedSongs,
+  playlist: state.playlist,
 });
 
 const mapDispatchToProps = (dispatch) => {

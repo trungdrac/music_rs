@@ -19,3 +19,5 @@ export const SET_LOADED_SONGS = "SET_LOADED_SONGS";
 export const TOGGLE_REPEAT = "TOGGLE_REPEAT";
 
 export const TOGGLE_RANDOM = "TOGGLE_RANDOM";
+
+export const GET_PLAYLIST = "GET_PLAYLIST";

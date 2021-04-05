@@ -419,6 +419,7 @@
   align-items: center;
   border: none;
   padding: 0.8rem 1rem;
+  cursor: pointer;
 }
 
 .list-song__item.active {
@@ -434,7 +435,6 @@
   align-items: center;
   max-width: 80%;
   padding-right: 0.5rem;
-  cursor: pointer;
 }
 
 .song-inline__img {
