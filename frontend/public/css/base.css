@@ -44,7 +44,7 @@ img {
   max-width: 100%;
 }
 
-li{
+li {
   list-style: none;
 }
 
@@ -62,3 +62,57 @@ li{
   opacity: 0.3;
   pointer-events: none;
 }
+
+.box-shadow {
+  -webkit-box-shadow: 0 1px 10px 2px var(--shadow-color);
+  -moz-box-shadow: 0 1px 10px 2px var(--shadow-color);
+  box-shadow: 0 1px 10px 2px var(--shadow-color);
+}
+
+/* dropdown button options start */
+#dropdown-options {
+  border: none;
+  background: none;
+  color: var(--text-color);
+  width: 2.3rem;
+  height: 2.3rem;
+  padding: 0.4rem;
+  font-size: 1.2rem;
+  border-radius: 50%;
+  text-align: center;
+  cursor: pointer;
+}
+
+#dropdown-options::before,
+#dropdown-options::after {
+  display: none;
+}
+
+#dropdown-options:hover {
+  background-color: var(--bg-active-color);
+}
+
+#dropdown-options:focus {
+  box-shadow: none;
+}
+
+.dropdown-menu {
+  padding: 0;
+  background-color: var(--bg-sidebar-color);
+  border: none;
+  -webkit-box-shadow: 0 1px 10px 2px var(--shadow-color);
+  -moz-box-shadow: 0 1px 10px 2px var(--shadow-color);
+  box-shadow: 0 1px 10px 2px var(--shadow-color);
+}
+
+.options-list__item {
+  display: flex;
+  color: var(--text-color);
+  padding: 0.45rem 1.2rem 0.45rem 0.5rem;
+}
+
+.option-list__item--icon {
+  width: 2rem;
+  text-align: center;
+}
+/* dropdown button options end */

@@ -2,7 +2,7 @@ import React, { Component } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faEllipsisV, faPlay } from "@fortawesome/free-solid-svg-icons";
 import OptionsList from "./OptionsList";
-import { ButtonGroup, DropdownButton } from "react-bootstrap";
+import { DropdownButton } from "react-bootstrap";
 
 export default class SongCard extends Component {
   render() {
@@ -20,16 +20,16 @@ export default class SongCard extends Component {
             <DropdownButton
               className="btn-ellipsis"
               id="dropdown-options"
-              as={ButtonGroup}
-              key="up"
-              drop="up"
-              variant="secondary"
+              key="left"
+              drop="left"
               title={<FontAwesomeIcon icon={faEllipsisV} />}
             >
               <OptionsList />
             </DropdownButton>
-            <div className="card-img__overlay btn-toggle-play">
-              <FontAwesomeIcon icon={faPlay} />
+            <div className="card-img__overlay">
+              <div className="btn-toggle-play">
+                <FontAwesomeIcon icon={faPlay} />
+              </div>
             </div>
           </div>
           <div className="card-body">

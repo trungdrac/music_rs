@@ -5,6 +5,8 @@ import callAPI from "../../helpers/callAPI";
 import * as playerActions from "../../actions/playerAction";
 import * as playlistActions from "../../actions/playlistAction";
 import RightSidebar from "./RightSidebar";
+import OptionsList from "./OptionsList";
+import { DropdownButton } from "react-bootstrap";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faStepBackward,
@@ -202,7 +204,7 @@ class Player extends Component {
 
   render() {
     return (
-      <div className="player">
+      <div className="player box-shadow">
         <div className="player__song">
           <a href="/">
             <div
@@ -287,9 +289,14 @@ class Player extends Component {
           </div>
         </div>
         <div className="player__options d-none d-md-flex">
-          <div className="option__btn">
-            <FontAwesomeIcon icon={faEllipsisV} />
-          </div>
+          <DropdownButton
+            id="dropdown-options"
+            key="left"
+            drop="left"
+            title={<FontAwesomeIcon icon={faEllipsisV} />}
+          >
+            <OptionsList />
+          </DropdownButton>
           <label htmlFor="list-songs-checkbox" className="option__btn">
             <FontAwesomeIcon icon={faMusic} />
           </label>

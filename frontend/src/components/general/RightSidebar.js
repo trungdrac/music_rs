@@ -1,6 +1,8 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
 import * as actions from "../../actions/playerAction";
+import OptionsList from "./OptionsList";
+import { DropdownButton } from "react-bootstrap";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faEllipsisH } from "@fortawesome/free-solid-svg-icons";
 
@@ -20,14 +22,11 @@ class RightSidebar extends Component {
         this.props.setLoadedSongs(newLoadedSongs);
       });
     }
-    if (songOption) {
-      console.log(songOption);
-    }
   };
 
   render() {
     return (
-      <div className="right-sidebar">
+      <div className="right-sidebar box-shadow">
         <div className="right-sidebar__header">Danh sách phát</div>
         <div className="right-sidebar__body">
           <ul
@@ -56,7 +55,14 @@ class RightSidebar extends Component {
                     </div>
                   </div>
                   <div className="song-options">
-                    <FontAwesomeIcon icon={faEllipsisH} />
+                    <DropdownButton
+                      id="dropdown-options"
+                      key="left"
+                      drop="left"
+                      title={<FontAwesomeIcon icon={faEllipsisH} />}
+                    >
+                      <OptionsList />
+                    </DropdownButton>
                   </div>
                 </li>
               );

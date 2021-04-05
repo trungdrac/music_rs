@@ -4,7 +4,7 @@ class Register extends Component {
   render() {
     return (
       <div className="auth">
-        <form action method="POST" className="form" id="register-form">
+        <form action method="POST" className="form box-shadow" id="register-form">
           <h3 className="heading">Thành viên đăng ký</h3>
           <p className="desc">Cùng nhau học lập trình miễn phí tại F8 ❤️</p>
           <div className="spacer" />

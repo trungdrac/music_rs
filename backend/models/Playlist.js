@@ -1,13 +1,12 @@
 const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
 
-const Song = new Schema(
+const Playlist = new Schema(
   {
     title: { type: String },
     artist: { type: String },
-    path: { type: String },
     image: { type: String },
-    lyric: { type: String },
+    songs: { type: Array },
   },
   { timestamp: true }
 );
