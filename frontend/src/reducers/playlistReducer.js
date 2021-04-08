@@ -1,13 +1,12 @@
 import * as types from "../constants/ActionTypes";
 
-const initialState = [];
+const initialState = {};
 
 const playlist = (state = initialState, action) => {
   switch (action.type) {
-    case types.GET_PLAYLIST:
+    case types.SET_PLAYLIST:
       state = action.playlist;
-      return [...state];
-
+      return {...state};
     default:
       return state;
   }

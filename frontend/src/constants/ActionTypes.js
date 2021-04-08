@@ -1,3 +1,7 @@
+export const SET_IS_LOADING_TRUE = "SET_IS_LOADING_TRUE";
+
+export const SET_IS_LOADING_FALSE = "SET_IS_LOADING_FALSE";
+
 export const PLAY_AUDIO = "PLAY_AUDIO";
 
 export const PAUSE_AUDIO = "PAUSE_AUDIO";
@@ -20,4 +24,6 @@ export const TOGGLE_REPEAT = "TOGGLE_REPEAT";
 
 export const TOGGLE_RANDOM = "TOGGLE_RANDOM";
 
-export const GET_PLAYLIST = "GET_PLAYLIST";
+export const SET_PLAYLIST = "SET_PLAYLIST";
+
+export const SET_SONG = "SET_SONGS";

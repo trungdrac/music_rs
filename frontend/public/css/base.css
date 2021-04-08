@@ -27,9 +27,9 @@ p {
 a {
   text-decoration: none;
   color: var(--text-color);
-  -webkit-transition: 0.4s all ease-in;
-  -moz-transition: 0.4s all ease-in;
-  transition: 0.4s all ease-in;
+  -webkit-transition: 0.2s all ease-in;
+  -moz-transition: 0.2s all ease-in;
+  transition: 0.2s all ease-in;
 }
 
 a:hover,

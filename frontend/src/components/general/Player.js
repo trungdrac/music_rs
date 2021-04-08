@@ -1,9 +1,11 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
+import { Link } from "react-router-dom";
 import { msToISO } from "../../helpers/convertTime";
 import callAPI from "../../helpers/callAPI";
 import * as playerActions from "../../actions/playerAction";
 import * as playlistActions from "../../actions/playlistAction";
+import * as appActions from "../../actions/appAction";
 import RightSidebar from "./RightSidebar";
 import OptionsList from "./OptionsList";
 import { DropdownButton } from "react-bootstrap";
@@ -31,9 +33,11 @@ class Player extends Component {
 
   componentDidMount() {
     // get playlist
-    callAPI("GET", "/playlist").then((res) => {
-      this.props.getPlaylist(res.data);
-    });
+    callAPI("GET", "/playlist")
+      .then((res) => {
+        this.props.setPlaylist(res.data);
+      })
+      .then((res) => this.props.setIsLoadingFalse());
 
     const audio = this.audioRef.current;
     window.onkeydown = (e) => {
@@ -62,12 +66,15 @@ class Player extends Component {
     }
 
     // load config
-    audio.currentTime = this.props.currentTime;
-    this.repeatRef.current.classList.toggle("active", this.props.isRepeat);
-    this.randomRef.current.classList.toggle("active", this.props.isRandom);
+    if (audio !== null) {
+      audio.currentTime = this.props.currentTime;
+      this.repeatRef.current.classList.toggle("active", this.props.isRepeat);
+      this.randomRef.current.classList.toggle("active", this.props.isRandom);
+    }
   }
 
   componentDidUpdate(prevProps) {
+    // const prevSong = prevProps.playlist.song
     if (prevProps.currentIndex !== this.props.currentIndex) {
       this.audioRef.current.play();
     }
@@ -121,7 +128,7 @@ class Player extends Component {
     const audio = this.audioRef.current;
 
     //get current time and duration
-    this.props.setCurrentTime(audio.currentTime);
+    // this.props.setCurrentTime(audio.currentTime);
     this.props.setDuration(audio.duration);
 
     // disabled & active prev button
@@ -147,7 +154,7 @@ class Player extends Component {
       this.playRandom();
     } else {
       const newIndex =
-        (this.props.currentIndex + 1) % this.props.playlist.length;
+        (this.props.currentIndex + 1) % this.props.playlist.song.length;
       const promise = new Promise((resolve) => {
         this.props.setCurrentIndex(newIndex);
         resolve();
@@ -183,7 +190,7 @@ class Player extends Component {
     let newLoadedSongs = this.props.loadedSongs;
     let newIndex;
     do {
-      newIndex = Math.floor(Math.random() * this.props.playlist.length);
+      newIndex = Math.floor(Math.random() * this.props.playlist.song.length);
     } while (newIndex === this.props.currentIndex);
     const promise = new Promise((resolve) => {
       this.props.setCurrentIndex(newIndex);
@@ -203,26 +210,36 @@ class Player extends Component {
   };
 
   render() {
+    if (this.props.isLoading) {
+      return "";
+    }
     return (
       <div className="player box-shadow">
         <div className="player__song">
-          <a href="/">
+          <Link to="/">
             <div
               className="player__song--img"
               ref={this.songImgRef}
               style={{
                 backgroundImage: `url(${
-                  this.props.playlist[this.props.currentIndex].image
+                  this.props.playlist.song[this.props.currentIndex].image
                 })`,
               }}
             ></div>
-          </a>
+          </Link>
           <div className="player__song--info d-none d-sm-block">
             <p className="player-song-title">
-              {this.props.playlist[this.props.currentIndex].title}
+              <Link to="/">{this.props.playlist.song[this.props.currentIndex].title}</Link>
             </p>
             <p className="player-song-artist">
-              {this.props.playlist[this.props.currentIndex].artist}
+              {this.props.playlist.song[this.props.currentIndex].artist.map(
+                (artist, index) => (
+                  <Link to="/" key={artist._id}>
+                    {index > 0 && ", "}
+                    {artist.name}
+                  </Link>
+                )
+              )}
             </p>
           </div>
         </div>
@@ -265,7 +282,7 @@ class Player extends Component {
           <div className="progress-wrapper">
             <audio
               ref={this.audioRef}
-              src={this.props.playlist[this.props.currentIndex].path}
+              src={this.props.playlist.song[this.props.currentIndex].url}
               onLoadedData={this.handleLoadedData}
               onPlay={this.handlePlay}
               onPause={this.handlePause}
@@ -306,7 +323,7 @@ class Player extends Component {
             className="list-songs-input"
             id="list-songs-checkbox"
           />
-          <RightSidebar />
+          <RightSidebar playlist={this.props.playlist.song} />
         </div>
       </div>
     );
@@ -314,6 +331,8 @@ class Player extends Component {
 }
 
 const mapStateToProps = (state) => ({
+  isLoading: state.app.isLoading,
+  playlist: state.playlist,
   isFirstSong: state.player.isFirstSong,
   isPlaying: state.player.isPlaying,
   isRandom: state.player.isRandom,
@@ -323,11 +342,14 @@ const mapStateToProps = (state) => ({
   currentTime: state.player.currentTime,
   duration: state.player.duration,
   loadedSongs: state.player.loadedSongs,
-  playlist: state.playlist,
 });
 
 const mapDispatchToProps = (dispatch) => {
   return {
+    //app
+    setIsLoadingTrue: () => dispatch(appActions.setIsLoadingTrue()),
+    setIsLoadingFalse: () => dispatch(appActions.setIsLoadingFalse()),
+
     //player
     playAudio: () => dispatch(playerActions.playAudio()),
     pauseAudio: () => dispatch(playerActions.pauseAudio()),
@@ -347,7 +369,7 @@ const mapDispatchToProps = (dispatch) => {
     toggleRandom: () => dispatch(playerActions.toggleRandom()),
 
     //song
-    getPlaylist: (playlist) => dispatch(playlistActions.getPlaylist(playlist)),
+    setPlaylist: (playlist) => dispatch(playlistActions.setPlaylist(playlist)),
   };
 };
 

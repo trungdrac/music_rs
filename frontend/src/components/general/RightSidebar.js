@@ -39,7 +39,7 @@ class RightSidebar extends Component {
                   className={`list-song__item list-group-item ${
                     index === this.props.currentIndex ? "active" : ""
                   }`}
-                  key={index}
+                  key={song._id}
                   data-index={index}
                 >
                   <div className="song-inline">
@@ -51,7 +51,14 @@ class RightSidebar extends Component {
                     ></div>
                     <div className="song-inline__info">
                       <p className="song-inline__info--title">{song.title}</p>
-                      <p className="song-inline__info--artist">{song.artist}</p>
+                      <p className="song-inline__info--artist">
+                        {song.artist.map((artist, index) => (
+                          <span to="/" key={artist._id}>
+                            {index > 0 && ", "}
+                            {artist.name}
+                          </span>
+                        ))}
+                      </p>
                     </div>
                   </div>
                   <div className="song-options">
@@ -77,7 +84,6 @@ class RightSidebar extends Component {
 const mapStateToProps = (state) => ({
   currentIndex: state.player.currentIndex,
   loadedSongs: state.player.loadedSongs,
-  playlist: state.playlist,
 });
 
 const mapDispatchToProps = (dispatch) => {

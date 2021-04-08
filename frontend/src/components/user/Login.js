@@ -9,14 +9,14 @@ class Login extends Component {
           <p className="desc">Cùng trải nghiệp đày đủ tính năng của MusicRS ❤️</p>
           <div className="spacer" />
           <div className="form-group">
-            <label htmlFor="email" className="form-label">
-              Email
+            <label htmlFor="username" className="form-label">
+              Tên đăng nhập
             </label>
             <input
-              id="email"
-              name="email"
+              id="username"
+              name="username"
               type="text"
-              placeholder="VD: email@domain.com"
+              placeholder="Nhập tên đăng nhập"
               className="form-control"
             />
             <span className="form-message" />

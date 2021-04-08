@@ -1,8 +1,8 @@
 import * as types from "../constants/ActionTypes";
 
-export const getPlaylist = (playlist) => {
+export const setPlaylist = (playlist) => {
   return {
-    type: types.GET_PLAYLIST,
+    type: types.SET_PLAYLIST,
     playlist,
   };
 };

@@ -1,7 +1,16 @@
 import React, { Component } from "react";
-import SongCard from "../general/SongCard";
+import { connect } from "react-redux";
+import * as songActions from "../../actions/songAction";
+import callAPI from "../../helpers/callAPI";
+import Card from "../general/Card";
 
 class Section extends Component {
+  componentDidMount() {
+    // get song
+    callAPI("GET", "/song").then((res) => {
+      this.props.setSong(res.data);
+    });
+  }
   render() {
     return (
       <div className="section">
@@ -21,16 +30,22 @@ class Section extends Component {
           <hr />
         </div>
         <div className="row">
-            <SongCard />
-            <SongCard />
-            <SongCard />
-            <SongCard />
-            <SongCard />
-            <SongCard />
+          {this.props.songs.map((song) => (
+            <Card key={song._id} item={song}/>
+          ))}
         </div>
       </div>
     );
   }
 }
 
-export default Section;
+const mapStateToProps = (state) => ({
+  songs: state.song,
+});
+
+const mapDispatchToProps = (dispatch) => {
+  return {
+    setSong: (song) => dispatch(songActions.setSong(song)),
+  };
+};
+export default connect(mapStateToProps, mapDispatchToProps)(Section);

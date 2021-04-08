@@ -22,7 +22,7 @@ export default class OptionsList extends Component {
         <Dropdown.Item href="#/action-2" className="options-list__item">
           <div className="option-list__item--icon">
             <FontAwesomeIcon icon={faListUl} />
-          </div>
+          </div>        
           <span>Thêm vào chờ phát</span>
         </Dropdown.Item>
         <Dropdown.Item href="#/action-3" className="options-list__item">

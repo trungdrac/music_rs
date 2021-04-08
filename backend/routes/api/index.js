@@ -1,12 +1,9 @@
-const Song = require("../../models/Song");
+const playlist = require("./playlist");
+const song = require("./song");
 
 function route(app) {
-  // [GET] /
-  app.get("/playlist", (req, res, next) => {
-    Song.find({})
-      .then((playlist) => res.send(playlist))
-      .catch(next);
-  });
+  app.use("/playlist", playlist);
+  app.use("/song", song);
 }
 
 module.exports = route;

@@ -9,19 +9,19 @@ class Register extends Component {
           <p className="desc">Cùng nhau học lập trình miễn phí tại F8 ❤️</p>
           <div className="spacer" />
           <div className="form-group">
-            <label htmlFor="fullname" className="form-label">
-              Tên đầy đủ
+            <label htmlFor="username" className="form-label">
+              Tên đăng nhập
             </label>
             <input
-              id="fullname"
-              name="fullname"
+              id="username"
+              name="username"
               type="text"
               placeholder="VD: Sơn Đặng"
               className="form-control"
             />
             <span className="form-message" />
           </div>
-          <div className="form-group">
+          {/* <div className="form-group">
             <label htmlFor="email" className="form-label">
               Email
             </label>
@@ -33,7 +33,7 @@ class Register extends Component {
               className="form-control"
             />
             <span className="form-message" />
-          </div>
+          </div> */}
           <div className="form-group">
             <label htmlFor="password" className="form-label">
               Mật khẩu
