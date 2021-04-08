@@ -1,6 +1,6 @@
-export const SET_IS_LOADING_TRUE = "SET_IS_LOADING_TRUE";
+export const SHOW_PLAYER = "SHOW_PLAYER";
 
-export const SET_IS_LOADING_FALSE = "SET_IS_LOADING_FALSE";
+export const SET_CURRENT_SONG = "SET_CURRENT_SONG";
 
 export const PLAY_AUDIO = "PLAY_AUDIO";
 

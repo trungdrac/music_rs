@@ -1,5 +1,11 @@
 import * as types from "../constants/ActionTypes";
 
+export const showPlayer = () => {
+  return {
+    type: types.SHOW_PLAYER,
+  };
+};
+
 export const playAudio = () => {
   return {
     type: types.PLAY_AUDIO,
@@ -9,6 +15,13 @@ export const playAudio = () => {
 export const pauseAudio = () => {
   return {
     type: types.PAUSE_AUDIO,
+  };
+};
+
+export const setCurrentSong = (currentSongId) => {
+  return {
+    type: types.SET_CURRENT_SONG,
+    currentSongId,
   };
 };
 

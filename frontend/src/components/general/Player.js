@@ -2,10 +2,8 @@ import React, { Component } from "react";
 import { connect } from "react-redux";
 import { Link } from "react-router-dom";
 import { msToISO } from "../../helpers/convertTime";
-import callAPI from "../../helpers/callAPI";
 import * as playerActions from "../../actions/playerAction";
 import * as playlistActions from "../../actions/playlistAction";
-import * as appActions from "../../actions/appAction";
 import RightSidebar from "./RightSidebar";
 import OptionsList from "./OptionsList";
 import { DropdownButton } from "react-bootstrap";
@@ -32,13 +30,6 @@ class Player extends Component {
   }
 
   componentDidMount() {
-    // get playlist
-    callAPI("GET", "/playlist")
-      .then((res) => {
-        this.props.setPlaylist(res.data);
-      })
-      .then((res) => this.props.setIsLoadingFalse());
-
     const audio = this.audioRef.current;
     window.onkeydown = (e) => {
       switch (e.keyCode) {
@@ -60,11 +51,6 @@ class Player extends Component {
     //audio pause when component did mount
     this.props.pauseAudio();
 
-    //load first song to loadedSongs
-    if (this.props.loadedSongs.length === 0) {
-      this.props.setLoadedSongs([this.props.currentIndex]);
-    }
-
     // load config
     if (audio !== null) {
       audio.currentTime = this.props.currentTime;
@@ -74,8 +60,9 @@ class Player extends Component {
   }
 
   componentDidUpdate(prevProps) {
-    // const prevSong = prevProps.playlist.song
-    if (prevProps.currentIndex !== this.props.currentIndex) {
+    if (!this.props.isShowPlayer) this.props.showPlayer();
+
+    if (prevProps.currentSongId !== this.props.currentSongId) {
       this.audioRef.current.play();
     }
   }
@@ -127,9 +114,12 @@ class Player extends Component {
   handleLoadedData = () => {
     const audio = this.audioRef.current;
 
-    //get current time and duration
-    // this.props.setCurrentTime(audio.currentTime);
+    //set duration
     this.props.setDuration(audio.duration);
+
+    //set current song
+    const currentSongId = this.props.playlist.song[this.props.currentIndex]._id;
+    this.props.setCurrentSong(currentSongId);
 
     // disabled & active prev button
     this.props.loadedSongs.length === 1
@@ -210,7 +200,17 @@ class Player extends Component {
   };
 
   render() {
-    if (this.props.isLoading) {
+    const {
+      playlist,
+      isFirstSong,
+      isPlaying,
+      currentIndex,
+      progressPercent,
+      currentTime,
+      duration,
+    } = this.props;
+
+    if (!this.props.isShowPlayer) {
       return "";
     }
     return (
@@ -221,25 +221,21 @@ class Player extends Component {
               className="player__song--img"
               ref={this.songImgRef}
               style={{
-                backgroundImage: `url(${
-                  this.props.playlist.song[this.props.currentIndex].image
-                })`,
+                backgroundImage: `url(${playlist.song[currentIndex].image})`,
               }}
             ></div>
           </Link>
           <div className="player__song--info d-none d-sm-block">
             <p className="player-song-title">
-              <Link to="/">{this.props.playlist.song[this.props.currentIndex].title}</Link>
+              <Link to="/">{playlist.song[currentIndex].title}</Link>
             </p>
             <p className="player-song-artist">
-              {this.props.playlist.song[this.props.currentIndex].artist.map(
-                (artist, index) => (
-                  <Link to="/" key={artist._id}>
-                    {index > 0 && ", "}
-                    {artist.name}
-                  </Link>
-                )
-              )}
+              {playlist.song[currentIndex].artist.map((artist, index) => (
+                <Link to="/" key={artist._id}>
+                  {index > 0 && ", "}
+                  {artist.name}
+                </Link>
+              ))}
             </p>
           </div>
         </div>
@@ -252,7 +248,7 @@ class Player extends Component {
             >
               <FontAwesomeIcon icon={faRedo} />
             </div>
-            {this.props.isFirstSong ? (
+            {isFirstSong ? (
               <div className="control__btn disabled">
                 <FontAwesomeIcon icon={faStepBackward} />
               </div>
@@ -262,7 +258,7 @@ class Player extends Component {
               </div>
             )}
             <div className="btn-toggle-play" onClick={this.handlePlayPause}>
-              {this.props.isPlaying ? (
+              {isPlaying ? (
                 <FontAwesomeIcon icon={faPause} />
               ) : (
                 <FontAwesomeIcon icon={faPlay} />
@@ -282,27 +278,25 @@ class Player extends Component {
           <div className="progress-wrapper">
             <audio
               ref={this.audioRef}
-              src={this.props.playlist.song[this.props.currentIndex].url}
+              src={playlist.song[currentIndex].url}
               onLoadedData={this.handleLoadedData}
               onPlay={this.handlePlay}
               onPause={this.handlePause}
               onTimeUpdate={this.handleTimeUpdate}
               onEnded={this.handleEnded}
             />
-            <div className="progress-time">
-              {msToISO(this.props.currentTime)}
-            </div>
+            <div className="progress-time">{msToISO(currentTime)}</div>
             <input
               className="progress"
               type="range"
               ref={this.progressRef}
-              value={this.props.progressPercent}
+              value={progressPercent}
               step={1}
               min={0}
               max={100}
               onChange={this.handleChange}
             />
-            <div className="progress-time">{msToISO(this.props.duration)}</div>
+            <div className="progress-time">{msToISO(duration)}</div>
           </div>
         </div>
         <div className="player__options d-none d-md-flex">
@@ -323,7 +317,7 @@ class Player extends Component {
             className="list-songs-input"
             id="list-songs-checkbox"
           />
-          <RightSidebar playlist={this.props.playlist.song} />
+          <RightSidebar playlist={playlist.song} />
         </div>
       </div>
     );
@@ -331,30 +325,30 @@ class Player extends Component {
 }
 
 const mapStateToProps = (state) => ({
-  isLoading: state.app.isLoading,
-  playlist: state.playlist,
+  isShowPlayer: state.player.isShowPlayer,
   isFirstSong: state.player.isFirstSong,
   isPlaying: state.player.isPlaying,
   isRandom: state.player.isRandom,
   isRepeat: state.player.isRepeat,
   currentIndex: state.player.currentIndex,
+  currentSongId: state.player.currentSongId,
   progressPercent: state.player.progressPercent,
   currentTime: state.player.currentTime,
   duration: state.player.duration,
   loadedSongs: state.player.loadedSongs,
+  playlist: state.playlist,
 });
 
 const mapDispatchToProps = (dispatch) => {
   return {
-    //app
-    setIsLoadingTrue: () => dispatch(appActions.setIsLoadingTrue()),
-    setIsLoadingFalse: () => dispatch(appActions.setIsLoadingFalse()),
-
     //player
+    showPlayer: () => dispatch(playerActions.showPlayer()),
     playAudio: () => dispatch(playerActions.playAudio()),
     pauseAudio: () => dispatch(playerActions.pauseAudio()),
     setCurrentTime: (newTime) =>
       dispatch(playerActions.setCurrentTime(newTime)),
+    setCurrentSong: (currentSongId) =>
+      dispatch(playerActions.setCurrentSong(currentSongId)),
     setProgressPercent: (newPercent) =>
       dispatch(playerActions.setProgressPercent(newPercent)),
     setCurrentIndex: (newIndex) =>
