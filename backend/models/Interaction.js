@@ -3,8 +3,8 @@ const Schema = mongoose.Schema;
 
 const interactionSchema = new Schema(
   {
-    user: [{ type: Schema.Types.ObjectId, ref: "User" }],
-    song: [{ type: Schema.Types.ObjectId, ref: "Song" }],
+    user: { type: Schema.Types.ObjectId, ref: "User" },
+    song: { type: Schema.Types.ObjectId, ref: "Song" },
     playing: { type: Number, default: 0 },
     like: { type: Boolean, default: false },
     comment: { type: String },

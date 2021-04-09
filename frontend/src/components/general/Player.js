@@ -362,7 +362,7 @@ const mapDispatchToProps = (dispatch) => {
     toggleRepeat: () => dispatch(playerActions.toggleRepeat()),
     toggleRandom: () => dispatch(playerActions.toggleRandom()),
 
-    //song
+    //playlist
     setPlaylist: (playlist) => dispatch(playlistActions.setPlaylist(playlist)),
   };
 };

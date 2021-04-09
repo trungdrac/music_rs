@@ -22,6 +22,18 @@ html {
 
 p {
   margin-bottom: 0;
+  color: var(--text-color);
+}
+
+th,
+td,
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  color: var(--text-color);
 }
 
 a {
@@ -46,6 +58,15 @@ img {
 
 li {
   list-style: none;
+}
+
+.spacer {
+  height: 2px;
+  background-color: var(--white-color);
+}
+
+.section {
+  margin-bottom: 4rem;
 }
 
 .overlay {

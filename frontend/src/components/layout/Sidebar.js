@@ -9,12 +9,14 @@ class Sidebar extends Component {
       <div className="sidebar translate-on-md">
         <div className="sidebar__header">
           <Link to="/" className="">
-            <img src={"./images/logos/logo.svg"} alt="logo-app" />
+            <img src={process.env.PUBLIC_URL + "./images/logos/logo.svg"} alt="logo-app" />
           </Link>
         </div>
         <nav className="sidebar__nav">
           <ul className="list-group">
-            <li className="sidebar__nav--item sidebar__nav--header">Browse Music</li>
+            <li className="sidebar__nav--item sidebar__nav--header">
+              Browse Music
+            </li>
             <li className="sidebar__nav--item active" aria-current="true">
               <Link to="/" className="sidebar__nav--link">
                 <FontAwesomeIcon icon={faHome} className="sidebar-icon" />
@@ -33,7 +35,9 @@ class Sidebar extends Component {
                 <span>Ca sĩ</span>
               </Link>
             </li>
-            <li className="sidebar__nav--item sidebar__nav--header">Music Events</li>
+            <li className="sidebar__nav--item sidebar__nav--header">
+              Music Events
+            </li>
             <li className="sidebar__nav--item">
               <Link to="/" className="sidebar__nav--link">
                 <span>Events</span>

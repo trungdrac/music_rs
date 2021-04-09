@@ -5,7 +5,7 @@ const playlistSchema = new Schema(
   {
     title: { type: String, required: true },
     song: [{ type: Schema.Types.ObjectId, ref: "Song", required: true}],
-    own: [{ type: Schema.Types.ObjectId, ref: "User", required: true}],
+    own: { type: Schema.Types.ObjectId, ref: "User", required: true},
     image: { type: String, required: true },
   },
   { timestamp: true }

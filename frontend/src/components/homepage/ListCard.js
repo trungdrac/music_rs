@@ -4,7 +4,7 @@ import * as songActions from "../../actions/songAction";
 import callAPI from "../../helpers/callAPI";
 import Card from "../general/Card";
 
-class Section extends Component {
+class ListCard extends Component {
   componentDidMount() {
     // get song
     callAPI("GET", "/song").then((res) => {
@@ -48,4 +48,4 @@ const mapDispatchToProps = (dispatch) => {
     setSong: (song) => dispatch(songActions.setSong(song)),
   };
 };
-export default connect(mapStateToProps, mapDispatchToProps)(Section);
+export default connect(mapStateToProps, mapDispatchToProps)(ListCard);

@@ -5,7 +5,7 @@ const songSchema = new Schema(
   {
     title: { type: String, required: true},
     artist: [{type: Schema.Types.ObjectId, ref: "Artist"}],
-    category: [{type: Schema.Types.ObjectId, ref: "Category"}],
+    category: {type: Schema.Types.ObjectId, ref: "Category"},
     area: {type: Schema.Types.ObjectId, ref: "Area"},
     image: { type: String, required: true},
     url: { type: String, required: true},
