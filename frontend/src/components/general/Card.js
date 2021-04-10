@@ -26,7 +26,7 @@ class Card extends Component {
       <div className="col-xl-2 col-lg-3 col-md-4 col-sm-6">
         <div className="card border-0 h-100">
           <div className="card-img">
-            <Link to="/">
+            <Link to={`/song/${item._id}`}>
               <img
                 src={item.image}
                 className="card-img__song card-img-top rounded"

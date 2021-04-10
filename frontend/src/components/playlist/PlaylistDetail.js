@@ -4,26 +4,26 @@ import Header from "../layout/Header";
 import Player from "../general/Player";
 import ListCard from "../homepage/ListCard";
 
-class PlaylistDetails extends Component {
+class PlaylistDetail extends Component {
   render() {
     return (
       <div className="wrapper">
         <Sidebar />
         <div className="content">
           <Header />
-          <div className="container-fruit">
-            <div className="row section text-center text-md-left">
+          <div className="main-content container-fruit">
+            <div className="row section text-center text-lg-left">
               <div className="col-xl-3 col-lg-4 col-sm-5">
                 <img
                   src={
                     "https://avatar-ex-swe.nixcdn.com/song/2021/03/08/1/3/2/2/1615183865420_300.jpg"
                   }
                   alt=""
-                  className="rounded box-shadow"
+                  className="img-detail box-shadow"
                 />
               </div>
               <div className="col-xl-9 col-lg-8 col-sm-7">
-                <div className="row pt-4">
+                <div className="row pt-5">
                   <div className="col-xl-8 col-lg-6">
                     <h5>Shack your butty</h5>
                     <p>Gerrina Linda</p>
@@ -99,4 +99,4 @@ class PlaylistDetails extends Component {
   }
 }
 
-export default PlaylistDetails;
+export default PlaylistDetail;

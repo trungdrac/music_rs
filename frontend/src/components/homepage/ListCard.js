@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
-import * as songActions from "../../actions/songAction";
+import {setSongs} from "../../actions/songAction";
 import callAPI from "../../helpers/callAPI";
 import Card from "../general/Card";
 
@@ -8,7 +8,7 @@ class ListCard extends Component {
   componentDidMount() {
     // get song
     callAPI("GET", "/song").then((res) => {
-      this.props.setSong(res.data);
+      this.props.setSongs(res.data);
     });
   }
   render() {
@@ -40,12 +40,12 @@ class ListCard extends Component {
 }
 
 const mapStateToProps = (state) => ({
-  songs: state.song,
+  songs: state.song.songs,
 });
 
 const mapDispatchToProps = (dispatch) => {
   return {
-    setSong: (song) => dispatch(songActions.setSong(song)),
+    setSongs: (songs) => dispatch(setSongs(songs)),
   };
 };
 export default connect(mapStateToProps, mapDispatchToProps)(ListCard);

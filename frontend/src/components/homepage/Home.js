@@ -11,7 +11,7 @@ class Home extends Component {
         <Sidebar />
         <div className="content">
           <Header />
-          <div className="container-fruit">
+          <div className="main-content container-fruit">
             <ListCard />
             <ListCard />
             <ListCard />

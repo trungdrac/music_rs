@@ -60,7 +60,7 @@ class Player extends Component {
   }
 
   componentDidUpdate(prevProps) {
-    if (!this.props.isShowPlayer) this.props.showPlayer();
+    if (this.props.isShowPlayer === false) this.props.showPlayer();
 
     if (prevProps.currentSongId !== this.props.currentSongId) {
       this.audioRef.current.play();
@@ -205,18 +205,19 @@ class Player extends Component {
       isFirstSong,
       isPlaying,
       currentIndex,
+      currentSongId,
       progressPercent,
       currentTime,
       duration,
     } = this.props;
 
-    if (!this.props.isShowPlayer) {
+    if (this.props.isShowPlayer === false) {
       return "";
     }
     return (
       <div className="player box-shadow">
         <div className="player__song">
-          <Link to="/">
+          <Link to={`/song/${currentSongId}`}>
             <div
               className="player__song--img"
               ref={this.songImgRef}
@@ -227,7 +228,9 @@ class Player extends Component {
           </Link>
           <div className="player__song--info d-none d-sm-block">
             <p className="player-song-title">
-              <Link to="/">{playlist.song[currentIndex].title}</Link>
+              <Link to={`/song/${currentSongId}`}>
+                {playlist.song[currentIndex].title}
+              </Link>
             </p>
             <p className="player-song-artist">
               {playlist.song[currentIndex].artist.map((artist, index) => (

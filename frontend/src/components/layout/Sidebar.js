@@ -9,7 +9,7 @@ class Sidebar extends Component {
       <div className="sidebar translate-on-md">
         <div className="sidebar__header">
           <Link to="/" className="">
-            <img src={process.env.PUBLIC_URL + "./images/logos/logo.svg"} alt="logo-app" />
+            <img src={"/images/logos/logo.svg"} alt="logo-app" />
           </Link>
         </div>
         <nav className="sidebar__nav">

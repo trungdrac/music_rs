@@ -26,4 +26,6 @@ export const TOGGLE_RANDOM = "TOGGLE_RANDOM";
 
 export const SET_PLAYLIST = "SET_PLAYLIST";
 
-export const SET_SONG = "SET_SONGS";
+export const SET_SONGS = "SET_SONGS";
+
+export const SET_SONG_DETAIL = "SET_SONG_DETAIL";
