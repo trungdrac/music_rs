@@ -53,6 +53,7 @@
 
 .sidebar-input:checked ~ .sidebar {
   transform: translateX(0%);
+  opacity: 1;
 }
 
 .header__content--search {
@@ -151,7 +152,17 @@
 
 .sidebar__header {
   padding: 1rem;
-  text-align: center;
+  height: 5rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.sidebar__header--arrow {
+  cursor: pointer;
+  padding: 0.4rem;
+  font-size: 1.3rem;
+  color: var(--main-color);
 }
 
 .sidebar__nav {
@@ -182,7 +193,7 @@
   background-color: var(--bg-active-color);
 }
 
-.sidebar__nav--item.active .sidebar__nav--link {
+.sidebar__nav--link.active {
   color: var(--main-color);
   font-weight: 600;
 }
@@ -348,6 +359,7 @@
 
 .list-songs-input:checked ~ .right-sidebar {
   right: 0;
+  opacity: 1;
 }
 /* Audio player end */
 
@@ -355,9 +367,10 @@
 .right-sidebar {
   position: fixed;
   top: 6rem;
-  right: -23rem;
+  right: -22rem;
   bottom: 7rem;
   width: 22rem;
+  opacity: 0;
   background-color: var(--white-color);
   border-bottom-left-radius: 1rem;
   border-top-left-radius: 1rem;
@@ -464,6 +477,7 @@
   display: flex;
   justify-content: center;
 }
+
 .form {
   width: 480px;
   min-height: 100px;
@@ -477,6 +491,7 @@
 .form .heading {
   font-size: 1.25rem;
 }
+
 .form .desc {
   text-align: center;
   color: #636d77;
@@ -666,14 +681,15 @@
 
 @keyframes spin {
   100% {
-    -webkit-transform: rotate(360deg);
+    transform: rotate(360deg);
     transform: rotate(360deg);
   }
 }
 
-@media (max-width: 1023px) {
+@media (max-width: 1199px) {
   .translate-on-md {
     transform: translateX(-100%);
+    opacity: 0;
   }
   .content {
     margin-left: 0;

@@ -55,6 +55,10 @@ li {
   list-style: none;
 }
 
+label {
+  margin-bottom: 0;
+}
+
 .spacer {
   height: 2px;
   background-color: var(--white-color);

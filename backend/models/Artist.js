@@ -5,7 +5,7 @@ const artistSchema = new Schema(
   {
     name: { type: String, required: true },
     image: { type: String, required: true },
-    song: [{ type: Schema.Types.ObjectId, ref: "Song" }],
+    area: { type: Schema.Types.ObjectId, ref: "Area" },
   },
   { timestamp: true }
 );

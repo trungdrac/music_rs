@@ -9,24 +9,24 @@ require("../../models/Artist");
 // [GET] /playlist
 router.get("/", (req, res, next) => {
   // Playlist.find({})
-  //   .then((playlist) => res.send(playlist))
+  //   .then((playlist) => res.json(playlist))
   //   .catch(next);
 
-  Playlist.find({ $text: { $search: "Playlist hay" } })
-    .populate({
-      path: "song",
-      populate: {
-        path: "artist",
-        select: "name",
-      },
-    })
-    .exec((err, playlist) => {
-      if (err) {
-        console.log(err);
-      } else {
-        res.send(playlist[0]);
-      }
-    });
+  // Playlist.find({ $text: { $search: "Playlist hay" } })
+  //   .populate({
+  //     path: "song",
+  //     populate: {
+  //       path: "artist",
+  //       select: "name",
+  //     },
+  //   })
+  //   .exec((err, playlist) => {
+  //     if (err) {
+  //       console.log(err);
+  //     } else {
+  //       res.json(playlist[0]);
+  //     }
+  //   });
 });
 
 //[GET] /playlist/:id
@@ -39,7 +39,7 @@ router.get("/playlist/:id", (req, res, next) => {
       if (err) {
         console.log(err);
       } else {
-        res.send(playlist);
+        res.json(playlist);
       }
     });
 });
