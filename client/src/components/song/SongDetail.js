@@ -9,7 +9,7 @@ import {
   setLoadedSongs,
 } from "../../actions/playerAction";
 import callAPI from "../../helpers/callAPI";
-import ListCard from "../homepage/ListCard";
+import ListCard from "../home/ListCard";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPlay } from "@fortawesome/free-solid-svg-icons";
 

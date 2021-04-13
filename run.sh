@@ -1,2 +1,2 @@
-cd backend \
+cd server \
 && npm run dev

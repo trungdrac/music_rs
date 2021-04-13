@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
-import { Link } from "react-router-dom";
+// import { Link } from "react-router-dom";
 // import { setSongDetail } from "../../actions/songAction";
 // import { setPlaylist } from "../../actions/playlistAction";
 // import {
@@ -9,7 +9,7 @@ import { Link } from "react-router-dom";
 //   setLoadedSongs,
 // } from "../../actions/playerAction";
 // import callAPI from "../../helpers/callAPI";
-import ListCard from "../homepage/ListCard";
+import ListCard from "../home/ListCard";
 
 class ArtistDetail extends Component {
   constructor(props) {

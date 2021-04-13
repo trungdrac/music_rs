@@ -2,7 +2,7 @@ import React, { Component } from "react";
 import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
 import ArtistDetail from "./components/artist/ArtistDetail";
 import Player from "./components/general/Player";
-import Home from "./components/homepage/Home";
+import Home from "./components/home/Home";
 import Header from "./components/layout/Header";
 import Sidebar from "./components/layout/Sidebar";
 import PlaylistDetail from "./components/playlist/PlaylistDetail";

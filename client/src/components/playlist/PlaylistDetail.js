@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import ListCard from "../homepage/ListCard";
+import ListCard from "../home/ListCard";
 
 class PlaylistDetail extends Component {
   render() {
