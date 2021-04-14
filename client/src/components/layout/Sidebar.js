@@ -4,29 +4,36 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faArrowLeft,
   faHome,
+  faListUl,
+  faMicrophone,
+  faMusic,
 } from "@fortawesome/free-solid-svg-icons";
 
 class Sidebar extends Component {
   constructor(props) {
     super(props);
-    this.sidebarRef = React.createRef();
+    this.arrowRef = React.createRef();
   }
 
   slideOff = () => {
-    this.sidebarRef.current.click();
+    const arrow = this.arrowRef.current;
+    //check arrow icon is visible
+    if (arrow.offsetParent) arrow.click();
   };
 
   render() {
     return (
       <div className="sidebar translate-on-md">
         <div className="sidebar__header">
-          <Link to="/" onClick={this.slideOff}>
-            <img src={"/images/logos/logo.svg"} alt="logo-app" />
-          </Link>
+          <div>
+            <Link to="/" onClick={this.slideOff}>
+              <img src={"/images/logos/logo.svg"} alt="logo-app" />
+            </Link>
+          </div>
           <label
             htmlFor="sidebar-checkbox"
             className="sidebar__header--arrow d-xl-none"
-            ref={this.sidebarRef}
+            ref={this.arrowRef}
           >
             <FontAwesomeIcon icon={faArrowLeft} />
           </label>
@@ -43,6 +50,40 @@ class Sidebar extends Component {
               >
                 <FontAwesomeIcon icon={faHome} className="sidebar-icon" />
                 <span>Trang chủ</span>
+              </NavLink>
+            </li>
+            <li className="sidebar__nav--header">Khám phá</li>
+            <li onClick={this.slideOff}>
+              <NavLink
+                exact
+                to="/song"
+                className="sidebar__nav--link"
+                activeClassName="active"
+              >
+                <FontAwesomeIcon icon={faMusic} className="sidebar-icon" />
+                <span>Bài hát</span>
+              </NavLink>
+            </li>
+            <li onClick={this.slideOff}>
+              <NavLink
+                exact
+                to="/playlist"
+                className="sidebar__nav--link"
+                activeClassName="active"
+              >
+                <FontAwesomeIcon icon={faListUl} className="sidebar-icon" />
+                <span>Playlist</span>
+              </NavLink>
+            </li>
+            <li onClick={this.slideOff}>
+              <NavLink
+                exact
+                to="/artist"
+                className="sidebar__nav--link"
+                activeClassName="active"
+              >
+                <FontAwesomeIcon icon={faMicrophone} className="sidebar-icon" />
+                <span>Nghệ sỹ</span>
               </NavLink>
             </li>
           </ul>

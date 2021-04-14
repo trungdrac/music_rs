@@ -29,8 +29,8 @@ router.get("/", (req, res, next) => {
   //   });
 });
 
-//[GET] /playlist/:id
-router.get("/playlist/:id", (req, res, next) => {
+//[GET] /playlist/detail/:id
+router.get("/detail/:id", (req, res, next) => {
   const playlistId = req.params.id;
   Playlist.findById(playlistId)
     .populate("song")

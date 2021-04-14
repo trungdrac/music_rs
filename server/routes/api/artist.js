@@ -13,8 +13,8 @@ router.get("/", (req, res, next) => {
     .catch(next);
 });
 
-// [GET] /artist/:id
-router.get("/:id", (req, res, next) => {
+// [GET] /artist/detail/:id
+router.get("/detail/:id", (req, res, next) => {
   const artistId = req.params.id;
   const artistPromise = Artist.findById(artistId)
     .populate({ path: "area" })

@@ -24,7 +24,7 @@ class SongDetail extends Component {
   componentDidMount() {
     // get song
     const songId = this.props.match.params.id;
-    callAPI("GET", `/song/${songId}`)
+    callAPI("GET", `/song/detail/${songId}`)
       .then((res) => {
         this.props.setSongDetail(res.data);
       })

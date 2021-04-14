@@ -31,22 +31,6 @@ class Player extends Component {
 
   componentDidMount() {
     const audio = this.audioRef.current;
-    window.onkeydown = (e) => {
-      switch (e.keyCode) {
-        case 32:
-          e.preventDefault();
-          this.handlePlayPause();
-          break;
-        case 37:
-          audio.currentTime -= 5;
-          break;
-        case 39:
-          audio.currentTime += 5;
-          break;
-        default:
-          break;
-      }
-    };
 
     //audio pause when component did mount
     this.props.pauseAudio();
@@ -210,6 +194,26 @@ class Player extends Component {
       currentTime,
       duration,
     } = this.props;
+
+    const audio = this.audioRef.current;
+    window.onkeydown = (e) => {
+      if (audio !== null) {
+        switch (e.keyCode) {
+          case 32:
+            e.preventDefault();
+            this.handlePlayPause();
+            break;
+          case 37:
+            audio.currentTime -= 5;
+            break;
+          case 39:
+            audio.currentTime += 5;
+            break;
+          default:
+            break;
+        }
+      }
+    };
 
     if (this.props.isShowPlayer === false) {
       return "";

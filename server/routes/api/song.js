@@ -21,8 +21,8 @@ router.get("/", (req, res, next) => {
     });
 });
 
-// [GET] /song/:id
-router.get("/:id", (req, res, next) => {
+// [GET] /song/detail/:id
+router.get("/detail/:id", (req, res, next) => {
   const songId = req.params.id;
   Song.findById(songId)
     .populate({ path: "artist", select: "name" })
