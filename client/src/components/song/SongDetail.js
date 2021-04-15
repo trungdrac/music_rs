@@ -9,7 +9,7 @@ import {
   setLoadedSongs,
 } from "../../actions/playerAction";
 import callAPI from "../../helpers/callAPI";
-import ListCard from "../home/ListCard";
+import Section from "../general/Section";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPlay } from "@fortawesome/free-solid-svg-icons";
 
@@ -115,7 +115,7 @@ class SongDetail extends Component {
         ) : (
           ""
         )}
-        <ListCard />
+        <Section />
       </React.Fragment>
     );
   }

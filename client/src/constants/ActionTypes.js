@@ -29,3 +29,5 @@ export const SET_PLAYLIST = "SET_PLAYLIST";
 export const SET_SONGS = "SET_SONGS";
 
 export const SET_SONG_DETAIL = "SET_SONG_DETAIL";
+
+export const SET_AREAS = "SET_AREAS";

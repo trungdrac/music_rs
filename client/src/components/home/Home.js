@@ -1,13 +1,13 @@
 import React, { Component } from "react";
-import ListCard from "./ListCard";
+import Section from "../general/Section";
 
 class Home extends Component {
   render() {
     return (
       <React.Fragment>
-        <ListCard />
-        <ListCard />
-        <ListCard />
+        <Section />
+        <Section />
+        <Section />
       </React.Fragment>
     );
   }

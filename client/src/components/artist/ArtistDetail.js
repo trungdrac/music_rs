@@ -9,7 +9,7 @@ import { connect } from "react-redux";
 //   setLoadedSongs,
 // } from "../../actions/playerAction";
 // import callAPI from "../../helpers/callAPI";
-import ListCard from "../home/ListCard";
+import Section from "../general/Section";
 
 class ArtistDetail extends Component {
   constructor(props) {
@@ -50,7 +50,7 @@ class ArtistDetail extends Component {
             </div>
           </div>
         </div>
-        <ListCard />
+        <Section />
       </React.Fragment>
     );
   }

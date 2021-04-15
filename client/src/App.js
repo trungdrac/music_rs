@@ -1,5 +1,13 @@
 import React, { Component } from "react";
-import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
+import {
+  BrowserRouter as Router,
+  Redirect,
+  Route,
+  Switch,
+} from "react-router-dom";
+import { connect } from "react-redux";
+import { setAreas } from "./actions/areaAction";
+import callAPI from "./helpers/callAPI";
 import ArtistDetail from "./components/artist/ArtistDetail";
 import Player from "./components/general/Player";
 import Home from "./components/home/Home";
@@ -18,8 +26,13 @@ class App extends Component {
     super(props);
     this.state = { isLoading: true };
   }
+
   componentDidMount() {
-    this.setState({ isLoading: false });
+    callAPI("GET", "/area")
+      .then((res) => {
+        this.props.setAreas(res.data);
+      })
+      .then(() => this.setState({ isLoading: false }));
   }
 
   render() {
@@ -44,34 +57,52 @@ class App extends Component {
 
     return (
       <Router>
-        <Switch>
-          <React.Fragment>
-            <Route exact path="/login" component={Login} />
-            <Route exact path="/register" component={Register} />
-            <div className="wrapper">
-              <Sidebar />
-              <div className="content">
-                <Header />
-                <div className="main-content container-fruit">
-                  <Route exact path="/search" component={Search} />
-                  <Route exact path="/song/:slug" component={Songs} />
-                  <Route exact path="/song/detail/:id" component={SongDetail} />
-                  <Route exact path="/playlist/:slug" component={Playlists} />
-                  <Route
-                    exact
-                    path="/playlist/detail/:id"
-                    component={PlaylistDetail}
-                  />
-                  <Route exact path="/artist/:id" component={ArtistDetail} />
-                  <Route exact path="/" component={Home} />
-                </div>
-                <Player />
-              </div>
+        <div className="wrapper">
+          <Sidebar />
+          <div className="content">
+            <Header />
+            <div className="main-content container-fruit">
+              <Switch>
+                <Route exact path="/search" component={Search} />
+                <Route exact path="/song/detail/:id" component={SongDetail} />
+                <Route exact path="/song/:slug" component={Songs} />
+                <Route exact path="/song" component={Songs} />
+                <Route
+                  exact
+                  path="/playlist/detail/:id"
+                  component={PlaylistDetail}
+                />
+                <Route exact path="/playlist/:slug" component={Playlists} />
+                <Route exact path="/playlist" component={Playlists} />
+                <Route
+                  exact
+                  path="/artist/detail/:id"
+                  component={ArtistDetail}
+                />
+                <Route exact path="/artist/:slug" component={Playlists} />
+                <Route exact path="/artist" component={Playlists} />
+                <Route exact path="/login" component={Login} />
+                <Route exact path="/register" component={Register} />
+                <Route exact path="/" component={Home} />
+                <Route render={() => <Redirect to="/" />} />
+              </Switch>
             </div>
-          </React.Fragment>
-        </Switch>
+            <Player />
+          </div>
+        </div>
       </Router>
     );
   }
 }
-export default App;
+
+const mapStateToProps = (state) => ({
+  areas: state.area,
+});
+
+const mapDispatchToProps = (dispatch) => {
+  return {
+    setAreas: (areas) => dispatch(setAreas(areas)),
+  };
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(App);

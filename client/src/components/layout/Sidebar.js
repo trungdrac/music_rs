@@ -55,8 +55,7 @@ class Sidebar extends Component {
             <li className="sidebar__nav--header">Khám phá</li>
             <li onClick={this.slideOff}>
               <NavLink
-                exact
-                to="/song"
+                to="/song/"
                 className="sidebar__nav--link"
                 activeClassName="active"
               >
@@ -66,8 +65,7 @@ class Sidebar extends Component {
             </li>
             <li onClick={this.slideOff}>
               <NavLink
-                exact
-                to="/playlist"
+                to="/playlist/"
                 className="sidebar__nav--link"
                 activeClassName="active"
               >
@@ -77,8 +75,7 @@ class Sidebar extends Component {
             </li>
             <li onClick={this.slideOff}>
               <NavLink
-                exact
-                to="/artist"
+                to="/artist/"
                 className="sidebar__nav--link"
                 activeClassName="active"
               >

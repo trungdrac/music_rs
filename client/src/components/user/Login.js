@@ -4,7 +4,7 @@ class Login extends Component {
   render() {
     return (
       <div className="auth">
-        <form action method="POST" className="form box-shadow" id="login-form">
+        <form action="true" method="POST" className="form box-shadow" id="login-form">
           <h3 className="heading">Đăng nhập</h3>
           <p className="desc">Cùng trải nghiệp đày đủ tính năng của MusicRS ❤️</p>
           <div className="spacer" />

@@ -4,7 +4,6 @@
   right: 0;
   bottom: 0;
   left: 0;
-  z-index: 10;
   background-color: #fff;
 }
 
@@ -579,11 +578,18 @@
 
 /* Authentication form start*/
 .auth {
-  background: #f1f1f1;
+  background: var(--bg-sidebar-color);
   min-height: 100vh;
   width: 100%;
   display: flex;
   justify-content: center;
+  position: fixed;
+  position: fixed;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  z-index: 1000;
 }
 
 .form {

@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import ListCard from "../home/ListCard";
+import Section from "../general/Section";
 
 class PlaylistDetail extends Component {
   render() {
@@ -83,7 +83,7 @@ class PlaylistDetail extends Component {
             </tbody>
           </table>
         </div>
-        <ListCard />
+        <Section />
       </React.Fragment>
     );
   }

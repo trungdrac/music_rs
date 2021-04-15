@@ -1,32 +1,50 @@
 import React, { Component } from "react";
 import { Tab, Tabs } from "react-bootstrap";
 import { connect } from "react-redux";
+import slug from "../../helpers/slug";
 
-export class Songs extends Component {
+export class Playlists extends Component {
+  componentDidMount() {
+    //set slug default to url
+    this.handleSelect("viet-nam");
+  }
+
+  handleSelect = (route) => this.props.history.push(route);
+
   render() {
+    const { areas } = this.props;
+
     return (
       <React.Fragment>
-        <Tabs defaultActiveKey="vietnam" transition={false}>
-          <Tab eventKey="vietnam" title="Việt Nam">
-            <div>aaa</div>
-          </Tab>
-          <Tab eventKey="usuk" title="Âu Mỹ">
-            <div>bbb</div>
-          </Tab>
-          <Tab eventKey="asian" title="Châu Á">
-            <div>ccc</div>
-          </Tab>
-          <Tab eventKey="other" title="Khác">
-            <div>ddd</div>
-          </Tab>
+        <Tabs transition={false}>
+          {areas.map((area) => (
+            <Tab eventKey={slug(area.name)} title={area.name} key={area._id}>
+              <div className="mt-3 mb-3">
+                <Tabs
+                  transition={false}
+                  onSelect={(route) => this.handleSelect(route)}
+                >
+                  {area.category.map((category) => (
+                    <Tab
+                      eventKey={slug(category.name)}
+                      title={category.name}
+                      key={category._id}
+                    >
+                      <div className="mt-4 mb-4"></div>
+                    </Tab>
+                  ))}
+                </Tabs>
+              </div>
+            </Tab>
+          ))}
         </Tabs>
       </React.Fragment>
     );
   }
 }
 
-const mapStateToProps = (state) => ({});
+const mapStateToProps = (state) => ({
+  areas: state.area,
+});
 
-const mapDispatchToProps = {};
-
-export default connect(mapStateToProps, mapDispatchToProps)(Songs);
+export default connect(mapStateToProps)(Playlists);

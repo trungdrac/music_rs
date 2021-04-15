@@ -2,11 +2,10 @@ import React, { Component } from "react";
 import { connect } from "react-redux";
 import {setSongs} from "../../actions/songAction";
 import callAPI from "../../helpers/callAPI";
-import Card from "../general/Card";
+import Card from "./Card";
 
-class ListCard extends Component {
+class Section extends Component {
   componentDidMount() {
-    // get song
     callAPI("GET", "/song").then((res) => {
       this.props.setSongs(res.data);
     });
@@ -48,4 +47,4 @@ const mapDispatchToProps = (dispatch) => {
     setSongs: (songs) => dispatch(setSongs(songs)),
   };
 };
-export default connect(mapStateToProps, mapDispatchToProps)(ListCard);
+export default connect(mapStateToProps, mapDispatchToProps)(Section);
