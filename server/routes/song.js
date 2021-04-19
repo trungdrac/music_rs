@@ -1,10 +1,10 @@
 const express = require("express");
 const router = express.Router();
 
-const Song = require("../../models/Song");
-require("../../models/Artist");
-require("../../models/Category");
-require("../../models/Area");
+const Song = require("../models/Song");
+require("../models/Artist");
+require("../models/Category");
+require("../models/Area");
 
 // [GET] /song
 router.get("/", (req, res, next) => {

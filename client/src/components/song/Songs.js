@@ -6,24 +6,44 @@ import slug from "../../helpers/slug";
 export class Playlists extends Component {
   componentDidMount() {
     //set slug default to url
-    this.handleSelect("viet-nam");
+    // this.handleSelect("nhac-tre");
   }
 
-  handleSelect = (route) => this.props.history.push(route);
+  handleSelect = (route) => {
+    switch (route) {
+      case "viet-nam":
+        route = "nhac-tre";
+        break;
+      case "au-my":
+        route = "pop";
+        break;
+      case "chau-a":
+        route = "nhac-han";
+        break;
+      case "khac":
+        route = "thieu-nhi";
+        break;
+      default:
+        break;
+    }
+    this.props.history.push(route);
+  };
+
+  getTab = () => {
+    const {pathname} = this.props.history.location
+    return pathname.slice(5)
+  }
 
   render() {
     const { areas } = this.props;
 
     return (
       <React.Fragment>
-        <Tabs transition={false}>
+        <Tabs transition={false} onSelect={this.handleSelect}>
           {areas.map((area) => (
             <Tab eventKey={slug(area.name)} title={area.name} key={area._id}>
-              <div className="mt-3 mb-3">
-                <Tabs
-                  transition={false}
-                  onSelect={(route) => this.handleSelect(route)}
-                >
+              <div className="category-tab mt-3 mb-3">
+                <Tabs defaultActiveKey={this.getTab} transition={false} onSelect={this.handleSelect}>
                   {area.category.map((category) => (
                     <Tab
                       eventKey={slug(category.name)}

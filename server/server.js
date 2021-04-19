@@ -2,7 +2,7 @@ const express = require("express");
 const app = express();
 const port = 5000;
 
-const route = require('./routes/api');
+const route = require("./routes");
 const db = require("./config/db");
 
 //Connect to DB

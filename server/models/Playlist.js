@@ -7,9 +7,9 @@ const playlistSchema = new Schema(
     song: [{ type: Schema.Types.ObjectId, ref: "Song", required: true }],
     own: { type: Schema.Types.ObjectId, ref: "User", required: true },
     image: { type: String, required: true },
-    area: { type: Schema.Types.ObjectId, ref: "Area" },
+    area: { type: Schema.Types.ObjectId, ref: "Area", required: true },
   },
-  { timestamp: true }
+  { timestamps: true }
 );
 
 playlistSchema.index({ title: "text" });

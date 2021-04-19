@@ -1,8 +1,8 @@
 const express = require("express");
 const router = express.Router();
 
-const Area = require("../../models/Area");
-require("../../models/Category");
+const Area = require("../models/Area");
+require("../models/Category");
 
 // [GET] /area
 router.get("/", (req, res, next) => {

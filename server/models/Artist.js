@@ -5,9 +5,9 @@ const artistSchema = new Schema(
   {
     name: { type: String, required: true },
     image: { type: String, required: true },
-    area: { type: Schema.Types.ObjectId, ref: "Area" },
+    area: { type: Schema.Types.ObjectId, ref: "Area", required: true },
   },
-  { timestamp: true }
+  { timestamps: true }
 );
 
 artistSchema.index({ name: "text" });
