@@ -12,6 +12,7 @@ router.get("/", (req, res, next) => {
     .populate({ path: "artist", select: "name" })
     .populate({ path: "category"})
     .populate({ path: "area"})
+    .limit(12)
     .exec((err, songs) => {
       if (err) {
         next;

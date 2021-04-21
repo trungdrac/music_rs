@@ -5,7 +5,11 @@ const playlistSchema = new Schema(
   {
     title: { type: String, required: true },
     song: [{ type: Schema.Types.ObjectId, ref: "Song", required: true }],
-    own: { type: Schema.Types.ObjectId, ref: "User", required: true },
+    own: {
+      type: Schema.Types.ObjectId,
+      ref: "User",
+      default: "607eb77ffa10cb50bdeac678",
+    },
     image: { type: String, required: true },
     area: { type: Schema.Types.ObjectId, ref: "Area", required: true },
   },

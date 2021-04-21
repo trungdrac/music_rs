@@ -57,7 +57,7 @@ class Card extends Component {
           </div>
           <div className="card-body pl-0 pr-0">
             <h6 className="card-title">
-              <Link to="/">{item.title}</Link>
+              <Link to={`/song/detail/${item._id}`}>{item.title}</Link>
             </h6>
             <h6 className="card-artist">
               {item.artist.map((artist, index) => (

@@ -20,23 +20,14 @@ async function connect() {
     // crawl and insert categorys
     // crawlCategory();
 
-    //crawl and insert songs
-    crawlSongAndArtist();
+    //create area
+    //createArea();
 
-    //insert area
-    // Category.find({}, "_id")
-    //   .sort({ _id: 1 })
-    //   .skip(21)
-    //   .limit(5)
-    //   .then((cates) => {
-    //     const area = new Area({ name: "Khác", category: cates });
-    //     area.save(function (err) {
-    //       if (err) return err;
-    //       // saved!
-    //     });
-    //   })
-    //   .then(console.log("DONE"))
-    //   .catch(console.log);
+    //crawl and insert songs and artists
+    // crawlSongAndArtist();
+
+    //create playlist
+    // createPlaylist();
   } catch (error) {
     console.log("Connect DB failure !!!");
   }
@@ -64,11 +55,29 @@ async function crawlCategory() {
   await browser.close();
 }
 
+function createArea() {
+  Category.find({}, "_id")
+    .sort({ _id: 1 })
+    .skip(21)
+    // .limit(4)
+    .then((cates) => {
+      const area = new Area({ name: "Khác", category: cates });
+      area.save(function (err) {
+        if (err) return err;
+        // saved!
+      });
+    })
+    .then(console.log("DONE"))
+    .catch(console.log);
+}
+
 async function crawlSongAndArtist() {
   const browser = await puppeteer.launch();
   const page = await browser.newPage();
   await page.setDefaultNavigationTimeout(0);
-  await page.goto("https://www.nhaccuatui.com/bai-hat/nhac-tre-moi.html");
+
+  // need changing
+  await page.goto("https://www.nhaccuatui.com/bai-hat/nhac-hoa-moi.4.html");
 
   const songUrls = await page.evaluate(() => {
     let items = document.querySelectorAll(".avatar_song");
@@ -153,7 +162,7 @@ async function crawlSongAndArtist() {
     });
     songInfo.lyrics = songXml.lyrics;
     // need changing
-    songInfo.category = "60799c89b71414e481bcf941";
+    songInfo.category = "607e437e9d94f224bfdb57f3";
     songs.push(songInfo);
   }
 
@@ -171,18 +180,18 @@ async function crawlSongAndArtist() {
         .querySelector('link[rel="image_src"]')
         .getAttribute("href");
       // need changing
-      artistInfo.area = "60799cd07353b9e51ec26c58";
+      artistInfo.area = "607e440b83da9625bcd71758";
       return artistInfo;
     });
     artistList.push(artist);
   }
-  // for (let artist of artistList) {
-  //   const artistCheck = await Artist.findOne({ name: artist.name }).exec();
-  //   if (artistCheck) continue;
-  //   await Artist.create(artist).then((artist) =>
-  //     console.log(`Crawl ${artist.title} done!`)
-  //   );
-  // }
+  for (let artist of artistList) {
+    const artistCheck = await Artist.findOne({ name: artist.name }).exec();
+    if (artistCheck) continue;
+    await Artist.create(artist).then((artist) =>
+      console.log(`Crawl artist: ${artist.name} done!`)
+    );
+  }
 
   //change artist's name to _id
   for (let song of songs) {
@@ -203,10 +212,46 @@ async function crawlSongAndArtist() {
   for (let song of songs) {
     if (song.artist.length === 0) continue;
     await Song.create(song).then((song) =>
-      console.log(`Crawl ${song.title} done!`)
+      console.log(`Crawl song: ${song.title} done!`)
     );
   }
   await browser.close();
+}
+
+function createPlaylist() {
+  Category.find({}, "_id").then((res) => {
+    res.map((category) => {
+      const titlePromise = Category.findById(category._id, "name -_id").exec();
+      const songPromise = Song.find({ category: category._id }, "_id").exec();
+      const imagePromise = Song.findOne(
+        { category: category._id },
+        "image -_id"
+      ).exec();
+      const areaPromise = Area.find(
+        {
+          category: mongoose.Types.ObjectId(category._id),
+        },
+        "_id"
+      );
+      Promise.all([titlePromise, songPromise, imagePromise, areaPromise])
+        .then((res) => {
+          const playlist = new Playlist({
+            title: `Những bài hát ${res[0].name.toLowerCase()} mới`,
+            song: res[1],
+            image: res[2].image,
+            area: res[3][0],
+          });
+          playlist.save(function (err) {
+            if (err) {
+              console.log(err);
+            } else {
+              console.log("Success!");
+            }
+          });
+        })
+        .catch((err) => console.log(err));
+    });
+  });
 }
 
 connect();

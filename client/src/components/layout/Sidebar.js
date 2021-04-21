@@ -1,5 +1,6 @@
 import React, { Component } from "react";
-import { Link, NavLink } from "react-router-dom";
+import { connect } from "react-redux";
+import { Link, NavLink, Route } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faArrowLeft,
@@ -8,6 +9,7 @@ import {
   faMicrophone,
   faMusic,
 } from "@fortawesome/free-solid-svg-icons";
+import slug from "../../helpers/slug";
 
 class Sidebar extends Component {
   constructor(props) {
@@ -22,6 +24,8 @@ class Sidebar extends Component {
   };
 
   render() {
+    const { areas } = this.props;
+    const areaParam = areas.map((area) => slug(area.name));
     return (
       <div className="sidebar translate-on-md">
         <div className="sidebar__header">
@@ -54,34 +58,76 @@ class Sidebar extends Component {
             </li>
             <li className="sidebar__nav--header">Khám phá</li>
             <li onClick={this.slideOff}>
-              <NavLink
-                to="/song/"
-                className="sidebar__nav--link"
-                activeClassName="active"
-              >
-                <FontAwesomeIcon icon={faMusic} className="sidebar-icon" />
-                <span>Bài hát</span>
-              </NavLink>
+              <Route path="/:slug/:area">
+                {({ match }) => {
+                  const { slug } = match ? match.params : {};
+                  const { area } = match ? match.params : {};
+                  return (
+                    <NavLink
+                      to="/song/viet-nam/nhac-tre"
+                      isActive={() =>
+                        slug === "song" && areaParam.includes(area)
+                      }
+                      className="sidebar__nav--link"
+                      activeClassName="active"
+                    >
+                      <FontAwesomeIcon
+                        icon={faMusic}
+                        className="sidebar-icon"
+                      />
+                      <span>Bài hát</span>
+                    </NavLink>
+                  );
+                }}
+              </Route>
             </li>
             <li onClick={this.slideOff}>
-              <NavLink
-                to="/playlist/"
-                className="sidebar__nav--link"
-                activeClassName="active"
-              >
-                <FontAwesomeIcon icon={faListUl} className="sidebar-icon" />
-                <span>Playlist</span>
-              </NavLink>
+              <Route path="/:slug/:area">
+                {({ match }) => {
+                  const { slug } = match ? match.params : {};
+                  const { area } = match ? match.params : {};
+                  return (
+                    <NavLink
+                      to="/playlist/viet-nam"
+                      isActive={() =>
+                        slug === "playlist" && areaParam.includes(area)
+                      }
+                      className="sidebar__nav--link"
+                      activeClassName="active"
+                    >
+                      <FontAwesomeIcon
+                        icon={faListUl}
+                        className="sidebar-icon"
+                      />
+                      <span>Playlist</span>
+                    </NavLink>
+                  );
+                }}
+              </Route>
             </li>
             <li onClick={this.slideOff}>
-              <NavLink
-                to="/artist/"
-                className="sidebar__nav--link"
-                activeClassName="active"
-              >
-                <FontAwesomeIcon icon={faMicrophone} className="sidebar-icon" />
-                <span>Nghệ sỹ</span>
-              </NavLink>
+              <Route path="/:slug/:area">
+                {({ match }) => {
+                  const { slug } = match ? match.params : {};
+                  const { area } = match ? match.params : {};
+                  return (
+                    <NavLink
+                      to="/artist/viet-nam"
+                      isActive={() =>
+                        slug === "artist" && areaParam.includes(area)
+                      }
+                      className="sidebar__nav--link"
+                      activeClassName="active"
+                    >
+                      <FontAwesomeIcon
+                        icon={faMicrophone}
+                        className="sidebar-icon"
+                      />
+                      <span>Nghệ sỹ</span>
+                    </NavLink>
+                  );
+                }}
+              </Route>
             </li>
           </ul>
         </nav>
@@ -95,4 +141,8 @@ class Sidebar extends Component {
   }
 }
 
-export default Sidebar;
+const mapStateToProps = (state) => ({
+  areas: state.area,
+});
+
+export default connect(mapStateToProps)(Sidebar);

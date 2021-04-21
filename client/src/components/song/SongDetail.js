@@ -46,7 +46,6 @@ class SongDetail extends Component {
       image,
       lyrics,
       category,
-      area,
     } = this.props.songDetail;
     const { currentSongId } = this.props;
 
@@ -89,10 +88,6 @@ class SongDetail extends Component {
               <div className="col-xl-4 col-lg-6">
                 <table className="table table-borderless">
                   <tbody>
-                    <tr>
-                      <th>Khu vực</th>
-                      <td>{area.name}</td>
-                    </tr>
                     <tr>
                       <th>Thể loại</th>
                       <td>{category.name}</td>

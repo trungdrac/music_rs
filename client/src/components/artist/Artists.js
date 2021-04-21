@@ -1,31 +1,37 @@
 import React, { Component } from "react";
+import { Route } from "react-router-dom";
 import { Tab, Tabs } from "react-bootstrap";
 import { connect } from "react-redux";
 import slug from "../../helpers/slug";
-import Section from "../general/Section";
 
 export class Playlists extends Component {
-  componentDidMount() {
-    //set slug default to url
-    this.handleSelect("viet-nam");
-  }
-
-  handleSelect = (route) => this.props.history.push(route);
-
   render() {
-    console.log(this.props.history)
     const { areas } = this.props;
-
     return (
       <React.Fragment>
-        <Tabs transition={false} onSelect={(route) => this.handleSelect(route)}>
-          {areas.map((area) => (
-            <Tab eventKey={slug(area.name)} title={area.name} key={area._id}>
-              <div className="mt-4 mb-4">
-              </div>
-            </Tab>
-          ))}
-        </Tabs>
+        <Route path="/artist/:areaTab">
+          {({ match, history }) => {
+            const { areaTab } = match ? match.params : {};
+
+            return (
+              <Tabs
+                activeKey={areaTab}
+                transition={false}
+                onSelect={(nextTab) => history.replace(nextTab)}
+              >
+                {areas.map((area) => (
+                  <Tab
+                    eventKey={slug(area.name)}
+                    title={area.name}
+                    key={area._id}
+                  >
+                    <div className="mt-4 mb-4"></div>
+                  </Tab>
+                ))}
+              </Tabs>
+            );
+          }}
+        </Route>
       </React.Fragment>
     );
   }

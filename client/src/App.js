@@ -9,6 +9,7 @@ import { connect } from "react-redux";
 import { setAreas } from "./actions/areaAction";
 import callAPI from "./helpers/callAPI";
 import ArtistDetail from "./components/artist/ArtistDetail";
+import Artists from "./components/artist/Artists";
 import Player from "./components/general/Player";
 import Home from "./components/home/Home";
 import Header from "./components/layout/Header";
@@ -64,23 +65,31 @@ class App extends Component {
             <div className="main-content container-fruit">
               <Switch>
                 <Route exact path="/search" component={Search} />
-                <Route exact path="/song/detail/:id" component={SongDetail} />
-                <Route exact path="/song/:slug" component={Songs} />
-                <Route exact path="/song" component={Songs} />
+                <Route
+                  exact
+                  path="/song/detail/:id"
+                  render={(props) => (
+                    <SongDetail key={props.match.params.id} {...props} />
+                  )}
+                />
+                <Route exact path="/song/:area/:category" component={Songs} />
+
                 <Route
                   exact
                   path="/playlist/detail/:id"
-                  component={PlaylistDetail}
+                  render={(props) => (
+                    <PlaylistDetail key={props.match.params.id} {...props} />
+                  )}
                 />
-                <Route exact path="/playlist/:slug" component={Playlists} />
-                <Route exact path="/playlist" component={Playlists} />
+                <Route exact path="/playlist/:area" component={Playlists} />
                 <Route
                   exact
                   path="/artist/detail/:id"
-                  component={ArtistDetail}
+                  render={(props) => (
+                    <ArtistDetail key={props.match.params.id} {...props} />
+                  )}
                 />
-                <Route exact path="/artist/:slug" component={Playlists} />
-                <Route exact path="/artist" component={Playlists} />
+                <Route exact path="/artist/:area" component={Artists} />
                 <Route exact path="/login" component={Login} />
                 <Route exact path="/register" component={Register} />
                 <Route exact path="/" component={Home} />
