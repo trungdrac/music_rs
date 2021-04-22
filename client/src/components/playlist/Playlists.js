@@ -2,29 +2,24 @@ import React, { Component } from "react";
 import { Route } from "react-router-dom";
 import { Tab, Tabs } from "react-bootstrap";
 import { connect } from "react-redux";
-import slug from "../../helpers/slug";
 
 export class Playlists extends Component {
   render() {
     const { areas } = this.props;
     return (
       <React.Fragment>
-        <Route path="/playlist/:areaTab">
+        <Route path="/playlist/:areaId">
           {({ match, history }) => {
-            const { areaTab } = match ? match.params : {};
+            const { areaId } = match ? match.params : {};
 
             return (
               <Tabs
-                activeKey={areaTab}
+                activeKey={areaId}
                 transition={false}
                 onSelect={(nextTab) => history.replace(nextTab)}
               >
                 {areas.map((area) => (
-                  <Tab
-                    eventKey={slug(area.name)}
-                    title={area.name}
-                    key={area._id}
-                  >
+                  <Tab eventKey={area._id} title={area.name} key={area._id}>
                     <div className="mt-4 mb-4"></div>
                   </Tab>
                 ))}

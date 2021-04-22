@@ -1,41 +1,11 @@
 const express = require("express");
 const router = express.Router();
+const SongController = require("../controllers/SongController");
 
-const Song = require("../models/Song");
-require("../models/Artist");
-require("../models/Category");
-require("../models/Area");
+router.get("/detail/:id", SongController.getDetail);
 
-// [GET] /song
-router.get("/", (req, res, next) => {
-  Song.find({}, "-lyrics")
-    .populate({ path: "artist", select: "name" })
-    .populate({ path: "category"})
-    .populate({ path: "area"})
-    .limit(12)
-    .exec((err, songs) => {
-      if (err) {
-        next;
-      } else {
-        res.json(songs);
-      }
-    });
-});
+router.get("/:area/:category", SongController.getSongCategory);
 
-// [GET] /song/detail/:id
-router.get("/detail/:id", (req, res, next) => {
-  const songId = req.params.id;
-  Song.findById(songId)
-    .populate({ path: "artist", select: "name" })
-    .populate({ path: "category", select: "name -_id" })
-    .populate({ path: "area", select: "name -_id" })
-    .exec((err, song) => {
-      if (err) {
-        next;
-      } else {
-        res.json(song);
-      }
-    });
-});
+router.get("/", SongController.getAll);
 
 module.exports = router;

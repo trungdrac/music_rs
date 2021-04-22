@@ -24,10 +24,17 @@ export const TOGGLE_REPEAT = "TOGGLE_REPEAT";
 
 export const TOGGLE_RANDOM = "TOGGLE_RANDOM";
 
-export const SET_PLAYLIST = "SET_PLAYLIST";
+export const SET_LIST_PLAYING = "SET_LIST_PLAYING";
 
 export const SET_SONGS = "SET_SONGS";
 
 export const SET_SONG_DETAIL = "SET_SONG_DETAIL";
 
 export const SET_AREAS = "SET_AREAS";
+
+export const SET_SONG_CATEGORY = "SET_SONG_CATEGORY";
+
+export const SET_PLAYLIST_AREA = "SET_PLAYLIST_AREA";
+
+export const SET_ARTIST_AREA = "SET_ARTIST_AREA";
+

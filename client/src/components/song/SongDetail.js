@@ -2,7 +2,7 @@ import React, { Component } from "react";
 import { connect } from "react-redux";
 import { Link } from "react-router-dom";
 import { setSongDetail } from "../../actions/songAction";
-import { setPlaylist } from "../../actions/playlistAction";
+import { setListPlaying } from "../../actions/playlistAction";
 import {
   setCurrentIndex,
   playAudio,
@@ -32,8 +32,8 @@ class SongDetail extends Component {
   }
 
   playAudio = () => {
-    const playlist = { song: [this.props.songDetail] };
-    this.props.setPlaylist(playlist);
+    const playlist = [this.props.songDetail];
+    this.props.setListPlaying(playlist);
     this.props.setCurrentIndex(0);
     this.props.setLoadedSongs([0]);
   };
@@ -124,7 +124,7 @@ const mapStateToProps = (state) => ({
 const mapDispatchToProps = (dispatch) => {
   return {
     setSongDetail: (song) => dispatch(setSongDetail(song)),
-    setPlaylist: (playlist) => dispatch(setPlaylist(playlist)),
+    setListPlaying: (playlist) => dispatch(setListPlaying(playlist)),
     setCurrentIndex: (newIndex) => dispatch(setCurrentIndex(newIndex)),
     playAudio: () => dispatch(playAudio()),
     setLoadedSongs: (newLoadedSongs) =>

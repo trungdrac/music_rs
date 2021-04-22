@@ -3,6 +3,7 @@ import * as types from "../constants/ActionTypes";
 const initialState = {
   songs: [],
   songDetail: {},
+  songCategory: [],
 };
 
 const song = (state = initialState, action) => {
@@ -11,6 +12,8 @@ const song = (state = initialState, action) => {
       return { ...state, songs: action.songs };
     case types.SET_SONG_DETAIL:
       return { ...state, songDetail: action.song };
+    case types.SET_SONG_CATEGORY:
+      return { ...state, songCategory: action.songs };
     default:
       return state;
   }

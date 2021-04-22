@@ -25,6 +25,7 @@ class RightSidebar extends Component {
   };
 
   render() {
+    const { listPlaying } = this.props;
     return (
       <div className="right-sidebar box-shadow">
         <div className="right-sidebar__header">Danh sách phát</div>
@@ -33,7 +34,7 @@ class RightSidebar extends Component {
             className="list-group list-group-flush"
             onClick={(e) => this.pickSong(e)}
           >
-            {this.props.playlist.map((song, index) => {
+            {listPlaying.map((song, index) => {
               return (
                 <li
                   className={`list-song__item list-group-item ${

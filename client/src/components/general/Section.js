@@ -2,7 +2,7 @@ import React, { Component } from "react";
 import { connect } from "react-redux";
 import {setSongs} from "../../actions/songAction";
 import callAPI from "../../helpers/callAPI";
-import Card from "./Card";
+import SongCard from "./SongCard";
 
 class Section extends Component {
   componentDidMount() {
@@ -30,7 +30,7 @@ class Section extends Component {
         </div>
         <div className="row">
           {this.props.songs.map((song) => (
-            <Card key={song._id} item={song}/>
+            <SongCard key={song._id} item={song}/>
           ))}
         </div>
       </div>

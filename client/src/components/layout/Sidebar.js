@@ -9,7 +9,6 @@ import {
   faMicrophone,
   faMusic,
 } from "@fortawesome/free-solid-svg-icons";
-import slug from "../../helpers/slug";
 
 class Sidebar extends Component {
   constructor(props) {
@@ -25,7 +24,7 @@ class Sidebar extends Component {
 
   render() {
     const { areas } = this.props;
-    const areaParam = areas.map((area) => slug(area.name));
+    const areaParam = areas.map((area) => area._id);
     return (
       <div className="sidebar translate-on-md">
         <div className="sidebar__header">
@@ -64,7 +63,7 @@ class Sidebar extends Component {
                   const { area } = match ? match.params : {};
                   return (
                     <NavLink
-                      to="/song/viet-nam/nhac-tre"
+                      to={`/song/${areas[0]._id}/${areas[0].category[0]._id}`}
                       isActive={() =>
                         slug === "song" && areaParam.includes(area)
                       }
@@ -88,7 +87,7 @@ class Sidebar extends Component {
                   const { area } = match ? match.params : {};
                   return (
                     <NavLink
-                      to="/playlist/viet-nam"
+                      to={`/playlist/${areas[0]._id}`}
                       isActive={() =>
                         slug === "playlist" && areaParam.includes(area)
                       }
@@ -112,7 +111,7 @@ class Sidebar extends Component {
                   const { area } = match ? match.params : {};
                   return (
                     <NavLink
-                      to="/artist/viet-nam"
+                      to={`/artist/${areas[0]._id}`}
                       isActive={() =>
                         slug === "artist" && areaParam.includes(area)
                       }

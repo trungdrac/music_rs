@@ -2,37 +2,36 @@ import React, { Component } from "react";
 import { Route } from "react-router-dom";
 import { Tab, Tabs } from "react-bootstrap";
 import { connect } from "react-redux";
-import slug from "../../helpers/slug";
-import Section from "../general/Section";
+import ListSong from "./ListSong";
 
 export class Playlists extends Component {
   render() {
     const { areas } = this.props;
     return (
       <React.Fragment>
-        <Route path="/song/:areaTab/:categoryTab">
+        <Route path="/song/:areaId/:categoryId">
           {({ match, history }) => {
-            const { areaTab } = match ? match.params : {};
-            const { categoryTab } = match ? match.params : {};
+            const { areaId } = match ? match.params : {};
+            const { categoryId } = match ? match.params : {};
 
             return (
               <Tabs
-                activeKey={areaTab}
+                activeKey={areaId}
                 transition={false}
                 onSelect={(nextTab) => {
                   let category = "";
                   switch (nextTab) {
-                    case "viet-nam":
-                      category = "nhac-tre";
+                    case areas[0]._id:
+                      category = areas[0].category[0]._id;
                       break;
-                    case "au-my":
-                      category = "pop";
+                    case areas[1]._id:
+                      category = areas[1].category[0]._id;
                       break;
-                    case "chau-a":
-                      category = "nhac-han";
+                    case areas[2]._id:
+                      category = areas[2].category[0]._id;
                       break;
-                    case "khac":
-                      category = "thieu-nhi";
+                    case areas[3]._id:
+                      category = areas[3].category[0]._id;
                       break;
                     default:
                       break;
@@ -41,25 +40,25 @@ export class Playlists extends Component {
                 }}
               >
                 {areas.map((area) => (
-                  <Tab
-                    eventKey={slug(area.name)}
-                    title={area.name}
-                    key={area._id}
-                  >
+                  <Tab eventKey={area._id} title={area.name} key={area._id}>
                     <div className="category-tab mt-3 mb-3">
                       <Tabs
-                        activeKey={categoryTab}
+                        activeKey={categoryId}
                         transition={false}
                         onSelect={(nextTab) => history.replace(nextTab)}
                       >
                         {area.category.map((category) => (
                           <Tab
-                            eventKey={slug(category.name)}
+                            eventKey={category._id}
                             title={category.name}
                             key={category._id}
                           >
                             <div className="mt-4 mb-4">
-                              <Section />
+                              {categoryId === category._id ? (
+                                <ListSong match={match} />
+                              ) : (
+                                ""
+                              )}
                             </div>
                           </Tab>
                         ))}

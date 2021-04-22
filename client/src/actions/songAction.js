@@ -13,3 +13,10 @@ export const setSongDetail = (song) => {
     song,
   };
 };
+
+export const setSongCategory = (songs) => {
+  return {
+    type: types.SET_SONG_CATEGORY,
+    songs,
+  };
+};

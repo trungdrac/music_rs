@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import { Link } from "react-router-dom";
 import { connect } from "react-redux";
-import { setPlaylist } from "../../actions/playlistAction";
+import { setListPlaying } from "../../actions/playlistAction";
 import {
   setCurrentIndex,
   playAudio,
@@ -12,10 +12,10 @@ import { faEllipsisV, faPlay } from "@fortawesome/free-solid-svg-icons";
 import OptionsList from "./OptionsList";
 import { DropdownButton } from "react-bootstrap";
 
-class Card extends Component {
+class SongCard extends Component {
   playAudio = () => {
-    const playlist = { song: [this.props.item] };
-    this.props.setPlaylist(playlist);
+    const listPlaying = [this.props.item];
+    this.props.setListPlaying(listPlaying);
     this.props.setCurrentIndex(0);
     this.props.setLoadedSongs([0]);
   };
@@ -80,7 +80,7 @@ const mapStateToProps = (state) => ({
 
 const mapDispatchToProps = (dispatch) => {
   return {
-    setPlaylist: (playlist) => dispatch(setPlaylist(playlist)),
+    setListPlaying: (listPlaying) => dispatch(setListPlaying(listPlaying)),
     setCurrentIndex: (newIndex) => dispatch(setCurrentIndex(newIndex)),
     playAudio: () => dispatch(playAudio()),
     setLoadedSongs: (newLoadedSongs) =>
@@ -88,4 +88,4 @@ const mapDispatchToProps = (dispatch) => {
   };
 };
 
-export default connect(mapStateToProps, mapDispatchToProps)(Card);
+export default connect(mapStateToProps, mapDispatchToProps)(SongCard);

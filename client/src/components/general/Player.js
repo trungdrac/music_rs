@@ -3,7 +3,6 @@ import { connect } from "react-redux";
 import { Link } from "react-router-dom";
 import { msToISO } from "../../helpers/convertTime";
 import * as playerActions from "../../actions/playerAction";
-import * as playlistActions from "../../actions/playlistAction";
 import RightSidebar from "./RightSidebar";
 import OptionsList from "./OptionsList";
 import { DropdownButton } from "react-bootstrap";
@@ -102,7 +101,7 @@ class Player extends Component {
     this.props.setDuration(audio.duration);
 
     //set current song
-    const currentSongId = this.props.playlist.song[this.props.currentIndex]._id;
+    const currentSongId = this.props.listPlaying[this.props.currentIndex]._id;
     this.props.setCurrentSong(currentSongId);
 
     // disabled & active prev button
@@ -128,7 +127,7 @@ class Player extends Component {
       this.playRandom();
     } else {
       const newIndex =
-        (this.props.currentIndex + 1) % this.props.playlist.song.length;
+        (this.props.currentIndex + 1) % this.props.listPlaying.length;
       const promise = new Promise((resolve) => {
         this.props.setCurrentIndex(newIndex);
         resolve();
@@ -164,7 +163,7 @@ class Player extends Component {
     let newLoadedSongs = this.props.loadedSongs;
     let newIndex;
     do {
-      newIndex = Math.floor(Math.random() * this.props.playlist.song.length);
+      newIndex = Math.floor(Math.random() * this.props.listPlaying.length);
     } while (newIndex === this.props.currentIndex);
     const promise = new Promise((resolve) => {
       this.props.setCurrentIndex(newIndex);
@@ -185,7 +184,7 @@ class Player extends Component {
 
   render() {
     const {
-      playlist,
+      listPlaying,
       isFirstSong,
       isPlaying,
       currentIndex,
@@ -223,21 +222,21 @@ class Player extends Component {
         <div className="player__song">
           <Link to={`/song/${currentSongId}`}>
             <div
-              className="player__song--img"
+              className="player__song--img box-shadow"
               ref={this.songImgRef}
               style={{
-                backgroundImage: `url(${playlist.song[currentIndex].image})`,
+                backgroundImage: `url(${listPlaying[currentIndex].image})`,
               }}
             ></div>
           </Link>
           <div className="player__song--info d-none d-sm-block">
             <p className="player-song-title">
               <Link to={`/song/${currentSongId}`}>
-                {playlist.song[currentIndex].title}
+                {listPlaying[currentIndex].title}
               </Link>
             </p>
             <p className="player-song-artist">
-              {playlist.song[currentIndex].artist.map((artist, index) => (
+              {listPlaying[currentIndex].artist.map((artist, index) => (
                 <Link to="/" key={artist._id}>
                   {index > 0 && ", "}
                   {artist.name}
@@ -285,7 +284,7 @@ class Player extends Component {
           <div className="progress-wrapper">
             <audio
               ref={this.audioRef}
-              src={playlist.song[currentIndex].url}
+              src={listPlaying[currentIndex].url}
               onLoadedData={this.handleLoadedData}
               onPlay={this.handlePlay}
               onPause={this.handlePause}
@@ -315,16 +314,19 @@ class Player extends Component {
           >
             <OptionsList />
           </DropdownButton>
-          <label htmlFor="list-songs-checkbox" className="option__btn">
-            <FontAwesomeIcon icon={faMusic} />
-          </label>
           <input
             type="checkbox"
             hidden
             className="list-songs-input"
             id="list-songs-checkbox"
           />
-          <RightSidebar playlist={playlist.song} />
+          <label
+            htmlFor="list-songs-checkbox"
+            className="option__btn-list-playing"
+          >
+            <FontAwesomeIcon icon={faMusic} />
+          </label>
+          <RightSidebar listPlaying={listPlaying} />
         </div>
       </div>
     );
@@ -343,7 +345,7 @@ const mapStateToProps = (state) => ({
   currentTime: state.player.currentTime,
   duration: state.player.duration,
   loadedSongs: state.player.loadedSongs,
-  playlist: state.playlist,
+  listPlaying: state.playlist.listPlaying,
 });
 
 const mapDispatchToProps = (dispatch) => {
@@ -368,9 +370,6 @@ const mapDispatchToProps = (dispatch) => {
       dispatch(playerActions.setLoadedSongs(newLoadedSongs)),
     toggleRepeat: () => dispatch(playerActions.toggleRepeat()),
     toggleRandom: () => dispatch(playerActions.toggleRandom()),
-
-    //playlist
-    setPlaylist: (playlist) => dispatch(playlistActions.setPlaylist(playlist)),
   };
 };
 

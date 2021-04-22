@@ -121,6 +121,7 @@
 .main-content {
   position: relative;
   margin-top: -6rem;
+  margin-bottom: 8rem;
 }
 
 /* Header start */
@@ -330,6 +331,7 @@
   right: 1rem;
   left: 18.5rem;
   height: 5rem;
+  z-index: 1000;
   background-color: var(--bg-sidebar-color);
   border-radius: 1rem;
   display: flex;
@@ -393,7 +395,7 @@
 }
 
 .control__btn,
-.option__btn {
+.option__btn-list-playing {
   color: var(--text-color);
   width: 2.3rem;
   height: 2.3rem;
@@ -405,7 +407,7 @@
 }
 
 .control__btn:hover,
-.option__btn:hover {
+.option__btn-list-playing:hover {
   background-color: var(--bg-active-color);
 }
 
@@ -459,9 +461,14 @@
   display: flex;
 }
 
-.option__btn {
+.option__btn-list-playing {
   margin-left: 1rem;
   margin-right: 2rem;
+}
+
+.list-songs-input:checked ~ .option__btn-list-playing {
+  background-color: var(--bg-active-color);
+  color: var(--main-color);
 }
 
 .list-songs-input:checked ~ .right-sidebar {

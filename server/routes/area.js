@@ -1,20 +1,7 @@
 const express = require("express");
 const router = express.Router();
+const AreaController = require("../controllers/AreaController");
 
-const Area = require("../models/Area");
-require("../models/Category");
-
-// [GET] /area
-router.get("/", (req, res, next) => {
-  Area.find({})
-  .populate({ path: "category"})
-  .exec((err, areas) => {
-    if (err) {
-      next;
-    } else {
-      res.json(areas);
-    }
-  });
-});
+router.get("/", AreaController.getAll);
 
 module.exports = router;
