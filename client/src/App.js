@@ -7,10 +7,11 @@ import {
 } from "react-router-dom";
 import { connect } from "react-redux";
 import { setAreas } from "./actions/areaAction";
-import callAPI from "./helpers/callAPI";
+import axios from "axios";
 import ArtistDetail from "./components/artist/ArtistDetail";
 import Artists from "./components/artist/Artists";
 import Player from "./components/general/Player";
+import Loading from "./components/general/Loading";
 import Home from "./components/home/Home";
 import Header from "./components/layout/Header";
 import Sidebar from "./components/layout/Sidebar";
@@ -29,32 +30,18 @@ class App extends Component {
   }
 
   componentDidMount() {
-    callAPI("GET", "/area")
+    axios
+      .get("/area")
       .then((res) => {
         this.props.setAreas(res.data);
       })
-      .then(() => this.setState({ isLoading: false }));
+      .then(() => this.setState({ isLoading: false }))
+      .catch(console.error);
   }
 
   render() {
     //display loader
-    if (this.state.isLoading) {
-      return (
-        <div className="loading">
-          <div className="loader">
-            <div className="eq">
-              <span className="eq-bar eq-bar--1" />
-              <span className="eq-bar eq-bar--2" />
-              <span className="eq-bar eq-bar--3" />
-              <span className="eq-bar eq-bar--4" />
-              <span className="eq-bar eq-bar--5" />
-              <span className="eq-bar eq-bar--6" />
-            </div>
-            <span className="loader__text">Đang tải dữ liệu</span>
-          </div>
-        </div>
-      );
-    }
+    if (this.state.isLoading) return <Loading />;
 
     return (
       <Router>

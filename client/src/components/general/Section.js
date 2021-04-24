@@ -1,14 +1,14 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
-import {setSongs} from "../../actions/songAction";
-import callAPI from "../../helpers/callAPI";
+import { setSongs } from "../../actions/songAction";
+import axios from "axios";
 import SongCard from "./SongCard";
 
 class Section extends Component {
   componentDidMount() {
-    callAPI("GET", "/song").then((res) => {
+    axios.get("/song").then((res) => {
       this.props.setSongs(res.data);
-    });
+    }).catch(console.error);
   }
   render() {
     return (
@@ -30,7 +30,7 @@ class Section extends Component {
         </div>
         <div className="row">
           {this.props.songs.map((song) => (
-            <SongCard key={song._id} item={song}/>
+            <SongCard key={song._id} item={song} />
           ))}
         </div>
       </div>

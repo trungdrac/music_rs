@@ -8,10 +8,11 @@ import {
   playAudio,
   setLoadedSongs,
 } from "../../actions/playerAction";
-import callAPI from "../../helpers/callAPI";
 import Section from "../general/Section";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPlay } from "@fortawesome/free-solid-svg-icons";
+import Loading from "../general/Loading";
+import axios from "axios";
 
 class SongDetail extends Component {
   constructor(props) {
@@ -22,13 +23,14 @@ class SongDetail extends Component {
   }
 
   componentDidMount() {
-    // get song
     const songId = this.props.match.params.id;
-    callAPI("GET", `/song/detail/${songId}`)
+    axios
+      .get(`/song/detail/${songId}`)
       .then((res) => {
         this.props.setSongDetail(res.data);
       })
-      .then(() => this.setState({ isLoading: false }));
+      .then(() => this.setState({ isLoading: false }))
+      .catch(console.error);
   }
 
   playAudio = () => {
@@ -49,7 +51,7 @@ class SongDetail extends Component {
     } = this.props.songDetail;
     const { currentSongId } = this.props;
 
-    if (this.state.isLoading === true) return "";
+    if (this.state.isLoading === true) return <Loading />;
     return (
       <React.Fragment>
         <div className="row section text-center text-lg-left">

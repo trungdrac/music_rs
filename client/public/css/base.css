@@ -1,6 +1,7 @@
 :root {
   --white-color: #fff;
   --text-color: #495057;
+  --border-color: #b3b3b3;
   --bg-sidebar-color: #f8f9fa;
   --bg-main-content-color: #fff;
   --main-color: #f14170;
@@ -8,6 +9,9 @@
   --bg-active-color: #f1417025;
   --shadow-color: #00000026;
   --overlay-color: #0000004d;
+  --error-color: #f33a58;
+  --btn-color: #1dbfaf;
+  --btn-hover-color: #1ac7b6;
 }
 
 * {
@@ -75,7 +79,7 @@ label {
   right: 0;
   bottom: 0;
   left: 0;
-  background-color:var(--overlay-color);
+  background-color: var(--overlay-color);
   display: none;
 }
 

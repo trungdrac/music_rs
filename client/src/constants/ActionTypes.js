@@ -1,3 +1,5 @@
+export const SET_CURRENT_USER = "SET_CURRENT_USER";
+
 export const SHOW_PLAYER = "SHOW_PLAYER";
 
 export const SET_CURRENT_SONG = "SET_CURRENT_SONG";
@@ -37,4 +39,3 @@ export const SET_SONG_CATEGORY = "SET_SONG_CATEGORY";
 export const SET_PLAYLIST_AREA = "SET_PLAYLIST_AREA";
 
 export const SET_ARTIST_AREA = "SET_ARTIST_AREA";
-

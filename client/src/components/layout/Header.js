@@ -1,11 +1,13 @@
 import React, { Component } from "react";
 import { Link } from "react-router-dom";
+import { connect } from "react-redux";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faBars, faSearch } from "@fortawesome/free-solid-svg-icons";
 import Sidebar from "./Sidebar";
 
 class Header extends Component {
   render() {
+    const { user } = this.props;
     return (
       <div className="header">
         <div className="header__content">
@@ -34,9 +36,13 @@ class Header extends Component {
             />
           </div>
           <div className="header__content--auth">
-            <Link to="/login" className="auth-link">
-              Đăng nhập
-            </Link>
+            {user ? (
+              user.username
+            ) : (
+              <Link to="/login" className="auth-link">
+                Đăng nhập
+              </Link>
+            )}
           </div>
         </div>
         <div className="header__banner"></div>
@@ -45,4 +51,8 @@ class Header extends Component {
   }
 }
 
-export default Header;
+const mapStateToProps = (state) => ({
+  user: state.user,
+});
+
+export default connect(mapStateToProps)(Header);

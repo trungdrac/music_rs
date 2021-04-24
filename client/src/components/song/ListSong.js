@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
-import callAPI from "../../helpers/callAPI";
+import axios from "axios";
 import { setSongCategory } from "../../actions/songAction";
 import SongCard from "../general/SongCard";
 import MyPagination from "../general/MyPagination";
@@ -10,9 +10,10 @@ class ListSong extends Component {
     const { areaId } = this.props.match.params;
     const { categoryId } = this.props.match.params;
 
-    callAPI("GET", `/song/${areaId}/${categoryId}`).then((res) =>
-      this.props.setSongCategory(res.data)
-    );
+    axios
+      .get(`/song/${areaId}/${categoryId}`)
+      .then((res) => this.props.setSongCategory(res.data))
+      .catch(console.error);
   }
 
   render() {
