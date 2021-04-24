@@ -190,12 +190,32 @@
   color: var(--white-color);
 }
 
+#dropdown-auth {
+  border: none;
+  background: none;
+  padding: 0.4rem;
+  text-align: center;
+  cursor: pointer;
+}
+
+#dropdown-auth::before,
+#dropdown-auth::after {
+  display: none;
+}
+
+#dropdown-auth:hover {
+  opacity: 0.8;
+}
+
+#dropdown-auth:focus {
+  box-shadow: none;
+}
+
 .auth-link {
   color: var(--white-color);
   display: block;
-  padding: 0.4rem 1rem;
+  padding: 0.4rem;
   cursor: pointer;
-  white-space: nowrap;
   margin-right: 0;
 }
 
@@ -621,7 +641,8 @@
 }
 
 .form-label,
-.form-message {
+.form-message,
+.api-message {
   text-align: left;
 }
 
@@ -632,7 +653,8 @@
   margin-bottom: 6px;
 }
 
-.form-message {
+.form-message,
+.api-message {
   color: var(--error-color);
   font-size: 0.85rem;
   line-height: 1rem;

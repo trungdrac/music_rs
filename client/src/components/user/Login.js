@@ -9,7 +9,8 @@ class Login extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      errorMessage: "",
+      usernameMessage: "",
+      passwordMessage: "",
     };
   }
   componentDidMount() {
@@ -32,7 +33,10 @@ class Login extends Component {
           })
           .catch((error) => {
             const errorData = error.response.data;
-            this.setState({ errorMessage: errorData.message });
+            if (errorData.field === "username")
+              this.setState({ usernameMessage: errorData.message });
+            if (errorData.field === "password")
+              this.setState({ passwordMessage: errorData.message });
           });
       },
     });
@@ -64,9 +68,10 @@ class Login extends Component {
               type="text"
               placeholder="Nhập tên đăng nhập"
               className="form-control"
-              onChange={() => this.setState({ errorMessage: "" })}
+              onChange={() => this.setState({ usernameMessage: "" })}
             />
             <span className="form-message" />
+            <span className="api-message">{this.state.usernameMessage}</span>
           </div>
           <div className="form-group">
             <label htmlFor="password" className="form-label">
@@ -78,11 +83,11 @@ class Login extends Component {
               type="password"
               placeholder="Nhập mật khẩu"
               className="form-control"
-              onChange={() => this.setState({ errorMessage: "" })}
+              onChange={() => this.setState({ passwordMessage: "" })}
             />
             <span className="form-message" />
+            <span className="api-message">{this.state.passwordMessage}</span>
           </div>
-          <span className="form-message">{this.state.errorMessage}</span>
           <button className="form-submit">Đăng nhập</button>
           <div className="d-flex justify-content-between mt-3">
             <Link to="/login" className="auth__options">

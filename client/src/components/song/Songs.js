@@ -17,7 +17,6 @@ export class Playlists extends Component {
             return (
               <Tabs
                 activeKey={areaId}
-                transition={false}
                 onSelect={(nextTab) => {
                   let category = "";
                   switch (nextTab) {
@@ -44,7 +43,6 @@ export class Playlists extends Component {
                     <div className="category-tab mt-3 mb-3">
                       <Tabs
                         activeKey={categoryId}
-                        transition={false}
                         onSelect={(nextTab) => history.replace(nextTab)}
                       >
                         {area.category.map((category) => (

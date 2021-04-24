@@ -21,6 +21,33 @@ class UserController {
       });
   };
 
+  // [POST] /user/register/existed
+  checkExisted = (req, res, next) => {
+    if (req.body.username)
+      User.findOne({ username: req.body.username })
+        .then((user) => {
+          if (user) {
+            res.json({
+              message: "Tên đăng nhập đã tồn tại!",
+              field: "username",
+            });
+          } else {
+            res.json({ message: "", field: "username" });
+          }
+        })
+        .catch(next);
+    if (req.body.email)
+      User.findOne({ email: req.body.email })
+        .then((email) => {
+          if (email) {
+            res.json({ message: "Email đã tồn tại!", field: "email" });
+          } else {
+            res.json({ message: "", field: "email" });
+          }
+        })
+        .catch(next);
+  };
+
   // [POST] /user/login
   login = (req, res, next) => {
     User.findOne({ username: req.body.username })
@@ -37,12 +64,14 @@ class UserController {
         } else {
           res.status(401).json({
             message: "Mật khẩu không chính xác!",
+            field: "password",
           });
         }
       })
       .catch(() => {
         res.status(401).json({
           message: "Tên đăng nhập không chính xác!",
+          field: "username",
         });
       });
   };

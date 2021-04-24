@@ -15,7 +15,6 @@ export class Artists extends Component {
             return (
               <Tabs
                 activeKey={areaId}
-                transition={false}
                 onSelect={(nextTab) => history.replace(nextTab)}
               >
                 {areas.map((area) => (

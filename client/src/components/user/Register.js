@@ -1,8 +1,16 @@
 import React, { Component } from "react";
 import { Link } from "react-router-dom";
+import axios from "axios";
 import Validator from "../../helpers/validator";
 
 class Register extends Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      usernameMessage: "",
+      emailMessage: "",
+    };
+  }
   componentDidMount() {
     Validator({
       form: "#register-form",
@@ -27,6 +35,21 @@ class Register extends Component {
       },
     });
   }
+
+  checkExisted = (e) => {
+    let data = {};
+    data[e.target.name] = e.target.value;
+    axios
+      .post("/user/register/existed", data)
+      .then((res) => {
+        const result = res.data;
+        if (result.field === "username")
+          this.setState({ usernameMessage: result.message });
+        if (result.field === "email")
+          this.setState({ emailMessage: result.message });
+      })
+      .catch(console.error);
+  };
 
   render() {
     return (
@@ -54,8 +77,10 @@ class Register extends Component {
               type="text"
               placeholder="Nhập tên đăng nhập"
               className="form-control"
+              onChange={this.checkExisted}
             />
             <span className="form-message" />
+            <span className="api-message">{this.state.usernameMessage}</span>
           </div>
           <div className="form-group">
             <label htmlFor="email" className="form-label">
@@ -67,8 +92,10 @@ class Register extends Component {
               type="text"
               placeholder="VD: email@domain.com"
               className="form-control"
+              onChange={this.checkExisted}
             />
             <span className="form-message" />
+            <span className="api-message">{this.state.emailMessage}</span>
           </div>
           <div className="form-group">
             <label htmlFor="password" className="form-label">
