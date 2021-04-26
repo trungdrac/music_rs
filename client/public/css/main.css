@@ -105,6 +105,15 @@
   }
 }
 
+.toast {
+  background-color: var(--bg-sidebar-color);
+  position: absolute;
+  top: 0;
+  right: 0;
+  z-index: 1002;
+  min-width: 280px;
+}
+
 .wrapper {
   display: flex;
 }
@@ -675,6 +684,10 @@
 }
 
 .form-group.invalid .form-control {
+  border-color: var(--error-color);
+}
+
+.form-group.api-invalid .form-control {
   border-color: var(--error-color);
 }
 

@@ -32,46 +32,8 @@ export default function Validator(options) {
     }
   };
 
+  // { selector: [rule]}
   let selectorRules = {};
-
-  const validate = (inputElement, rule) => {
-    let errorElement = getParent(
-      inputElement,
-      options.formGroupSelector
-    ).querySelector(options.errorSelector);
-    let errorMessage;
-
-    // get all rules from 1 field
-    let rules = selectorRules[rule.selector];
-
-    // get first error in 1 field
-    for (let i = 0; i < rules.length; ++i) {
-      switch (inputElement.type) {
-        case "radio":
-        case "checkbox":
-          errorMessage = rules[i](
-            formElement.querySelector(rule.selector + ":checked")
-          );
-          break;
-        default:
-          errorMessage = rules[i](inputElement.value);
-      }
-      if (errorMessage) break;
-    }
-
-    if (errorMessage) {
-      errorElement.innerText = errorMessage;
-      getParent(inputElement, options.formGroupSelector).classList.add(
-        "invalid"
-      );
-    } else {
-      errorElement.innerText = "";
-      getParent(inputElement, options.formGroupSelector).classList.remove(
-        "invalid"
-      );
-    }
-    return !errorMessage;
-  };
 
   // get elements of form
   let formElement = document.querySelector(options.form);
@@ -137,7 +99,7 @@ export default function Validator(options) {
       let inputElements = formElement.querySelectorAll(rule.selector);
 
       Array.from(inputElements).forEach((inputElement) => {
-        // onblur
+        // input onblur
         inputElement.onblur = () => {
           validate(inputElement, rule);
         };
@@ -156,6 +118,45 @@ export default function Validator(options) {
       });
     });
   }
+
+  const validate = (inputElement, rule) => {
+    let errorElement = getParent(
+      inputElement,
+      options.formGroupSelector
+    ).querySelector(options.errorSelector);
+    let errorMessage;
+
+    // get all rules from 1 field
+    let rules = selectorRules[rule.selector];
+
+    // get first error in 1 field
+    for (let i = 0; i < rules.length; ++i) {
+      switch (inputElement.type) {
+        case "radio":
+        case "checkbox":
+          errorMessage = rules[i](
+            formElement.querySelector(rule.selector + ":checked")
+          );
+          break;
+        default:
+          errorMessage = rules[i](inputElement.value);
+      }
+      if (errorMessage) break;
+    }
+
+    if (errorMessage) {
+      errorElement.innerText = errorMessage;
+      getParent(inputElement, options.formGroupSelector).classList.add(
+        "invalid"
+      );
+    } else {
+      errorElement.innerText = "";
+      getParent(inputElement, options.formGroupSelector).classList.remove(
+        "invalid"
+      );
+    }
+    return !errorMessage;
+  };
 }
 
 // define rules

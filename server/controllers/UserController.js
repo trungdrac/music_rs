@@ -17,7 +17,7 @@ class UserController {
         });
       })
       .catch(() => {
-        res.json({});
+        res.status(401).json({ message: "Đăng ký thất bại!" });
       });
   };
 

@@ -40,9 +40,9 @@ class App extends Component {
   }
 
   render() {
+    const { user } = this.props;
     //display loader
     if (this.state.isLoading) return <Loading />;
-
     return (
       <Router>
         <div className="wrapper">
@@ -77,8 +77,12 @@ class App extends Component {
                   )}
                 />
                 <Route exact path="/artist/:area" component={Artists} />
-                <Route exact path="/login" component={Login} />
-                <Route exact path="/register" component={Register} />
+                {!user.userToken ? (
+                  <Route exact path="/login" component={Login} />
+                ) : null}
+                {!user.userToken ? (
+                  <Route exact path="/register" component={Register} />
+                ) : null}
                 <Route exact path="/" component={Home} />
                 <Route render={() => <Redirect to="/" />} />
               </Switch>
@@ -93,6 +97,7 @@ class App extends Component {
 
 const mapStateToProps = (state) => ({
   areas: state.area,
+  user: state.user,
 });
 
 const mapDispatchToProps = (dispatch) => {

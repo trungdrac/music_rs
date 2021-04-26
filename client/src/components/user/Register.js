@@ -1,5 +1,7 @@
 import React, { Component } from "react";
 import { Link } from "react-router-dom";
+import { connect } from "react-redux";
+import { setCurrentUser } from "../../actions/userAction";
 import axios from "axios";
 import Validator from "../../helpers/validator";
 
@@ -29,9 +31,18 @@ class Register extends Component {
           "Mật khẩu nhập lại không chính xác"
         ),
       ],
-      onSubmit(data) {
-        // Call API
-        console.log(data);
+      onSubmit: (data) => {
+        delete data.password_confirmation;
+        if (!this.state.usernameMessage && !this.state.emailMessage) {
+          axios
+            .post("/user/register", data)
+            .then((res) => {
+              const user = res.data;
+              this.props.setCurrentUser(user);
+              this.props.history.push("/");
+            })
+            .catch((error) => alert(error.response.data.message));
+        }
       },
     });
   }
@@ -67,7 +78,11 @@ class Register extends Component {
             </Link>
           </div>
           <div className="spacer" />
-          <div className="form-group">
+          <div
+            className={`form-group ${
+              this.state.usernameMessage ? "api-invalid" : ""
+            }`}
+          >
             <label htmlFor="username" className="form-label">
               Tên đăng nhập
             </label>
@@ -82,7 +97,11 @@ class Register extends Component {
             <span className="form-message" />
             <span className="api-message">{this.state.usernameMessage}</span>
           </div>
-          <div className="form-group">
+          <div
+            className={`form-group ${
+              this.state.emailMessage ? "api-invalid" : ""
+            }`}
+          >
             <label htmlFor="email" className="form-label">
               Email
             </label>
@@ -136,4 +155,10 @@ class Register extends Component {
   }
 }
 
-export default Register;
+const mapDispatchToProps = (dispatch) => {
+  return {
+    setCurrentUser: (user) => dispatch(setCurrentUser(user)),
+  };
+};
+
+export default connect(null, mapDispatchToProps)(Register);

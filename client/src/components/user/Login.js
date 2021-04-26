@@ -58,7 +58,11 @@ class Login extends Component {
             </Link>
           </div>
           <div className="spacer" />
-          <div className="form-group">
+          <div
+            className={`form-group ${
+              this.state.usernameMessage ? "api-invalid" : ""
+            }`}
+          >
             <label htmlFor="username" className="form-label">
               Tên đăng nhập
             </label>
@@ -73,7 +77,11 @@ class Login extends Component {
             <span className="form-message" />
             <span className="api-message">{this.state.usernameMessage}</span>
           </div>
-          <div className="form-group">
+          <div
+            className={`form-group ${
+              this.state.passwordMessage ? "api-invalid" : ""
+            }`}
+          >
             <label htmlFor="password" className="form-label">
               Mật khẩu
             </label>

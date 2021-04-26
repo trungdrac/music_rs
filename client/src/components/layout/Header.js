@@ -71,7 +71,6 @@ class Header extends Component {
                 </Dropdown.Item>
                 <Dropdown.Divider />
                 <Dropdown.Item
-                  href="#/action-3"
                   className="options-list__item"
                   onClick={() => this.setState({ showDialog: true })}
                 >
