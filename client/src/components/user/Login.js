@@ -21,6 +21,7 @@ class Login extends Component {
       rules: [
         Validator.isRequired("#username"),
         Validator.isRequired("#password"),
+        Validator.minLength("#username", 4),
         Validator.minLength("#password", 6),
       ],
       onSubmit: (data) => {
@@ -98,10 +99,10 @@ class Login extends Component {
           </div>
           <button className="form-submit">Đăng nhập</button>
           <div className="d-flex justify-content-between mt-3">
-            <Link to="/login" className="auth__options">
+            <Link to="/forgot-password" className="auth__options text-info">
               Quên mật khẩu?
             </Link>
-            <Link to="/register" className="auth__options">
+            <Link to="/register" className="auth__options text-info">
               Đăng ký ngay!
             </Link>
           </div>

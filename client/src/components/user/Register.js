@@ -23,6 +23,7 @@ class Register extends Component {
         Validator.isRequired("#email"),
         Validator.isRequired("#password"),
         Validator.isRequired("#password_confirmation"),
+        Validator.minLength("#username", 4),
         Validator.isEmail("#email"),
         Validator.minLength("#password", 6),
         Validator.isConfirmed(
@@ -59,7 +60,13 @@ class Register extends Component {
         if (result.field === "email")
           this.setState({ emailMessage: result.message });
       })
-      .catch(console.error);
+      .catch((error) =>
+        alert(
+          `Lỗi! ${
+            error.response.data.message ? error.response.data.message : ""
+          }`
+        )
+      );
   };
 
   render() {
@@ -92,7 +99,8 @@ class Register extends Component {
               type="text"
               placeholder="Nhập tên đăng nhập"
               className="form-control"
-              onChange={this.checkExisted}
+              onBlur={this.checkExisted}
+              onInput={() => this.setState({ usernameMessage: "" })}
             />
             <span className="form-message" />
             <span className="api-message">{this.state.usernameMessage}</span>
@@ -111,7 +119,8 @@ class Register extends Component {
               type="text"
               placeholder="VD: email@domain.com"
               className="form-control"
-              onChange={this.checkExisted}
+              onBlur={this.checkExisted}
+              onInput={() => this.setState({ emailMessage: "" })}
             />
             <span className="form-message" />
             <span className="api-message">{this.state.emailMessage}</span>

@@ -30,7 +30,13 @@ class SongDetail extends Component {
         this.props.setSongDetail(res.data);
       })
       .then(() => this.setState({ isLoading: false }))
-      .catch(console.error);
+      .catch((error) =>
+        alert(
+          `Lỗi! ${
+            error.response.data.message ? error.response.data.message : ""
+          }`
+        )
+      );
   }
 
   playAudio = () => {

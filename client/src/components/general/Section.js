@@ -6,9 +6,18 @@ import SongCard from "./SongCard";
 
 class Section extends Component {
   componentDidMount() {
-    axios.get("/song").then((res) => {
-      this.props.setSongs(res.data);
-    }).catch(console.error);
+    axios
+      .get("/song")
+      .then((res) => {
+        this.props.setSongs(res.data);
+      })
+      .catch((error) =>
+        alert(
+          `Lỗi! ${
+            error.response.data.message ? error.response.data.message : ""
+          }`
+        )
+      );
   }
   render() {
     return (

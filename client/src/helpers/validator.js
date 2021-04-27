@@ -183,7 +183,7 @@ Validator.minLength = (
 ) => ({
   selector,
   test(value) {
-    return value.length >= min ? undefined : message;
+    return value.trim().length >= min ? undefined : message;
   },
 });
 

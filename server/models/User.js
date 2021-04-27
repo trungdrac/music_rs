@@ -5,10 +5,18 @@ const Schema = mongoose.Schema;
 
 const userSchema = new Schema(
   {
-    username: { type: String, unique: true, required: true, trim: true },
+    username: {
+      type: String,
+      unique: true,
+      minLength: 4,
+      required: true,
+      trim: true,
+    },
     password: { type: String, required: true, minLength: 6 },
     email: { type: String, unique: true, required: true, trim: true },
     role: { type: String, default: "user" },
+    resetToken: String,
+    expireToken: Date,
   },
   {
     timestamps: true,

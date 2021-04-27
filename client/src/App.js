@@ -22,6 +22,8 @@ import SongDetail from "./components/song/SongDetail";
 import Songs from "./components/song/Songs";
 import Login from "./components/user/Login";
 import Register from "./components/user/Register";
+import ForgotPassword from "./components/user/ForgotPassword";
+import ResetPassword from "./components/user/ResetPassword";
 
 class App extends Component {
   constructor(props) {
@@ -36,7 +38,13 @@ class App extends Component {
         this.props.setAreas(res.data);
       })
       .then(() => this.setState({ isLoading: false }))
-      .catch(console.error);
+      .catch((error) =>
+        alert(
+          `Lỗi! ${
+            error.response.data.message ? error.response.data.message : ""
+          }`
+        )
+      );
   }
 
   render() {
@@ -83,6 +91,14 @@ class App extends Component {
                 {!user.userToken ? (
                   <Route exact path="/register" component={Register} />
                 ) : null}
+                {!user.userToken ? (
+                  <Route
+                    exact
+                    path="/forgot-password"
+                    component={ForgotPassword}
+                  />
+                ) : null}
+                <Route exact path="/reset-password/:token" component={ResetPassword} />
                 <Route exact path="/" component={Home} />
                 <Route render={() => <Redirect to="/" />} />
               </Switch>

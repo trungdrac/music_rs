@@ -12,7 +12,13 @@ class ListPlaylist extends Component {
     axios
       .get(`/song/${areaId}/${categoryId}`)
       .then((res) => this.props.setSongCategory(res.data))
-      .catch(console.error);
+      .catch((error) =>
+        alert(
+          `Lỗi! ${
+            error.response.data.message ? error.response.data.message : ""
+          }`
+        )
+      );
   }
 
   render() {
