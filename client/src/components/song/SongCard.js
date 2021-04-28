@@ -9,7 +9,7 @@ import {
 } from "../../actions/playerAction";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faEllipsisV, faPlay } from "@fortawesome/free-solid-svg-icons";
-import OptionsList from "./OptionsList";
+import OptionsList from "../general/OptionsList";
 import { DropdownButton } from "react-bootstrap";
 
 class SongCard extends Component {
@@ -21,15 +21,14 @@ class SongCard extends Component {
   };
   render() {
     const { item, currentSongId } = this.props;
-    if (!item.artist) item.artist = [];
     return (
-      <div className="col-xl-2 col-lg-3 col-md-4 col-sm-6">
+      <div className="col-xl-2 col-lg-3 col-md-4 col-sm-6 mt-3">
         <div className="card border-0 h-100">
-          <div className="card-img">
+          <div className="card-img box-shadow rounded">
             <Link to={`/song/detail/${item._id}`}>
               <img
                 src={item.image}
-                className="card-img__song card-img-top rounded"
+                className="card-img__song card-img-top"
                 alt="..."
               />
             </Link>

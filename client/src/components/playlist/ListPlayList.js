@@ -1,17 +1,17 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
 import axios from "axios";
-import { setSongCategory } from "../../actions/songAction";
-import SongCard from "../general/SongCard";
+import { setPlaylistArea } from "../../actions/playlistAction";
+import MyPagination from "../general/MyPagination";
+import PlaylistCard from "../playlist/PlaylistCard";
 
 class ListPlaylist extends Component {
   componentDidMount() {
     const { areaId } = this.props.match.params;
-    const { categoryId } = this.props.match.params;
 
     axios
-      .get(`/song/${areaId}/${categoryId}`)
-      .then((res) => this.props.setSongCategory(res.data))
+      .get(`/playlist/${areaId}`)
+      .then((res) => this.props.setPlaylistArea(res.data))
       .catch((error) =>
         alert(
           `Lỗi! ${
@@ -23,22 +23,27 @@ class ListPlaylist extends Component {
 
   render() {
     return (
-      <div className="row">
-        {this.props.songCategory.map((song) => (
-          <SongCard key={song._id} item={song} />
-        ))}
-      </div>
+      <React.Fragment>
+        <div className="row">
+          {this.props.playlistArea.map((playlist) => (
+            <PlaylistCard key={playlist._id} item={playlist} />
+          ))}
+        </div>
+        <div className="d-flex justify-content-center mt-2">
+          <MyPagination />
+        </div>
+      </React.Fragment>
     );
   }
 }
 
 const mapStateToProps = (state) => ({
-  songCategory: state.song.songCategory,
+  playlistArea: state.playlist.playlistArea,
 });
 
 const mapDispatchToProps = (dispatch) => {
   return {
-    setSongCategory: (songs) => dispatch(setSongCategory(songs)),
+    setPlaylistArea: (playlists) => dispatch(setPlaylistArea(playlists)),
   };
 };
 export default connect(mapStateToProps, mapDispatchToProps)(ListPlaylist);

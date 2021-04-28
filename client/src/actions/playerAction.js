@@ -83,3 +83,10 @@ export const toggleRandom = () => {
     type: types.TOGGLE_RANDOM,
   };
 };
+
+export const setVolume = (newVolume) => {
+  return {
+    type: types.SET_VOLUME,
+    newVolume,
+  };
+};

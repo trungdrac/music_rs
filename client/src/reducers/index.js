@@ -4,6 +4,7 @@ import playlist from "./playlistReducer";
 import song from "./songReducer";
 import area from "./areaReducer";
 import user from "./userReducer";
+import artist from "./artistReducer";
 
 export default combineReducers({
   player,
@@ -11,4 +12,5 @@ export default combineReducers({
   song,
   area,
   user,
+  artist,
 });

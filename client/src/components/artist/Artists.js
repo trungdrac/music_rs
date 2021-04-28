@@ -2,6 +2,7 @@ import React, { Component } from "react";
 import { Route } from "react-router-dom";
 import { Tab, Tabs } from "react-bootstrap";
 import { connect } from "react-redux";
+import ListArtist from "./ListArtist";
 
 export class Artists extends Component {
   render() {
@@ -19,7 +20,9 @@ export class Artists extends Component {
               >
                 {areas.map((area) => (
                   <Tab eventKey={area._id} title={area.name} key={area._id}>
-                    <div className="mt-4 mb-4"></div>
+                    <div className="mt-4 mb-4">
+                      {areaId === area._id ? <ListArtist match={match} /> : ""}
+                    </div>
                   </Tab>
                 ))}
               </Tabs>

@@ -26,6 +26,8 @@ export const TOGGLE_REPEAT = "TOGGLE_REPEAT";
 
 export const TOGGLE_RANDOM = "TOGGLE_RANDOM";
 
+export const SET_VOLUME = "SET_VOLUME";
+
 export const SET_LIST_PLAYING = "SET_LIST_PLAYING";
 
 export const SET_SONGS = "SET_SONGS";

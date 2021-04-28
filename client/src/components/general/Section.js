@@ -2,7 +2,7 @@ import React, { Component } from "react";
 import { connect } from "react-redux";
 import { setSongs } from "../../actions/songAction";
 import axios from "axios";
-import SongCard from "./SongCard";
+import SongCard from "../song/SongCard";
 
 class Section extends Component {
   componentDidMount() {

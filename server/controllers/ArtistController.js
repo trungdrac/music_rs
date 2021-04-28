@@ -4,13 +4,6 @@ const Song = require("../models/Song");
 require("../models/Area");
 
 class ArtistController {
-  // [GET] /artist
-  getAll = (req, res, next) => {
-    Artist.find({})
-      .then((artists) => res.json(artists))
-      .catch(next);
-  };
-
   // [GET] /artist/detail/:id
   getDetail = (req, res, next) => {
     const artistId = req.params.id;
@@ -26,6 +19,21 @@ class ArtistController {
     Promise.all([artistPromise, songPromise])
       .then((artistDetail) => res.json(artistDetail))
       .catch(next);
+  };
+
+  // [GET] /artist/:area/
+  getArtistArea = (req, res, next) => {
+    const areaId = req.params.area;
+    Artist.find({ area: areaId }, "name image")
+      .sort({ _id: 1 })
+      .limit(24)
+      .exec((err, artists) => {
+        if (err) {
+          next;
+        } else {
+          res.json(artists);  
+        }
+      });
   };
 }
 

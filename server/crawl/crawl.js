@@ -222,7 +222,15 @@ function createPlaylist() {
   Category.find({}, "_id").then((res) => {
     res.map((category) => {
       const titlePromise = Category.findById(category._id, "name -_id").exec();
-      const songPromise = Song.find({ category: category._id }, "_id").exec();
+      const songPromise = Song.aggregate([
+        {
+          $match: {
+            category: category._id,
+          },
+        },
+        { $project: { _id: true } },
+        { $sample: { size: 10 } },
+      ]).exec();
       const imagePromise = Song.findOne(
         { category: category._id },
         "image -_id"

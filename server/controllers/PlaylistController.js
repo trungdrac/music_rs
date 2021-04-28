@@ -18,6 +18,21 @@ class PlaylistController {
         }
       });
   };
+
+  // [GET] /playlist/:area/
+  getPlaylistArea = (req, res, next) => {
+    const areaId = req.params.area;
+    Playlist.find({ area: areaId }, "title image song")
+      .sort({ _id: 1 })
+      .limit(24)
+      .exec((err, playlists) => {
+        if (err) {
+          next;
+        } else {
+          res.json(playlists);
+        }
+      });
+  };
 }
 
 module.exports = new PlaylistController();

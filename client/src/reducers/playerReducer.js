@@ -6,6 +6,7 @@ const initialState = {
   isPlaying: false,
   isRandom: false,
   isRepeat: false,
+  volume: 1,
   currentIndex: 0,
   currentSongId: "",
   progressPercent: 0,
@@ -41,6 +42,8 @@ const player = (state = initialState, action) => {
       return { ...state, isRepeat: !state.isRepeat };
     case types.TOGGLE_RANDOM:
       return { ...state, isRandom: !state.isRandom };
+    case types.SET_VOLUME:
+      return { ...state, volume: action.newVolume };
     default:
       return state;
   }

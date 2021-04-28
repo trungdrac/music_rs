@@ -16,16 +16,18 @@ import {
   faStepForward,
   faEllipsisV,
   faMusic,
+  faVolumeMute,
+  faVolumeUp,
 } from "@fortawesome/free-solid-svg-icons";
 
 class Player extends Component {
   constructor(props) {
     super(props);
+    this.state = {
+      prevVolume: 1,
+    };
     this.audioRef = React.createRef();
-    this.songImgRef = React.createRef();
     this.progressRef = React.createRef();
-    this.repeatRef = React.createRef();
-    this.randomRef = React.createRef();
   }
 
   componentDidMount() {
@@ -34,20 +36,21 @@ class Player extends Component {
     //audio pause when component did mount
     this.props.pauseAudio();
 
-    // load config
+    // load audio status
     if (audio !== null) {
       audio.currentTime = this.props.currentTime;
-      this.repeatRef.current.classList.toggle("active", this.props.isRepeat);
-      this.randomRef.current.classList.toggle("active", this.props.isRandom);
+      audio.volume = this.props.volume;
     }
   }
 
   componentDidUpdate(prevProps) {
+    const audio = this.audioRef.current;
     if (this.props.isShowPlayer === false) this.props.showPlayer();
 
-    if (prevProps.currentSongId !== this.props.currentSongId) {
-      this.audioRef.current.play();
-    }
+    if (prevProps.currentSongId !== this.props.currentSongId) audio.play();
+
+    if (prevProps.volume !== this.props.volume)
+      audio.volume = this.props.volume;
   }
 
   handlePlayPause = () => {
@@ -57,22 +60,6 @@ class Player extends Component {
     } else {
       audio.play();
     }
-  };
-
-  handlePlay = () => {
-    const promise = new Promise((resolve) => {
-      this.props.playAudio();
-      resolve();
-    });
-    promise.then(() => this.songImgRef.current.classList.add("spin"));
-  };
-
-  handlePause = () => {
-    const promise = new Promise((resolve) => {
-      this.props.pauseAudio();
-      resolve();
-    });
-    promise.then(() => this.songImgRef.current.classList.remove("spin"));
   };
 
   handleTimeUpdate = () => {
@@ -87,7 +74,7 @@ class Player extends Component {
   };
 
   //for seeking
-  handleChange = () => {
+  handleProgress = () => {
     const audio = this.audioRef.current;
     const progress = this.progressRef.current;
     const seekTime = (audio.duration * progress.value) / 100;
@@ -139,26 +126,6 @@ class Player extends Component {
     this.props.setLoadedSongs(newLoadedSongs);
   };
 
-  handleRepeat = () => {
-    const promise = new Promise((resolve) => {
-      this.props.toggleRepeat();
-      resolve();
-    });
-    promise.then(() =>
-      this.repeatRef.current.classList.toggle("active", this.props.isRepeat)
-    );
-  };
-
-  handleRandom = () => {
-    const promise = new Promise((resolve) => {
-      this.props.toggleRandom();
-      resolve();
-    });
-    promise.then(() =>
-      this.randomRef.current.classList.toggle("active", this.props.isRandom)
-    );
-  };
-
   playRandom = () => {
     let newLoadedSongs = this.props.loadedSongs;
     let newIndex;
@@ -172,6 +139,22 @@ class Player extends Component {
     promise.then(() => {
       newLoadedSongs.push(this.props.currentIndex);
     });
+  };
+
+  handleVolume = (e) => {
+    const newVolume = e.target.valueAsNumber;
+    this.audioRef.current.volume = newVolume;
+    this.props.setVolume(newVolume);
+  };
+
+  handleVolumeBtn = () => {
+    const audio = this.audioRef.current;
+    if (audio.volume !== 0) {
+      this.setState({ prevVolume: audio.volume });
+      audio.volume = 0;
+    } else {
+      audio.volume = this.state.prevVolume;
+    }
   };
 
   handleEnded = () => {
@@ -192,9 +175,14 @@ class Player extends Component {
       progressPercent,
       currentTime,
       duration,
+      isRepeat,
+      isRandom,
     } = this.props;
 
     const audio = this.audioRef.current;
+    let volume = this.props.volume;
+    if (audio) volume = audio.volume;
+
     window.onkeydown = (e) => {
       if (audio !== null) {
         switch (e.keyCode) {
@@ -207,6 +195,18 @@ class Player extends Component {
             break;
           case 39:
             audio.currentTime += 5;
+            break;
+          case 38:
+            e.preventDefault();
+            if (audio.volume <= 0.9) audio.volume += 0.1;
+            else audio.volume = 1;
+            this.props.setVolume(audio.volume);
+            break;
+          case 40:
+            e.preventDefault();
+            if (audio.volume >= 0.1) audio.volume -= 0.1;
+            else audio.volume = 0;
+            this.props.setVolume(audio.volume);
             break;
           default:
             break;
@@ -222,8 +222,9 @@ class Player extends Component {
         <div className="player__song">
           <Link to={`/song/${currentSongId}`}>
             <div
-              className="player__song--img box-shadow"
-              ref={this.songImgRef}
+              className={`player__song--img box-shadow ${
+                isPlaying ? "spin" : ""
+              }`}
               style={{
                 backgroundImage: `url(${listPlaying[currentIndex].image})`,
               }}
@@ -248,9 +249,8 @@ class Player extends Component {
         <div className="player__controls">
           <div className="control-wrapper">
             <div
-              className="control__btn"
-              ref={this.repeatRef}
-              onClick={this.handleRepeat}
+              className={`control__btn ${isRepeat ? "active" : ""}`}
+              onClick={() => this.props.toggleRepeat()}
             >
               <FontAwesomeIcon icon={faRedo} />
             </div>
@@ -274,20 +274,19 @@ class Player extends Component {
               <FontAwesomeIcon icon={faStepForward} />
             </div>
             <div
-              className="control__btn"
-              ref={this.randomRef}
-              onClick={this.handleRandom}
+              className={`control__btn ${isRandom ? "active" : ""}`}
+              onClick={() => this.props.toggleRandom()}
             >
               <FontAwesomeIcon icon={faRandom} />
             </div>
           </div>
-          <div className="progress-wrapper">
+          <div className="d-flex align-items-center">
             <audio
               ref={this.audioRef}
               src={listPlaying[currentIndex].url}
               onLoadedData={this.handleLoadedData}
-              onPlay={this.handlePlay}
-              onPause={this.handlePause}
+              onPlay={() => this.props.playAudio()}
+              onPause={() => this.props.pauseAudio()}
               onTimeUpdate={this.handleTimeUpdate}
               onEnded={this.handleEnded}
             />
@@ -300,12 +299,32 @@ class Player extends Component {
               step={1}
               min={0}
               max={100}
-              onChange={this.handleChange}
+              onChange={this.handleProgress}
             />
             <div className="progress-time">{msToISO(duration)}</div>
           </div>
         </div>
         <div className="player__options d-none d-md-flex">
+          <div className="d-none d-lg-flex ml-2 mr-2">
+            <div className="control__btn" onClick={this.handleVolumeBtn}>
+              {volume === 0 ? (
+                <FontAwesomeIcon icon={faVolumeMute} />
+              ) : (
+                <FontAwesomeIcon icon={faVolumeUp} />
+              )}
+            </div>
+            <div className="d-flex align-items-center">
+              <input
+                className="volume"
+                type="range"
+                min={0}
+                max={1}
+                step={0.02}
+                value={volume}
+                onChange={this.handleVolume}
+              />
+            </div>
+          </div>
           <DropdownButton
             id="dropdown-options"
             key="left"
@@ -320,10 +339,7 @@ class Player extends Component {
             className="list-songs-input"
             id="list-songs-checkbox"
           />
-          <label
-            htmlFor="list-songs-checkbox"
-            className="option__btn-list-playing"
-          >
+          <label htmlFor="list-songs-checkbox" className="control__btn mr-4">
             <FontAwesomeIcon icon={faMusic} />
           </label>
           <RightSidebar listPlaying={listPlaying} />
@@ -339,6 +355,7 @@ const mapStateToProps = (state) => ({
   isPlaying: state.player.isPlaying,
   isRandom: state.player.isRandom,
   isRepeat: state.player.isRepeat,
+  volume: state.player.volume,
   currentIndex: state.player.currentIndex,
   currentSongId: state.player.currentSongId,
   progressPercent: state.player.progressPercent,
@@ -370,6 +387,7 @@ const mapDispatchToProps = (dispatch) => {
       dispatch(playerActions.setLoadedSongs(newLoadedSongs)),
     toggleRepeat: () => dispatch(playerActions.toggleRepeat()),
     toggleRandom: () => dispatch(playerActions.toggleRandom()),
+    setVolume: (newVolume) => dispatch(playerActions.setVolume(newVolume)),
   };
 };
 
