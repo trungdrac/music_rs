@@ -14,7 +14,7 @@ import { DropdownButton } from "react-bootstrap";
 
 class PlaylistCard extends Component {
   playPlaylist = () => {
-    const listPlaying = [this.props.item];
+    const listPlaying = this.props.item.song;
     this.props.setListPlaying(listPlaying);
     this.props.setCurrentIndex(0);
     this.props.setLoadedSongs([0]);

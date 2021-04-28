@@ -22,7 +22,15 @@ class PlaylistController {
   // [GET] /playlist/:area/
   getPlaylistArea = (req, res, next) => {
     const areaId = req.params.area;
-    Playlist.find({ area: areaId }, "title image")
+    Playlist.find({ area: areaId }, "title image song")
+      .populate({
+        path: "song",
+        select: "title artist image url",
+        populate: {
+          path: "artist",
+          select: "name",
+        },
+      })
       .sort({ _id: 1 })
       .limit(24)
       .exec((err, playlists) => {

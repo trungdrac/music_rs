@@ -220,7 +220,7 @@ class Player extends Component {
     return (
       <div className="player box-shadow">
         <div className="player__song">
-          <Link to={`/song/${currentSongId}`}>
+          <Link to={`/song/detail/${currentSongId}`}>
             <div
               className={`player__song--img box-shadow ${
                 isPlaying ? "spin" : ""
@@ -232,7 +232,7 @@ class Player extends Component {
           </Link>
           <div className="player__song--info d-none d-sm-block">
             <p className="player-song-title">
-              <Link to={`/song/${currentSongId}`}>
+              <Link to={`/song/detail/${currentSongId}`}>
                 {listPlaying[currentIndex].title}
               </Link>
             </p>

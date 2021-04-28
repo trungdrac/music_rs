@@ -150,7 +150,7 @@ async function crawlSongAndArtist() {
       if (imagePath) {
         song.image = imagePath;
       } else {
-        song.image = "./images/song-image-default/default.jpg";
+        song.image = "/images/song-image-default/default.jpg";
       }
 
       const artistXml = document.querySelector("creator").innerHTML;
@@ -219,47 +219,58 @@ async function crawlSongAndArtist() {
 }
 
 function createPlaylist() {
-  Category.find({}, "_id").then((res) => {
-    res.map((category) => {
-      const titlePromise = Category.findById(category._id, "name -_id").exec();
-      const songPromise = Song.aggregate([
-        {
-          $match: {
-            category: category._id,
+  Category.find({}, "_id")
+    .then((res) => {
+      res.map((category) => {
+        const titlePromise = Category.findById(
+          category._id,
+          "name -_id"
+        ).exec();
+        const songPromise = Song.aggregate([
+          {
+            $match: {
+              category: category._id,
+            },
           },
-        },
-        { $project: { _id: true } },
-        { $sample: { size: 10 } },
-      ]).exec();
-      const imagePromise = Song.findOne(
-        { category: category._id },
-        "image -_id"
-      ).exec();
-      const areaPromise = Area.find(
-        {
-          category: mongoose.Types.ObjectId(category._id),
-        },
-        "_id"
-      );
-      Promise.all([titlePromise, songPromise, imagePromise, areaPromise])
+          { $project: { _id: true } },
+          { $sample: { size: 10 } },
+        ]).exec();
+        const areaPromise = Area.find(
+          {
+            category: mongoose.Types.ObjectId(category._id),
+          },
+          "_id"
+        );
+        Promise.all([titlePromise, songPromise, areaPromise])
+          .then((res) => {
+            const playlist = new Playlist({
+              title: `Những bài hát ${res[0].name.toLowerCase()} mới`,
+              song: res[1],
+              area: res[2][0],
+            });
+            playlist.save(function (err) {
+              if (err) {
+                console.log(err);
+              } else {
+                console.log("Success!");
+              }
+            });
+          })
+          .catch((err) => console.log(err));
+      });
+    })
+    .then(() => {
+      Playlist.find({})
         .then((res) => {
-          const playlist = new Playlist({
-            title: `Những bài hát ${res[0].name.toLowerCase()} mới`,
-            song: res[1],
-            image: res[2].image,
-            area: res[3][0],
-          });
-          playlist.save(function (err) {
-            if (err) {
-              console.log(err);
-            } else {
-              console.log("Success!");
-            }
+          res.map((playlist) => {
+            Song.findById(playlist.song[0]).then((res) => {
+              playlist.image = res.image;
+              playlist.save();
+            });
           });
         })
-        .catch((err) => console.log(err));
+        .then(() => console.log("DONE"));
     });
-  });
 }
 
 connect();

@@ -10,7 +10,7 @@ const playlistSchema = new Schema(
       ref: "User",
       default: "607eb77ffa10cb50bdeac678",
     },
-    image: { type: String, required: true },
+    image: { type: String, default: "/images/song-image-default/default.jpg" },
     area: { type: Schema.Types.ObjectId, ref: "Area", required: true },
   },
   { timestamps: true }

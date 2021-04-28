@@ -6,7 +6,7 @@ const songSchema = new Schema(
     title: { type: String, required: true },
     artist: [{ type: Schema.Types.ObjectId, ref: "Artist", required: true }],
     category: { type: Schema.Types.ObjectId, ref: "Category", required: true },
-    image: { type: String, required: true },
+    image: { type: String, default: "/images/song-image-default/default.jpg" },
     url: { type: String, required: true },
     lyrics: { type: String },
   },
