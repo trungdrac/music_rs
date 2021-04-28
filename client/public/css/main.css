@@ -746,7 +746,7 @@
   background-color: rgba(28, 30, 32, 0.08);
 }
 
-.card-img__song {
+.card-img-custom {
   position: absolute;
   max-width: 100%;
   max-height: 100%;
@@ -765,7 +765,7 @@
   text-align: center;
 }
 
-.card-img:hover .card-img__song {
+.card-img:hover .card-img-custom {
   -webkit-filter: brightness(60%);
   filter: brightness(60%);
   -webkit-transform: scale(1.2);

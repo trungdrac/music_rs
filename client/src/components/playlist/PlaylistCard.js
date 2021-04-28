@@ -1,8 +1,8 @@
 import React, { Component } from "react";
 import { Link } from "react-router-dom";
 import { connect } from "react-redux";
-import { setListPlaying } from "../../actions/playlistAction";
 import {
+  setListPlaying,
   setCurrentIndex,
   playAudio,
   setLoadedSongs,
@@ -13,7 +13,7 @@ import OptionsList from "../general/OptionsList";
 import { DropdownButton } from "react-bootstrap";
 
 class PlaylistCard extends Component {
-  playAudio = () => {
+  playPlaylist = () => {
     const listPlaying = [this.props.item];
     this.props.setListPlaying(listPlaying);
     this.props.setCurrentIndex(0);
@@ -27,10 +27,10 @@ class PlaylistCard extends Component {
           <div className="playlist-bar-1" />
           <div className="playlist-bar-2" />
           <div className="card-img box-shadow rounded">
-            <Link to={`/song/detail/${item._id}`}>
+            <Link to={`/playlist/detail/${item._id}`}>
               <img
                 src={item.image}
-                className="card-img__song card-img-top"
+                className="card-img-custom card-img-top"
                 alt="..."
               />
             </Link>
@@ -47,7 +47,7 @@ class PlaylistCard extends Component {
                 </DropdownButton>
 
                 <div className="card-img__overlay">
-                  <div className="btn-toggle-play" onClick={this.playAudio}>
+                  <div className="btn-toggle-play" onClick={this.playPlaylist}>
                     <FontAwesomeIcon icon={faPlay} />
                   </div>
                 </div>

@@ -13,6 +13,7 @@ const initialState = {
   currentTime: 0,
   duration: 0,
   loadedSongs: [],
+  listPlaying: [],
 };
 const player = (state = initialState, action) => {
   switch (action.type) {
@@ -44,6 +45,8 @@ const player = (state = initialState, action) => {
       return { ...state, isRandom: !state.isRandom };
     case types.SET_VOLUME:
       return { ...state, volume: action.newVolume };
+    case types.SET_LIST_PLAYING:
+      return { ...state, listPlaying: action.listPlaying };
     default:
       return state;
   }

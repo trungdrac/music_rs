@@ -2,8 +2,8 @@ import React, { Component } from "react";
 import { connect } from "react-redux";
 import { Link } from "react-router-dom";
 import { setSongDetail } from "../../actions/songAction";
-import { setListPlaying } from "../../actions/playlistAction";
 import {
+  setListPlaying,
   setCurrentIndex,
   playAudio,
   setLoadedSongs,
@@ -47,6 +47,8 @@ class SongDetail extends Component {
   };
 
   render() {
+    if (this.state.isLoading) return <Loading />;
+
     const {
       _id,
       title,
@@ -57,7 +59,6 @@ class SongDetail extends Component {
     } = this.props.songDetail;
     const { currentSongId } = this.props;
 
-    if (this.state.isLoading === true) return <Loading />;
     return (
       <React.Fragment>
         <div className="row section text-center text-lg-left">

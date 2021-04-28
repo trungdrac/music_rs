@@ -1,8 +1,8 @@
 import React, { Component } from "react";
 import { Link } from "react-router-dom";
 import { connect } from "react-redux";
-import { setListPlaying } from "../../actions/playlistAction";
 import {
+  setListPlaying,
   setCurrentIndex,
   playAudio,
   setLoadedSongs,
@@ -28,7 +28,7 @@ class SongCard extends Component {
             <Link to={`/song/detail/${item._id}`}>
               <img
                 src={item.image}
-                className="card-img__song card-img-top"
+                className="card-img-custom card-img-top"
                 alt="..."
               />
             </Link>

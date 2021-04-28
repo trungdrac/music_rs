@@ -48,9 +48,10 @@ class App extends Component {
   }
 
   render() {
-    const { user } = this.props;
-    //display loader
     if (this.state.isLoading) return <Loading />;
+
+    const { user } = this.props;
+    
     return (
       <Router>
         <div className="wrapper">

@@ -362,7 +362,7 @@ const mapStateToProps = (state) => ({
   currentTime: state.player.currentTime,
   duration: state.player.duration,
   loadedSongs: state.player.loadedSongs,
-  listPlaying: state.playlist.listPlaying,
+  listPlaying: state.player.listPlaying,
 });
 
 const mapDispatchToProps = (dispatch) => {

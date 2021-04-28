@@ -90,3 +90,10 @@ export const setVolume = (newVolume) => {
     newVolume,
   };
 };
+
+export const setListPlaying = (listPlaying) => {
+  return {
+    type: types.SET_LIST_PLAYING,
+    listPlaying,
+  };
+};
