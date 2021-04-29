@@ -51,6 +51,11 @@ class Player extends Component {
 
     if (prevProps.volume !== this.props.volume)
       audio.volume = this.props.volume;
+
+    // disabled & active prev button
+    this.props.listPlaying[0]._id === this.props.currentSongId
+      ? this.props.setIsFirstSongTrue()
+      : this.props.setIsFirstSongFalse();
   }
 
   handlePlayPause = () => {
@@ -90,55 +95,33 @@ class Player extends Component {
     //set current song
     const currentSongId = this.props.listPlaying[this.props.currentIndex]._id;
     this.props.setCurrentSong(currentSongId);
-
-    // disabled & active prev button
-    this.props.loadedSongs.length === 1
-      ? this.props.setIsFirstSongTrue()
-      : this.props.setIsFirstSongFalse();
   };
 
   handlePrev = () => {
-    let newLoadedSongs = this.props.loadedSongs;
+    const { currentIndex } = this.props;
     let newIndex;
-    if (newLoadedSongs.length > 1) {
-      newLoadedSongs.pop();
-      newIndex = newLoadedSongs[newLoadedSongs.length - 1];
+    if (currentIndex >= 1) {
+      newIndex = currentIndex - 1;
       this.props.setCurrentIndex(newIndex);
-      this.props.setLoadedSongs(newLoadedSongs);
     }
   };
 
   handleNext = () => {
-    const newLoadedSongs = this.props.loadedSongs;
     if (this.props.isRandom) {
       this.playRandom();
     } else {
       const newIndex =
         (this.props.currentIndex + 1) % this.props.listPlaying.length;
-      const promise = new Promise((resolve) => {
-        this.props.setCurrentIndex(newIndex);
-        resolve();
-      });
-      promise.then(() => {
-        newLoadedSongs.push(this.props.currentIndex);
-      });
+      this.props.setCurrentIndex(newIndex);
     }
-    this.props.setLoadedSongs(newLoadedSongs);
   };
 
   playRandom = () => {
-    let newLoadedSongs = this.props.loadedSongs;
     let newIndex;
     do {
       newIndex = Math.floor(Math.random() * this.props.listPlaying.length);
     } while (newIndex === this.props.currentIndex);
-    const promise = new Promise((resolve) => {
-      this.props.setCurrentIndex(newIndex);
-      resolve();
-    });
-    promise.then(() => {
-      newLoadedSongs.push(this.props.currentIndex);
-    });
+    this.props.setCurrentIndex(newIndex);
   };
 
   handleVolume = (e) => {
@@ -361,7 +344,6 @@ const mapStateToProps = (state) => ({
   progressPercent: state.player.progressPercent,
   currentTime: state.player.currentTime,
   duration: state.player.duration,
-  loadedSongs: state.player.loadedSongs,
   listPlaying: state.player.listPlaying,
 });
 
@@ -383,8 +365,6 @@ const mapDispatchToProps = (dispatch) => {
       dispatch(playerActions.setDuration(newDuration)),
     setIsFirstSongTrue: () => dispatch(playerActions.setIsFirstSongTrue()),
     setIsFirstSongFalse: () => dispatch(playerActions.setIsFirstSongFalse()),
-    setLoadedSongs: (newLoadedSongs) =>
-      dispatch(playerActions.setLoadedSongs(newLoadedSongs)),
     toggleRepeat: () => dispatch(playerActions.toggleRepeat()),
     toggleRandom: () => dispatch(playerActions.toggleRandom()),
     setVolume: (newVolume) => dispatch(playerActions.setVolume(newVolume)),

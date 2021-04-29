@@ -11,16 +11,9 @@ class RightSidebar extends Component {
     const songNode = e.target.closest(".list-song__item:not(.active)");
     const songOption = e.target.closest(".song-options");
     if (songNode && !songOption) {
-      const newLoadedSongs = this.props.loadedSongs;
       const newIndex = Number(songNode.dataset.index);
-      const promise = new Promise((resolve) => {
-        this.props.setCurrentIndex(newIndex);
-        resolve();
-      });
-      promise.then(() => {
-        newLoadedSongs.push(this.props.currentIndex);
-        this.props.setLoadedSongs(newLoadedSongs);
-      });
+      console.log(newIndex)
+      this.props.setCurrentIndex(newIndex);
     }
   };
 
@@ -84,14 +77,11 @@ class RightSidebar extends Component {
 
 const mapStateToProps = (state) => ({
   currentIndex: state.player.currentIndex,
-  loadedSongs: state.player.loadedSongs,
 });
 
 const mapDispatchToProps = (dispatch) => {
   return {
     setCurrentIndex: (newIndex) => dispatch(actions.setCurrentIndex(newIndex)),
-    setLoadedSongs: (newLoadedSongs) =>
-      dispatch(actions.setLoadedSongs(newLoadedSongs)),
   };
 };
 

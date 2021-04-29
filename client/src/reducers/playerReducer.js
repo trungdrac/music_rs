@@ -12,7 +12,6 @@ const initialState = {
   progressPercent: 0,
   currentTime: 0,
   duration: 0,
-  loadedSongs: [],
   listPlaying: [],
 };
 const player = (state = initialState, action) => {
@@ -37,8 +36,6 @@ const player = (state = initialState, action) => {
       return { ...state, isFirstSong: true };
     case types.SET_IS_FIRST_SONG_FALSE:
       return { ...state, isFirstSong: false };
-    case types.SET_LOADED_SONGS:
-      return { ...state, loadedSongs: action.newLoadedSongs };
     case types.TOGGLE_REPEAT:
       return { ...state, isRepeat: !state.isRepeat };
     case types.TOGGLE_RANDOM:

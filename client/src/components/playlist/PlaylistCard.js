@@ -5,7 +5,6 @@ import {
   setListPlaying,
   setCurrentIndex,
   playAudio,
-  setLoadedSongs,
 } from "../../actions/playerAction";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faEllipsisV, faPlay } from "@fortawesome/free-solid-svg-icons";
@@ -17,7 +16,6 @@ class PlaylistCard extends Component {
     const listPlaying = this.props.item.song;
     this.props.setListPlaying(listPlaying);
     this.props.setCurrentIndex(0);
-    this.props.setLoadedSongs([0]);
   };
   render() {
     const { item, currentSongId } = this.props;
@@ -76,8 +74,6 @@ const mapDispatchToProps = (dispatch) => {
     setListPlaying: (listPlaying) => dispatch(setListPlaying(listPlaying)),
     setCurrentIndex: (newIndex) => dispatch(setCurrentIndex(newIndex)),
     playAudio: () => dispatch(playAudio()),
-    setLoadedSongs: (newLoadedSongs) =>
-      dispatch(setLoadedSongs(newLoadedSongs)),
   };
 };
 

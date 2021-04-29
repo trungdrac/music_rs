@@ -65,13 +65,6 @@ export const setIsFirstSongFalse = () => {
   };
 };
 
-export const setLoadedSongs = (newLoadedSongs) => {
-  return {
-    type: types.SET_LOADED_SONGS,
-    newLoadedSongs,
-  };
-};
-
 export const toggleRepeat = () => {
   return {
     type: types.TOGGLE_REPEAT,

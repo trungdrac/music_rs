@@ -6,7 +6,6 @@ import {
   setListPlaying,
   setCurrentIndex,
   playAudio,
-  setLoadedSongs,
 } from "../../actions/playerAction";
 import Section from "../general/Section";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -43,7 +42,6 @@ class SongDetail extends Component {
     const playlist = [this.props.songDetail];
     this.props.setListPlaying(playlist);
     this.props.setCurrentIndex(0);
-    this.props.setLoadedSongs([0]);
   };
 
   render() {
@@ -136,8 +134,6 @@ const mapDispatchToProps = (dispatch) => {
     setListPlaying: (playlist) => dispatch(setListPlaying(playlist)),
     setCurrentIndex: (newIndex) => dispatch(setCurrentIndex(newIndex)),
     playAudio: () => dispatch(playAudio()),
-    setLoadedSongs: (newLoadedSongs) =>
-      dispatch(setLoadedSongs(newLoadedSongs)),
   };
 };
 export default connect(mapStateToProps, mapDispatchToProps)(SongDetail);
