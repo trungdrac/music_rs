@@ -47,9 +47,10 @@ export const setDuration = (newDuration) => {
   };
 };
 
-export const toggleRepeat = () => {
+export const setRepeat = (value) => {
   return {
-    type: types.TOGGLE_REPEAT,
+    type: types.SET_REPEAT,
+    value,
   };
 };
 

@@ -25,7 +25,6 @@ class Player extends Component {
     super(props);
     this.state = {
       prevVolume: 1,
-      originIndex: 0,
       originalListPlaying: [],
     };
     this.audioRef = React.createRef();
@@ -112,7 +111,7 @@ class Player extends Component {
   };
 
   handleRandom = () => {
-    const { isRandom, currentIndex, listPlaying } = this.props;
+    const { isRandom, currentIndex, listPlaying, currentSongId } = this.props;
     if (!isRandom) {
       this.setState(
         { originalListPlaying: listPlaying, originIndex: currentIndex },
@@ -127,8 +126,12 @@ class Player extends Component {
         }
       );
     } else {
-      this.props.setCurrentIndex(this.state.originIndex);
-      this.props.setListPlaying(this.state.originalListPlaying);
+      const { originalListPlaying } = this.state;
+      const prevIndex = originalListPlaying.findIndex(
+        (song) => song._id === currentSongId
+      );
+      this.props.setCurrentIndex(prevIndex);
+      this.props.setListPlaying(originalListPlaying);
     }
     this.props.toggleRandom();
   };
@@ -150,7 +153,7 @@ class Player extends Component {
   };
 
   handleEnded = () => {
-    if (this.props.isRepeat) {
+    if (this.props.repeat) {
       this.audioRef.current.play();
     } else {
       this.handleNext();
@@ -168,7 +171,7 @@ class Player extends Component {
       progressPercent,
       currentTime,
       duration,
-      isRepeat,
+      repeat,
       isRandom,
     } = this.props;
 
@@ -238,12 +241,38 @@ class Player extends Component {
         </div>
         <div className="player__controls">
           <div className="control-wrapper">
-            <div
-              className={`control__btn ${isRepeat ? "active" : ""}`}
-              onClick={() => this.props.toggleRepeat()}
-            >
-              <FontAwesomeIcon icon={faRedo} />
-            </div>
+            {repeat === "none" ? (
+              <div
+                className="control__btn"
+                onClick={() => this.props.setRepeat("one")}
+              >
+                <FontAwesomeIcon icon={faRedo} />
+              </div>
+            ) : (
+              ""
+            )}
+            {repeat === "one" ? (
+              <div
+                className="control__btn active"
+                onClick={() => this.props.setRepeat("all")}
+              >
+                <FontAwesomeIcon icon={faRedo} />
+                <span className="repeat">1</span>
+              </div>
+            ) : (
+              ""
+            )}
+            {repeat === "all" ? (
+              <div
+                className="control__btn active"
+                onClick={() => this.props.setRepeat("none")}
+              >
+                <FontAwesomeIcon icon={faRedo} />
+                <span className="repeat">all</span>
+              </div>
+            ) : (
+              ""
+            )}
             {currentIndex === 0 ? (
               <div className="control__btn disabled">
                 <FontAwesomeIcon icon={faStepBackward} />
@@ -295,7 +324,7 @@ class Player extends Component {
           </div>
         </div>
         <div className="player__options d-none d-md-flex">
-          <div className="d-none d-lg-flex ml-2 mr-2">
+          <div className="d-none d-lg-flex ml-3 mr-3">
             <div className="control__btn" onClick={this.handleVolumeBtn}>
               {volume === 0 ? (
                 <FontAwesomeIcon icon={faVolumeMute} />
@@ -329,7 +358,10 @@ class Player extends Component {
             className="list-songs-input"
             id="list-songs-checkbox"
           />
-          <label htmlFor="list-songs-checkbox" className="control__btn mr-4">
+          <label
+            htmlFor="list-songs-checkbox"
+            className="control__btn ml-2 mr-4"
+          >
             <FontAwesomeIcon icon={faMusic} />
           </label>
           <RightSidebar listPlaying={listPlaying} />
@@ -342,7 +374,7 @@ class Player extends Component {
 const mapStateToProps = (state) => ({
   isPlaying: state.player.isPlaying,
   isRandom: state.player.isRandom,
-  isRepeat: state.player.isRepeat,
+  repeat: state.player.repeat,
   volume: state.player.volume,
   currentIndex: state.player.currentIndex,
   currentSongId: state.player.currentSongId,
@@ -367,7 +399,7 @@ const mapDispatchToProps = (dispatch) => {
       dispatch(playerActions.setCurrentIndex(newIndex)),
     setDuration: (newDuration) =>
       dispatch(playerActions.setDuration(newDuration)),
-    toggleRepeat: () => dispatch(playerActions.toggleRepeat()),
+    setRepeat: (value) => dispatch(playerActions.setRepeat(value)),
     toggleRandom: () => dispatch(playerActions.toggleRandom()),
     setVolume: (newVolume) => dispatch(playerActions.setVolume(newVolume)),
     setListPlaying: (listPlaying) =>

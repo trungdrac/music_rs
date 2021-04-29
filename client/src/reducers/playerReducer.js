@@ -3,7 +3,7 @@ import * as types from "../constants/ActionTypes";
 const initialState = {
   isPlaying: false,
   isRandom: false,
-  isRepeat: false,
+  repeat: "none",
   volume: 1,
   currentIndex: 0,
   currentSongId: "",
@@ -28,8 +28,8 @@ const player = (state = initialState, action) => {
       return { ...state, currentIndex: action.newIndex };
     case types.SET_DURATION:
       return { ...state, duration: action.newDuration };
-    case types.TOGGLE_REPEAT:
-      return { ...state, isRepeat: !state.isRepeat };
+    case types.SET_REPEAT:
+      return { ...state, repeat: action.value };
     case types.TOGGLE_RANDOM:
       return { ...state, isRandom: !state.isRandom };
     case types.SET_VOLUME:

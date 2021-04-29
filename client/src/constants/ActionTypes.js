@@ -14,7 +14,7 @@ export const SET_CURRENT_INDEX = "SET_CURRENT_INDEX";
 
 export const SET_DURATION = "SET_DURATION";
 
-export const TOGGLE_REPEAT = "TOGGLE_REPEAT";
+export const SET_REPEAT = "SET_REPEAT";
 
 export const TOGGLE_RANDOM = "TOGGLE_RANDOM";
 

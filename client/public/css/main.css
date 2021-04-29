@@ -436,15 +436,27 @@
   border-radius: 50%;
   text-align: center;
   cursor: pointer;
+  position: relative;
 }
 
-.control__btn:hover,
-.option__btn-list-playing:hover {
+.control__btn:hover {
   background-color: var(--bg-active-color);
 }
 
 .control__btn.active {
   color: var(--main-color);
+}
+
+.repeat {
+  position: absolute;
+  font-size: 0.6rem;
+  font-weight: 700;
+  padding: 0 4px;
+  bottom: 4px;
+  left: 18px;
+  background-color: var(--main-color);
+  color: var(--white-color);
+  border-radius: 50%;
 }
 
 .btn-toggle-play {
@@ -496,9 +508,12 @@
   border: none;
 }
 
-.list-songs-input:checked ~ .option__btn-list-playing {
+.list-songs-input:checked ~ .control__btn {
   background-color: var(--bg-active-color);
   color: var(--main-color);
+  -webkit-box-shadow: 0 1px 10px 2px var(--shadow-color);
+  -moz-box-shadow: 0 1px 10px 2px var(--shadow-color);
+  box-shadow: 0 1px 10px 2px var(--shadow-color);
 }
 
 .list-songs-input:checked ~ .right-sidebar {
@@ -720,12 +735,11 @@
 }
 /* Authentication form end*/
 
-/* Song card start */
+/* Card start */
 .card-img {
   position: relative;
   cursor: pointer;
   padding-bottom: 100%;
-  overflow: hidden;
 }
 
 .playlist-bar-1 {
@@ -768,9 +782,9 @@
 .card-img:hover .card-img-custom {
   -webkit-filter: brightness(60%);
   filter: brightness(60%);
-  -webkit-transform: scale(1.2);
-  -ms-transform: scale(1.2);
-  transform: scale(1.2);
+  -webkit-transform: scale(1.1);
+  -ms-transform: scale(1.1);
+  transform: scale(1.1);
 }
 
 .card-img:hover .card-img__overlay {
@@ -815,7 +829,7 @@
   font-size: 0.85rem;
   font-weight: 400;
 }
-/* Song card end*/
+/* Card end*/
 
 /* Lyrics start */
 .lyrics {

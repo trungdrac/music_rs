@@ -8,7 +8,11 @@ import { faEllipsisH } from "@fortawesome/free-solid-svg-icons";
 
 class RightSidebar extends Component {
   componentDidUpdate(prevProps) {
-    if (prevProps.listPlaying !== this.props.listPlaying) this.forceUpdate();
+    if (prevProps.currentIndex !== this.props.currentIndex) {
+      document
+        .querySelector(".list-song__item.active")
+        .scrollIntoView({ behavior: "smooth", block: "center" });
+    }
   }
 
   pickSong = (e) => {

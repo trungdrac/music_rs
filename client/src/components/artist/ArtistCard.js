@@ -12,7 +12,7 @@ class ArtistCard extends Component {
             <Link to={`/artist/detail/${item._id}`}>
               <img
                 src={item.image}
-                className="card-img-custom card-img-top"
+                className="card-img-custom card-img-top rounded-circle"
                 alt="..."
               />
             </Link>
