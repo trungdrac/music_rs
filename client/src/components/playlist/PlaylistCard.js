@@ -5,6 +5,7 @@ import {
   setListPlaying,
   setCurrentIndex,
   playAudio,
+  toggleRandom,
 } from "../../actions/playerAction";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faEllipsisV, faPlay } from "@fortawesome/free-solid-svg-icons";
@@ -16,6 +17,7 @@ class PlaylistCard extends Component {
     const listPlaying = this.props.item.song;
     this.props.setListPlaying(listPlaying);
     this.props.setCurrentIndex(0);
+    if (this.props.isRandom) this.props.toggleRandom();
   };
   render() {
     const { item, currentSongId } = this.props;
@@ -67,6 +69,7 @@ class PlaylistCard extends Component {
 
 const mapStateToProps = (state) => ({
   currentSongId: state.player.currentSongId,
+  isRandom: state.player.isRandom,
 });
 
 const mapDispatchToProps = (dispatch) => {
@@ -74,6 +77,7 @@ const mapDispatchToProps = (dispatch) => {
     setListPlaying: (listPlaying) => dispatch(setListPlaying(listPlaying)),
     setCurrentIndex: (newIndex) => dispatch(setCurrentIndex(newIndex)),
     playAudio: () => dispatch(playAudio()),
+    toggleRandom: () => dispatch(toggleRandom()),
   };
 };
 

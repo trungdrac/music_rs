@@ -25,6 +25,8 @@ class Player extends Component {
     super(props);
     this.state = {
       prevVolume: 1,
+      originIndex: 0,
+      originalListPlaying: [],
     };
     this.audioRef = React.createRef();
     this.progressRef = React.createRef();
@@ -45,17 +47,11 @@ class Player extends Component {
 
   componentDidUpdate(prevProps) {
     const audio = this.audioRef.current;
-    if (this.props.isShowPlayer === false) this.props.showPlayer();
 
     if (prevProps.currentSongId !== this.props.currentSongId) audio.play();
 
     if (prevProps.volume !== this.props.volume)
       audio.volume = this.props.volume;
-
-    // disabled & active prev button
-    this.props.listPlaying[0]._id === this.props.currentSongId
-      ? this.props.setIsFirstSongTrue()
-      : this.props.setIsFirstSongFalse();
   }
 
   handlePlayPause = () => {
@@ -94,7 +90,7 @@ class Player extends Component {
 
     //set current song
     const currentSongId = this.props.listPlaying[this.props.currentIndex]._id;
-    this.props.setCurrentSong(currentSongId);
+    this.props.setCurrentSongId(currentSongId);
   };
 
   handlePrev = () => {
@@ -107,21 +103,34 @@ class Player extends Component {
   };
 
   handleNext = () => {
-    if (this.props.isRandom) {
-      this.playRandom();
-    } else {
-      const newIndex =
-        (this.props.currentIndex + 1) % this.props.listPlaying.length;
+    const { currentIndex, listPlaying } = this.props;
+    let newIndex;
+    if (currentIndex < listPlaying.length - 1) {
+      newIndex = currentIndex + 1;
       this.props.setCurrentIndex(newIndex);
     }
   };
 
-  playRandom = () => {
-    let newIndex;
-    do {
-      newIndex = Math.floor(Math.random() * this.props.listPlaying.length);
-    } while (newIndex === this.props.currentIndex);
-    this.props.setCurrentIndex(newIndex);
+  handleRandom = () => {
+    const { isRandom, currentIndex, listPlaying } = this.props;
+    if (!isRandom) {
+      this.setState(
+        { originalListPlaying: listPlaying, originIndex: currentIndex },
+        () => {
+          const listPlayingShuffle = [...listPlaying];
+          const currentSong = listPlaying[currentIndex];
+          listPlayingShuffle.splice(currentIndex, 1);
+          listPlayingShuffle.sort(() => Math.random() - 0.5);
+          listPlayingShuffle.unshift(currentSong);
+          this.props.setCurrentIndex(0);
+          this.props.setListPlaying(listPlayingShuffle);
+        }
+      );
+    } else {
+      this.props.setCurrentIndex(this.state.originIndex);
+      this.props.setListPlaying(this.state.originalListPlaying);
+    }
+    this.props.toggleRandom();
   };
 
   handleVolume = (e) => {
@@ -149,9 +158,10 @@ class Player extends Component {
   };
 
   render() {
+    if (this.props.listPlaying.length === 0) return "";
+
     const {
       listPlaying,
-      isFirstSong,
       isPlaying,
       currentIndex,
       currentSongId,
@@ -197,9 +207,6 @@ class Player extends Component {
       }
     };
 
-    if (this.props.isShowPlayer === false) {
-      return "";
-    }
     return (
       <div className="player box-shadow">
         <div className="player__song">
@@ -237,7 +244,7 @@ class Player extends Component {
             >
               <FontAwesomeIcon icon={faRedo} />
             </div>
-            {isFirstSong ? (
+            {currentIndex === 0 ? (
               <div className="control__btn disabled">
                 <FontAwesomeIcon icon={faStepBackward} />
               </div>
@@ -258,7 +265,7 @@ class Player extends Component {
             </div>
             <div
               className={`control__btn ${isRandom ? "active" : ""}`}
-              onClick={() => this.props.toggleRandom()}
+              onClick={this.handleRandom}
             >
               <FontAwesomeIcon icon={faRandom} />
             </div>
@@ -333,8 +340,6 @@ class Player extends Component {
 }
 
 const mapStateToProps = (state) => ({
-  isShowPlayer: state.player.isShowPlayer,
-  isFirstSong: state.player.isFirstSong,
   isPlaying: state.player.isPlaying,
   isRandom: state.player.isRandom,
   isRepeat: state.player.isRepeat,
@@ -350,24 +355,23 @@ const mapStateToProps = (state) => ({
 const mapDispatchToProps = (dispatch) => {
   return {
     //player
-    showPlayer: () => dispatch(playerActions.showPlayer()),
     playAudio: () => dispatch(playerActions.playAudio()),
     pauseAudio: () => dispatch(playerActions.pauseAudio()),
     setCurrentTime: (newTime) =>
       dispatch(playerActions.setCurrentTime(newTime)),
-    setCurrentSong: (currentSongId) =>
-      dispatch(playerActions.setCurrentSong(currentSongId)),
+    setCurrentSongId: (currentSongId) =>
+      dispatch(playerActions.setCurrentSongId(currentSongId)),
     setProgressPercent: (newPercent) =>
       dispatch(playerActions.setProgressPercent(newPercent)),
     setCurrentIndex: (newIndex) =>
       dispatch(playerActions.setCurrentIndex(newIndex)),
     setDuration: (newDuration) =>
       dispatch(playerActions.setDuration(newDuration)),
-    setIsFirstSongTrue: () => dispatch(playerActions.setIsFirstSongTrue()),
-    setIsFirstSongFalse: () => dispatch(playerActions.setIsFirstSongFalse()),
     toggleRepeat: () => dispatch(playerActions.toggleRepeat()),
     toggleRandom: () => dispatch(playerActions.toggleRandom()),
     setVolume: (newVolume) => dispatch(playerActions.setVolume(newVolume)),
+    setListPlaying: (listPlaying) =>
+      dispatch(playerActions.setListPlaying(listPlaying)),
   };
 };
 

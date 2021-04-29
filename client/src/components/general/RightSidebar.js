@@ -7,12 +7,15 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faEllipsisH } from "@fortawesome/free-solid-svg-icons";
 
 class RightSidebar extends Component {
+  componentDidUpdate(prevProps) {
+    if (prevProps.listPlaying !== this.props.listPlaying) this.forceUpdate();
+  }
+
   pickSong = (e) => {
     const songNode = e.target.closest(".list-song__item:not(.active)");
     const songOption = e.target.closest(".song-options");
     if (songNode && !songOption) {
       const newIndex = Number(songNode.dataset.index);
-      console.log(newIndex)
       this.props.setCurrentIndex(newIndex);
     }
   };
