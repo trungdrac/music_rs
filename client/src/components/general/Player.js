@@ -102,10 +102,14 @@ class Player extends Component {
   };
 
   handleNext = () => {
-    const { currentIndex, listPlaying } = this.props;
+    const { currentIndex, listPlaying, repeat } = this.props;
     let newIndex;
-    if (currentIndex < listPlaying.length - 1) {
+    if (repeat === "none" && currentIndex < listPlaying.length - 1) {
       newIndex = currentIndex + 1;
+      this.props.setCurrentIndex(newIndex);
+    }
+    if (repeat === "all") {
+      newIndex = (currentIndex + 1) % listPlaying.length;
       this.props.setCurrentIndex(newIndex);
     }
   };
@@ -153,7 +157,7 @@ class Player extends Component {
   };
 
   handleEnded = () => {
-    if (this.props.repeat) {
+    if (this.props.repeat === "one") {
       this.audioRef.current.play();
     } else {
       this.handleNext();
