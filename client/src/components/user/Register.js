@@ -40,7 +40,7 @@ class Register extends Component {
             .then((res) => {
               const user = res.data;
               this.props.setCurrentUser(user);
-              this.props.history.push("/");
+              this.props.history.replace("/");
             })
             .catch((error) => alert(error.response.data.message));
         }

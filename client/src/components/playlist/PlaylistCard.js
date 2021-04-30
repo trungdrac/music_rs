@@ -43,7 +43,7 @@ class PlaylistCard extends Component {
                   drop="left"
                   title={<FontAwesomeIcon icon={faEllipsisV} />}
                 >
-                  <OptionsList />
+                  <OptionsList playlist={item} info copyLink />
                 </DropdownButton>
 
                 <div className="card-img__overlay">

@@ -69,7 +69,18 @@ class RightSidebar extends Component {
                       drop="left"
                       title={<FontAwesomeIcon icon={faEllipsisH} />}
                     >
-                      <OptionsList />
+                      <OptionsList
+                        song={song}
+                        like
+                        addToPlaylist
+                        playNext
+                        playLast
+                        remove
+                        comment
+                        info
+                        copyLink
+                        download
+                      />
                     </DropdownButton>
                   </div>
                 </li>

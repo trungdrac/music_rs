@@ -51,7 +51,7 @@ class App extends Component {
     if (this.state.isLoading) return <Loading />;
 
     const { user } = this.props;
-    
+
     return (
       <Router>
         <div className="wrapper">
@@ -99,7 +99,11 @@ class App extends Component {
                     component={ForgotPassword}
                   />
                 ) : null}
-                <Route exact path="/reset-password/:token" component={ResetPassword} />
+                <Route
+                  exact
+                  path="/reset-password/:token"
+                  component={ResetPassword}
+                />
                 <Route exact path="/" component={Home} />
                 <Route render={() => <Redirect to="/" />} />
               </Switch>

@@ -39,7 +39,17 @@ class SongCard extends Component {
                   drop="left"
                   title={<FontAwesomeIcon icon={faEllipsisV} />}
                 >
-                  <OptionsList />
+                  <OptionsList
+                    song={item}
+                    like
+                    addToPlaylist
+                    playNext
+                    playLast
+                    comment
+                    info
+                    copyLink
+                    download
+                  />
                 </DropdownButton>
 
                 <div className="card-img__overlay">

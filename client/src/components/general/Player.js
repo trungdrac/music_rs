@@ -46,11 +46,36 @@ class Player extends Component {
 
   componentDidUpdate(prevProps) {
     const audio = this.audioRef.current;
+    const { currentSongId, listPlaying, volume } = this.props;
 
-    if (prevProps.currentSongId !== this.props.currentSongId) audio.play();
+    if (prevProps.currentSongId !== currentSongId) audio.play();
 
-    if (prevProps.volume !== this.props.volume)
-      audio.volume = this.props.volume;
+    if (prevProps.volume !== volume) audio.volume = volume;
+
+    if (
+      prevProps.listPlaying.length &&
+      prevProps.listPlaying.length < listPlaying.length
+    ) {
+      const oldListId = prevProps.listPlaying.map((song) => song._id);
+      const addedSong = listPlaying.filter(
+        (song) => !oldListId.includes(song._id)
+      );
+      const newList = [...this.state.originalListPlaying].concat(addedSong);
+      this.setState({ originalListPlaying: newList });
+    }
+
+    if (prevProps.listPlaying.length > listPlaying.length) {
+      const newListId = listPlaying.map((song) => song._id);
+      const removedSong = prevProps.listPlaying.filter(
+        (song) => !newListId.includes(song._id)
+      );
+      const removedSongIndex = this.state.originalListPlaying.findIndex(
+        (song) => song._id === removedSong[0]._id
+      );
+      const newList = [...this.state.originalListPlaying];
+      newList.splice(removedSongIndex, 1);
+      this.setState({ originalListPlaying: newList });
+    }
   }
 
   handlePlayPause = () => {
@@ -354,7 +379,15 @@ class Player extends Component {
             drop="left"
             title={<FontAwesomeIcon icon={faEllipsisV} />}
           >
-            <OptionsList />
+            <OptionsList
+              song={listPlaying[currentIndex]}
+              like
+              addToPlaylist
+              comment
+              info
+              copyLink
+              download
+            />
           </DropdownButton>
           <input
             type="checkbox"

@@ -30,7 +30,7 @@ class Login extends Component {
           .then((res) => {
             const user = res.data;
             this.props.setCurrentUser(user);
-            this.props.history.push("/");
+            this.props.history.replace("/");
           })
           .catch((error) => {
             const errorData = error.response.data;
