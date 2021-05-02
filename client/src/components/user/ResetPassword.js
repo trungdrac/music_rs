@@ -34,7 +34,13 @@ class ResetPassword extends Component {
           .then(() => {
             this.setState({ isSuccessed: true });
           })
-          .catch((error) => alert(error.response.data.message));
+          .catch((error) =>
+            alert(
+              `Lỗi! ${
+                error.response.data.message ? error.response.data.message : ""
+              }`
+            )
+          );
       },
     });
   }

@@ -5,6 +5,7 @@ const area = require("./area");
 const category = require("./category");
 const user = require("./user");
 const interaction = require("./interaction");
+const search = require("./search");
 
 function route(app) {
   app.use("/playlist", playlist);
@@ -14,6 +15,7 @@ function route(app) {
   app.use("/category", category);
   app.use("/user", user);
   app.use("/interaction", interaction);
+  app.use("/search", search);
 }
 
 module.exports = route;

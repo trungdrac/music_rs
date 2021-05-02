@@ -5,6 +5,7 @@ import song from "./songReducer";
 import area from "./areaReducer";
 import user from "./userReducer";
 import artist from "./artistReducer";
+import search from "./searchReducer";
 
 export default combineReducers({
   player,
@@ -13,4 +14,5 @@ export default combineReducers({
   area,
   user,
   artist,
+  search,
 });

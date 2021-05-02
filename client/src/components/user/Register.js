@@ -42,7 +42,13 @@ class Register extends Component {
               this.props.setCurrentUser(user);
               this.props.history.replace("/");
             })
-            .catch((error) => alert(error.response.data.message));
+            .catch((error) =>
+              alert(
+                `Lỗi! ${
+                  error.response.data.message ? error.response.data.message : ""
+                }`
+              )
+            );
         }
       },
     });

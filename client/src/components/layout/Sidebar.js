@@ -43,7 +43,7 @@ class Sidebar extends Component {
         </div>
         <nav className="sidebar__nav">
           <ul className="list-group">
-            <li className="sidebar__nav--header">Browse Music</li>
+            <li className="sidebar__nav--header">Bài hát</li>
             <li onClick={this.slideOff}>
               <NavLink
                 exact
