@@ -9,13 +9,8 @@ class SongController {
     Song.find({}, "title artist image url")
       .populate({ path: "artist", select: "name" })
       .limit(12)
-      .exec((err, songs) => {
-        if (err) {
-          next;
-        } else {
-          res.json(songs);
-        }
-      });
+      .then((songs) => res.json(songs))
+      .catch((error) => res.json({ message: error }));
   };
 
   // [GET] /song/detail/:id
@@ -25,13 +20,8 @@ class SongController {
       .populate({ path: "artist", select: "name" })
       .populate({ path: "category", select: "name -_id" })
       .populate({ path: "area", select: "name -_id" })
-      .exec((err, song) => {
-        if (err) {
-          next;
-        } else {
-          res.json(song);
-        }
-      });
+      .then((song) => res.json(song))
+      .catch((error) => res.json({ message: error }));
   };
 
   // [GET] /song/:area/:category
@@ -41,13 +31,8 @@ class SongController {
       .populate({ path: "artist", select: "name" })
       .sort({ _id: 1 })
       .limit(24)
-      .exec((err, songs) => {
-        if (err) {
-          next;
-        } else {
-          res.json(songs);
-        }
-      });
+      .then((songs) => res.json(songs))
+      .catch((error) => res.json({ message: error }));
   };
 }
 

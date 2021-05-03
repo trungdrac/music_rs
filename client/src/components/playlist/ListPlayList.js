@@ -6,12 +6,20 @@ import MyPagination from "../general/MyPagination";
 import PlaylistCard from "../playlist/PlaylistCard";
 
 class ListPlaylist extends Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      isLoading: true,
+    };
+  }
+
   componentDidMount() {
     const { areaId } = this.props.match.params;
 
     axios
       .get(`/playlist/${areaId}`)
       .then((res) => this.props.setPlaylistArea(res.data))
+      .then(() => this.setState({ isLoading: false }))
       .catch((error) =>
         alert(
           `Lỗi! ${
@@ -22,6 +30,8 @@ class ListPlaylist extends Component {
   }
 
   render() {
+    if (this.state.isLoading) return "";
+
     return (
       <React.Fragment>
         <div className="row">
@@ -41,9 +51,8 @@ const mapStateToProps = (state) => ({
   playlistArea: state.playlist.playlistArea,
 });
 
-const mapDispatchToProps = (dispatch) => {
-  return {
-    setPlaylistArea: (playlists) => dispatch(setPlaylistArea(playlists)),
-  };
-};
+const mapDispatchToProps = (dispatch) => ({
+  setPlaylistArea: (playlists) => dispatch(setPlaylistArea(playlists)),
+});
+
 export default connect(mapStateToProps, mapDispatchToProps)(ListPlaylist);

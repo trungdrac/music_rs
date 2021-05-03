@@ -17,13 +17,13 @@ import Header from "./components/layout/Header";
 import Sidebar from "./components/layout/Sidebar";
 import PlaylistDetail from "./components/playlist/PlaylistDetail";
 import Playlists from "./components/playlist/Playlists";
-import Search from "./components/search/Search";
 import SongDetail from "./components/song/SongDetail";
 import Songs from "./components/song/Songs";
 import Login from "./components/user/Login";
 import Register from "./components/user/Register";
 import ForgotPassword from "./components/user/ForgotPassword";
 import ResetPassword from "./components/user/ResetPassword";
+import SearchResult from "./components/search/SearchResult";
 
 class App extends Component {
   constructor(props) {
@@ -60,7 +60,16 @@ class App extends Component {
             <Header />
             <div className="main-content container-fruit">
               <Switch>
-                <Route exact path="/search" component={Search} />
+                <Route
+                  exact
+                  path="/search/:type"
+                  render={(props) => (
+                    <SearchResult
+                      key={props.history.location.search}
+                      {...props}
+                    />
+                  )}
+                />
                 <Route
                   exact
                   path="/song/detail/:id"
@@ -121,10 +130,8 @@ const mapStateToProps = (state) => ({
   user: state.user,
 });
 
-const mapDispatchToProps = (dispatch) => {
-  return {
-    setAreas: (areas) => dispatch(setAreas(areas)),
-  };
-};
+const mapDispatchToProps = (dispatch) => ({
+  setAreas: (areas) => dispatch(setAreas(areas)),
+});
 
 export default connect(mapStateToProps, mapDispatchToProps)(App);

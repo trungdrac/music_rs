@@ -4,15 +4,10 @@ require("../models/Category");
 class AreaController {
   // [GET] /area
   getAll = (req, res, next) => {
-    Area.find({})
-      .populate({ path: "category" })
-      .exec((err, areas) => {
-        if (err) {
-          next;
-        } else {
-          res.json(areas);
-        }
-      });
+    Area.find({}, "name category")
+      .populate({ path: "category", select: "name" })
+      .then((areas) => res.json(areas))
+      .catch((error) => res.json({ message: error }));
   };
 }
 

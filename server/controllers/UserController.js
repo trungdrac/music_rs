@@ -37,7 +37,7 @@ class UserController {
             res.json({ message: "", field: "username" });
           }
         })
-        .catch(next);
+        .catch((error) => res.json({ message: error }));
     if (req.body.email)
       User.findOne({ email: req.body.email })
         .then((email) => {
@@ -47,7 +47,7 @@ class UserController {
             res.json({ message: "", field: "email" });
           }
         })
-        .catch(next);
+        .catch((error) => res.json({ message: error }));
   };
 
   // [POST] /user/login

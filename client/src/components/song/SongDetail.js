@@ -10,7 +10,6 @@ import {
 import Section from "../general/Section";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPlay } from "@fortawesome/free-solid-svg-icons";
-import Loading from "../general/Loading";
 import axios from "axios";
 
 class SongDetail extends Component {
@@ -45,7 +44,7 @@ class SongDetail extends Component {
   };
 
   render() {
-    if (this.state.isLoading) return <Loading />;
+    if (this.state.isLoading) return "";
 
     const {
       _id,
@@ -128,12 +127,11 @@ const mapStateToProps = (state) => ({
   currentSongId: state.player.currentSongId,
 });
 
-const mapDispatchToProps = (dispatch) => {
-  return {
-    setSongDetail: (song) => dispatch(setSongDetail(song)),
-    setListPlaying: (playlist) => dispatch(setListPlaying(playlist)),
-    setCurrentIndex: (newIndex) => dispatch(setCurrentIndex(newIndex)),
-    playAudio: () => dispatch(playAudio()),
-  };
-};
+const mapDispatchToProps = (dispatch) => ({
+  setSongDetail: (song) => dispatch(setSongDetail(song)),
+  setListPlaying: (playlist) => dispatch(setListPlaying(playlist)),
+  setCurrentIndex: (newIndex) => dispatch(setCurrentIndex(newIndex)),
+  playAudio: () => dispatch(playAudio()),
+});
+
 export default connect(mapStateToProps, mapDispatchToProps)(SongDetail);

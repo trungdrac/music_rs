@@ -185,12 +185,10 @@ const mapStateToProps = (state) => ({
   listPlaying: state.player.listPlaying,
 });
 
-const mapDispatchToProps = (dispatch) => {
-  return {
-    setCurrentIndex: (newIndex) => dispatch(setCurrentIndex(newIndex)),
-    setListPlaying: (listPlaying) => dispatch(setListPlaying(listPlaying)),
-  };
-};
+const mapDispatchToProps = (dispatch) => ({
+  setCurrentIndex: (newIndex) => dispatch(setCurrentIndex(newIndex)),
+  setListPlaying: (listPlaying) => dispatch(setListPlaying(listPlaying)),
+});
 
 const OptionsListWithRouter = withRouter(OptionsList);
 export default connect(

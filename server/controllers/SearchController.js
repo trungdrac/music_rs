@@ -3,11 +3,11 @@ const Playlist = require("../models/Playlist");
 const Artist = require("../models/Artist");
 
 class SearchController {
-  // [POST] /search
-  search = (req, res, next) => {
-    const { text } = req.body;
+  // [GET] /search
+  suggest = (req, res, next) => {
+    const { q } = req.query;
     const songPromise = Song.find(
-      { $text: { $search: text } },
+      { $text: { $search: q } },
       { score: { $meta: "textScore" } },
       { select: "title image" }
     )
@@ -15,7 +15,7 @@ class SearchController {
       .limit(4)
       .exec();
     const playlistPromise = Playlist.find(
-      { $text: { $search: text } },
+      { $text: { $search: q } },
       { score: { $meta: "textScore" } },
       { select: "title image" }
     )
@@ -23,7 +23,7 @@ class SearchController {
       .limit(4)
       .exec();
     const artistPromise = Artist.find(
-      { $text: { $search: text } },
+      { $text: { $search: q } },
       { score: { $meta: "textScore" } },
       { select: "name image" }
     )
@@ -32,7 +32,55 @@ class SearchController {
       .exec();
     Promise.all([songPromise, playlistPromise, artistPromise])
       .then((suggestion) => res.json(suggestion))
-      .catch(next);
+      .catch((error) => res.json({ message: error }));
+  };
+
+  // [GET] /search/:type?q=&page=
+  search = (req, res, next) => {
+    const { q, page } = req.query;
+    const { type } = req.params;
+    if (type === "song") {
+      Song.find(
+        { $text: { $search: q } },
+        { score: { $meta: "textScore" } },
+        { select: "title image artist url" }
+      )
+        .populate({ path: "artist", select: "name" })
+        .sort({ score: { $meta: "textScore" } })
+        .limit(24)
+        .then((result) => res.json(result))
+        .catch((error) => res.json({ message: error }));
+    }
+    if (type === "playlist") {
+      Playlist.find(
+        { $text: { $search: q } },
+        { score: { $meta: "textScore" } },
+        { select: "title image song" }
+      )
+        .populate({
+          path: "song",
+          select: "title artist image url",
+          populate: {
+            path: "artist",
+            select: "name",
+          },
+        })
+        .sort({ score: { $meta: "textScore" } })
+        .limit(24)
+        .then((result) => res.json(result))
+        .catch((error) => res.json({ message: error }));
+    }
+    if (type === "artist") {
+      Artist.find(
+        { $text: { $search: q } },
+        { score: { $meta: "textScore" } },
+        { select: "name image" }
+      )
+        .sort({ score: { $meta: "textScore" } })
+        .limit(24)
+        .then((result) => res.json(result))
+        .catch((error) => res.json({ message: error }));
+    }
   };
 }
 

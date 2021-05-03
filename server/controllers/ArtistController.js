@@ -18,7 +18,7 @@ class ArtistController {
     ).exec();
     Promise.all([artistPromise, songPromise])
       .then((artistDetail) => res.json(artistDetail))
-      .catch(next);
+      .catch((error) => res.json({ message: error }));
   };
 
   // [GET] /artist/:area/
@@ -27,13 +27,8 @@ class ArtistController {
     Artist.find({ area: areaId }, "name image")
       .sort({ _id: 1 })
       .limit(24)
-      .exec((err, artists) => {
-        if (err) {
-          next;
-        } else {
-          res.json(artists);  
-        }
-      });
+      .then((artists) => res.json(artists))
+      .catch((error) => res.json({ message: error }));
   };
 }
 

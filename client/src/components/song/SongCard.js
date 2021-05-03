@@ -85,12 +85,10 @@ const mapStateToProps = (state) => ({
   currentSongId: state.player.currentSongId,
 });
 
-const mapDispatchToProps = (dispatch) => {
-  return {
-    setListPlaying: (listPlaying) => dispatch(setListPlaying(listPlaying)),
-    setCurrentIndex: (newIndex) => dispatch(setCurrentIndex(newIndex)),
-    playAudio: () => dispatch(playAudio()),
-  };
-};
+const mapDispatchToProps = (dispatch) => ({
+  setListPlaying: (listPlaying) => dispatch(setListPlaying(listPlaying)),
+  setCurrentIndex: (newIndex) => dispatch(setCurrentIndex(newIndex)),
+  playAudio: () => dispatch(playAudio()),
+});
 
 export default connect(mapStateToProps, mapDispatchToProps)(SongCard);

@@ -194,6 +194,10 @@
   color: var(--white-color);
 }
 
+.search-input:focus ~ .search-suggest {
+  display: block;
+}
+
 .search-suggest {
   background-color: var(--item-header-color);
   position: absolute;
@@ -204,6 +208,7 @@
   overflow-y: auto;
   color: var(--text-color);
   border-radius: 2px;
+  display: none;
 }
 
 .search-suggest__header {

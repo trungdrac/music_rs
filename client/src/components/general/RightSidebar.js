@@ -97,10 +97,8 @@ const mapStateToProps = (state) => ({
   currentIndex: state.player.currentIndex,
 });
 
-const mapDispatchToProps = (dispatch) => {
-  return {
-    setCurrentIndex: (newIndex) => dispatch(actions.setCurrentIndex(newIndex)),
-  };
-};
+const mapDispatchToProps = (dispatch) => ({
+  setCurrentIndex: (newIndex) => dispatch(actions.setCurrentIndex(newIndex)),
+});
 
 export default connect(mapStateToProps, mapDispatchToProps)(RightSidebar);

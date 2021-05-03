@@ -212,8 +212,12 @@ class Player extends Component {
       if (audio !== null) {
         switch (e.keyCode) {
           case 32:
-            e.preventDefault();
-            this.handlePlayPause();
+            if (
+              document.querySelector(".search-input") !== document.activeElement
+            ) {
+              e.preventDefault();
+              this.handlePlayPause();
+            }
             break;
           case 37:
             audio.currentTime -= 5;
@@ -421,27 +425,23 @@ const mapStateToProps = (state) => ({
   listPlaying: state.player.listPlaying,
 });
 
-const mapDispatchToProps = (dispatch) => {
-  return {
-    //player
-    playAudio: () => dispatch(playerActions.playAudio()),
-    pauseAudio: () => dispatch(playerActions.pauseAudio()),
-    setCurrentTime: (newTime) =>
-      dispatch(playerActions.setCurrentTime(newTime)),
-    setCurrentSongId: (currentSongId) =>
-      dispatch(playerActions.setCurrentSongId(currentSongId)),
-    setProgressPercent: (newPercent) =>
-      dispatch(playerActions.setProgressPercent(newPercent)),
-    setCurrentIndex: (newIndex) =>
-      dispatch(playerActions.setCurrentIndex(newIndex)),
-    setDuration: (newDuration) =>
-      dispatch(playerActions.setDuration(newDuration)),
-    setRepeat: (value) => dispatch(playerActions.setRepeat(value)),
-    toggleRandom: () => dispatch(playerActions.toggleRandom()),
-    setVolume: (newVolume) => dispatch(playerActions.setVolume(newVolume)),
-    setListPlaying: (listPlaying) =>
-      dispatch(playerActions.setListPlaying(listPlaying)),
-  };
-};
+const mapDispatchToProps = (dispatch) => ({
+  playAudio: () => dispatch(playerActions.playAudio()),
+  pauseAudio: () => dispatch(playerActions.pauseAudio()),
+  setCurrentTime: (newTime) => dispatch(playerActions.setCurrentTime(newTime)),
+  setCurrentSongId: (currentSongId) =>
+    dispatch(playerActions.setCurrentSongId(currentSongId)),
+  setProgressPercent: (newPercent) =>
+    dispatch(playerActions.setProgressPercent(newPercent)),
+  setCurrentIndex: (newIndex) =>
+    dispatch(playerActions.setCurrentIndex(newIndex)),
+  setDuration: (newDuration) =>
+    dispatch(playerActions.setDuration(newDuration)),
+  setRepeat: (value) => dispatch(playerActions.setRepeat(value)),
+  toggleRandom: () => dispatch(playerActions.toggleRandom()),
+  setVolume: (newVolume) => dispatch(playerActions.setVolume(newVolume)),
+  setListPlaying: (listPlaying) =>
+    dispatch(playerActions.setListPlaying(listPlaying)),
+});
 
 export default connect(mapStateToProps, mapDispatchToProps)(Player);

@@ -1,7 +1,7 @@
 import * as types from "../constants/ActionTypes";
 
 const initialState = {
-  suggestion: [[], [], []],
+  suggestion: [],
   result: [],
 };
 

@@ -72,13 +72,11 @@ const mapStateToProps = (state) => ({
   isRandom: state.player.isRandom,
 });
 
-const mapDispatchToProps = (dispatch) => {
-  return {
-    setListPlaying: (listPlaying) => dispatch(setListPlaying(listPlaying)),
-    setCurrentIndex: (newIndex) => dispatch(setCurrentIndex(newIndex)),
-    playAudio: () => dispatch(playAudio()),
-    toggleRandom: () => dispatch(toggleRandom()),
-  };
-};
+const mapDispatchToProps = (dispatch) => ({
+  setListPlaying: (listPlaying) => dispatch(setListPlaying(listPlaying)),
+  setCurrentIndex: (newIndex) => dispatch(setCurrentIndex(newIndex)),
+  playAudio: () => dispatch(playAudio()),
+  toggleRandom: () => dispatch(toggleRandom()),
+});
 
 export default connect(mapStateToProps, mapDispatchToProps)(PlaylistCard);

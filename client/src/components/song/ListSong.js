@@ -6,6 +6,13 @@ import SongCard from "./SongCard";
 import MyPagination from "../general/MyPagination";
 
 class ListSong extends Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      isLoading: true,
+    };
+  }
+
   componentDidMount() {
     const { areaId } = this.props.match.params;
     const { categoryId } = this.props.match.params;
@@ -13,6 +20,7 @@ class ListSong extends Component {
     axios
       .get(`/song/${areaId}/${categoryId}`)
       .then((res) => this.props.setSongCategory(res.data))
+      .then(() => this.setState({ isLoading: false }))
       .catch((error) =>
         alert(
           `Lỗi! ${
@@ -23,6 +31,8 @@ class ListSong extends Component {
   }
 
   render() {
+    if (this.state.isLoading) return "";
+
     return (
       <React.Fragment>
         <div className="row">
@@ -42,9 +52,8 @@ const mapStateToProps = (state) => ({
   songCategory: state.song.songCategory,
 });
 
-const mapDispatchToProps = (dispatch) => {
-  return {
-    setSongCategory: (songs) => dispatch(setSongCategory(songs)),
-  };
-};
+const mapDispatchToProps = (dispatch) => ({
+  setSongCategory: (songs) => dispatch(setSongCategory(songs)),
+});
+
 export default connect(mapStateToProps, mapDispatchToProps)(ListSong);

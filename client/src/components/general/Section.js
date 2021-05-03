@@ -5,12 +5,20 @@ import axios from "axios";
 import SongCard from "../song/SongCard";
 
 class Section extends Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      isLoading: true,
+    };
+  }
+
   componentDidMount() {
     axios
       .get("/song")
       .then((res) => {
         this.props.setSongs(res.data);
       })
+      .then(() => this.setState({ isLoading: false }))
       .catch((error) =>
         alert(
           `Lỗi! ${
@@ -20,6 +28,8 @@ class Section extends Component {
       );
   }
   render() {
+    if (this.state.isLoading) return "";
+
     return (
       <div className="section">
         <div className="heading">
@@ -51,9 +61,8 @@ const mapStateToProps = (state) => ({
   songs: state.song.songs,
 });
 
-const mapDispatchToProps = (dispatch) => {
-  return {
-    setSongs: (songs) => dispatch(setSongs(songs)),
-  };
-};
+const mapDispatchToProps = (dispatch) => ({
+  setSongs: (songs) => dispatch(setSongs(songs)),
+});
+
 export default connect(mapStateToProps, mapDispatchToProps)(Section);

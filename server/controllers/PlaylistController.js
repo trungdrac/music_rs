@@ -10,13 +10,8 @@ class PlaylistController {
     Playlist.findById(playlistId)
       .populate({ path: "song", select: "title artist image url" })
       .populate({ path: "own", select: "username" })
-      .exec((err, playlist) => {
-        if (err) {
-          console.log(err);
-        } else {
-          res.json(playlist);
-        }
-      });
+      .then((playlist) => res.json(playlist))
+      .catch((error) => res.json({ message: error }));
   };
 
   // [GET] /playlist/:area/
@@ -33,13 +28,8 @@ class PlaylistController {
       })
       .sort({ _id: 1 })
       .limit(24)
-      .exec((err, playlists) => {
-        if (err) {
-          next;
-        } else {
-          res.json(playlists);
-        }
-      });
+      .then((playlists) => res.json(playlists))
+      .catch((error) => res.json({ message: error }));
   };
 }
 

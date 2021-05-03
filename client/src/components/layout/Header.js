@@ -1,5 +1,6 @@
 import React, { Component } from "react";
 import { Link } from "react-router-dom";
+import { withRouter } from "react-router-dom";
 import { connect } from "react-redux";
 import { setCurrentUser } from "../../actions/userAction";
 import { setSuggestion } from "../../actions/searchAction";
@@ -24,10 +25,9 @@ class Header extends Component {
     this.searchRef = React.createRef();
   }
 
-  search = debounce((e) => {
-    const data = { text: e.target.value };
+  suggest = debounce((e) => {
     axios
-      .post("/search", data)
+      .get(`/search?q=${e.target.value}`)
       .then((res) => {
         const suggestion = res.data;
         this.props.setSuggestion(suggestion);
@@ -40,6 +40,24 @@ class Header extends Component {
         )
       );
   }, 500);
+
+  handleSelect = (e) => {
+    const selectedNode = e.target.closest(".list-song__item.list-group-item");
+    const { type, id } = selectedNode.dataset;
+    this.props.history.push(`/${type}/detail/${id}`);
+    this.searchRef.current.value = "";
+    this.props.setSuggestion([]);
+  };
+
+  search = () => {
+    const input = this.searchRef.current;
+    this.props.history.push(`/search/song?q=${input.value}&page=1`);
+    input.blur();
+  };
+
+  onEnter = (e) => {
+    if (e.key === "Enter") this.search();
+  };
 
   logout = () => {
     this.props.setCurrentUser(null);
@@ -67,96 +85,97 @@ class Header extends Component {
           <label htmlFor="sidebar-checkbox" className="overlay"></label>
           <Sidebar />
           <div className="header__content--search">
-            <button className="search-icon">
+            <button className="search-icon" onClick={this.search}>
               <FontAwesomeIcon icon={faSearch} />
             </button>
             <input
               type="text"
               className="search-input"
               placeholder="Tìm kiếm..."
-              onChange={this.search}
+              onChange={this.suggest}
               ref={this.searchRef}
+              onKeyPress={this.onEnter}
             />
             <div className="search-suggest box-shadow">
               <ul className="list-group list-group-flush">
-                {suggestion[0].length ? (
+                {suggestion[0] && suggestion[0].length ? (
                   <React.Fragment>
                     <li className="search-suggest__header">Bài hát</li>
                     {suggestion[0].map((song) => (
-                      <li key={song._id}>
-                        <Link
-                          exact
-                          to={`/song/detail/${song._id}`}
-                          className="list-song__item list-group-item"
-                        >
-                          <div className="search-suggest__item">
-                            <div
-                              className="search-suggest__item--img"
-                              style={{
-                                backgroundImage: `url(${song.image})`,
-                              }}
-                            ></div>
-                            <p className="search-suggest__item--info">
-                              {song.title}
-                            </p>
-                          </div>
-                        </Link>
+                      <li
+                        className="list-song__item list-group-item"
+                        key={song._id}
+                        onMouseDown={this.handleSelect}
+                        data-id={song._id}
+                        data-type="song"
+                      >
+                        <div className="search-suggest__item">
+                          <div
+                            className="search-suggest__item--img"
+                            style={{
+                              backgroundImage: `url(${song.image})`,
+                            }}
+                          ></div>
+                          <p className="search-suggest__item--info">
+                            {song.title}
+                          </p>
+                        </div>
                       </li>
                     ))}
                   </React.Fragment>
                 ) : (
                   ""
                 )}
-                {suggestion[1].length ? (
+                {suggestion[1] && suggestion[1].length ? (
                   <React.Fragment>
                     <li className="search-suggest__header">Playlist</li>
                     {suggestion[1].map((playlist) => (
-                      <li key={playlist._id}>
-                        <Link
-                          exact
-                          to={`/playlist/detail/${playlist._id}`}
-                          className="list-song__item list-group-item"
-                        >
-                          <div className="search-suggest__item">
-                            <div
-                              className="search-suggest__item--img"
-                              style={{
-                                backgroundImage: `url(${playlist.image})`,
-                              }}
-                            ></div>
-                            <p className="search-suggest__item--info">
-                              {playlist.title}
-                            </p>
-                          </div>
-                        </Link>
+                      <li
+                        className="list-song__item list-group-item"
+                        key={playlist._id}
+                        onMouseDown={this.handleSelect}
+                        data-id={playlist._id}
+                        data-type="playlist"
+                      >
+                        <div className="search-suggest__item">
+                          <div
+                            className="search-suggest__item--img"
+                            style={{
+                              backgroundImage: `url(${playlist.image})`,
+                            }}
+                          ></div>
+                          <p className="search-suggest__item--info">
+                            {playlist.title}
+                          </p>
+                        </div>
                       </li>
                     ))}
                   </React.Fragment>
                 ) : (
                   ""
                 )}
-                {suggestion[2].length ? (
+                {suggestion[2] && suggestion[2].length ? (
                   <React.Fragment>
                     <li className="search-suggest__header">Nghệ sỹ</li>
                     {suggestion[2].map((artist) => (
-                      <li key={artist._id}>
-                        <Link
-                          exact
-                          to={`/artist/detail/${artist._id}`}
-                          className="list-song__item list-group-item"
-                        >
-                          <div className="search-suggest__item">
-                            <div
-                              className="search-suggest__item--img rounded-circle"
-                              style={{
-                                backgroundImage: `url(${artist.image})`,
-                              }}
-                            ></div>
-                            <p className="search-suggest__item--info">
-                              {artist.name}
-                            </p>
-                          </div>
-                        </Link>
+                      <li
+                        className="list-song__item list-group-item"
+                        key={artist._id}
+                        onMouseDown={this.handleSelect}
+                        data-id={artist._id}
+                        data-type="artist"
+                      >
+                        <div className="search-suggest__item">
+                          <div
+                            className="search-suggest__item--img rounded-circle"
+                            style={{
+                              backgroundImage: `url(${artist.image})`,
+                            }}
+                          ></div>
+                          <p className="search-suggest__item--info">
+                            {artist.name}
+                          </p>
+                        </div>
                       </li>
                     ))}
                   </React.Fragment>
@@ -230,11 +249,10 @@ const mapStateToProps = (state) => ({
   suggestion: state.search.suggestion,
 });
 
-const mapDispatchToProps = (dispatch) => {
-  return {
-    setCurrentUser: (user) => dispatch(setCurrentUser(user)),
-    setSuggestion: (suggestion) => dispatch(setSuggestion(suggestion)),
-  };
-};
+const mapDispatchToProps = (dispatch) => ({
+  setCurrentUser: (user) => dispatch(setCurrentUser(user)),
+  setSuggestion: (suggestion) => dispatch(setSuggestion(suggestion)),
+});
 
-export default connect(mapStateToProps, mapDispatchToProps)(Header);
+const HeaderWithRouter = withRouter(Header);
+export default connect(mapStateToProps, mapDispatchToProps)(HeaderWithRouter);
