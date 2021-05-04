@@ -141,17 +141,16 @@
   padding: 0 1.25rem;
   display: flex;
   align-items: center;
+  justify-content: space-between;
   -webkit-transition: 0.4s all ease-in;
   -moz-transition: 0.4s all ease-in;
   transition: 0.4s all ease-in;
 }
 
 .header__content--sidebar-icon {
-  padding: 0.4rem;
+  padding: 0.1rem 0.4rem;
   cursor: pointer;
-  font-size: 1.3rem;
-  margin-right: 0.8rem;
-  margin-bottom: 0;
+  font-size: 1.5rem;
   display: none;
 }
 
@@ -167,10 +166,16 @@
 }
 
 .header__content--search {
-  flex: 1;
+  margin-left: 1rem;
+  margin-right: 1rem;
+  width: 40rem;
+  min-width: 8rem;
+  align-items: center;
   display: flex;
-  height: 100%;
+  height: 70%;
   position: relative;
+  border-radius: 20px;
+  background-color: var(--bg-input-color);
 }
 
 .search-icon {
@@ -178,7 +183,6 @@
   background-color: transparent;
   font-size: 1.2rem;
   color: var(--white-color);
-  padding: 0.4rem;
 }
 
 .search-input {
@@ -202,7 +206,7 @@
   background-color: var(--item-header-color);
   position: absolute;
   width: 100%;
-  top: 100%;
+  top: calc(100% + 8px);
   left: 0;
   max-height: 400px;
   overflow-y: auto;
@@ -212,7 +216,7 @@
 }
 
 .search-suggest__header {
-  padding: 1rem 2rem;
+  padding: 1rem 1.5rem;
   font-size: 0.75rem;
   text-transform: uppercase;
   letter-spacing: 1.5px;
@@ -224,7 +228,7 @@
   display: flex;
   align-items: center;
   width: 100%;
-  padding: 0 1rem;
+  padding: 0 0.5rem;
 }
 
 .search-suggest__item--img {
@@ -241,7 +245,7 @@
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
-  width: calc(100% - 6rem)
+  width: calc(100% - 3rem);
 }
 
 .search-suggest::-webkit-scrollbar {
@@ -268,6 +272,7 @@
   padding: 0.4rem;
   text-align: center;
   cursor: pointer;
+  white-space: nowrap;
 }
 
 #dropdown-auth::before,
@@ -283,12 +288,18 @@
   box-shadow: none;
 }
 
+.user-circle-icon {
+  font-size: 1.7rem;
+}
+
 .auth-link {
   color: var(--white-color);
   display: block;
   padding: 0.4rem;
   cursor: pointer;
   margin-right: 0;
+  display: flex;
+  align-items: center;
 }
 
 .auth-link:hover {
@@ -344,7 +355,7 @@
   bottom: 0;
   left: 0;
   width: 17.5rem;
-  z-index: 1003;
+  z-index: 1004;
   background-color: var(--bg-sidebar-color);
   -webkit-transition: 0.4s all ease-in;
   -moz-transition: 0.4s all ease-in;
@@ -361,8 +372,7 @@
 
 .sidebar__header--arrow {
   cursor: pointer;
-  padding: 0.4rem;
-  font-size: 1.3rem;
+  font-size: 1.8rem;
   color: var(--main-color);
 }
 
@@ -702,7 +712,7 @@
   right: 0;
   bottom: 0;
   left: 0;
-  z-index: 1004;
+  z-index: 1005;
 }
 
 .form {

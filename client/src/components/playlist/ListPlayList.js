@@ -4,6 +4,7 @@ import axios from "axios";
 import { setPlaylistArea } from "../../actions/playlistAction";
 import MyPagination from "../general/MyPagination";
 import PlaylistCard from "../playlist/PlaylistCard";
+import Blank from "../general/Blank";
 
 class ListPlaylist extends Component {
   constructor(props) {
@@ -15,9 +16,11 @@ class ListPlaylist extends Component {
 
   componentDidMount() {
     const { areaId } = this.props.match.params;
+    const { search } = this.props.history.location;
+    const query = new URLSearchParams(search);
 
     axios
-      .get(`/playlist/${areaId}`)
+      .get(`/playlist/${areaId}?page=${query.get("page")}`)
       .then((res) => this.props.setPlaylistArea(res.data))
       .then(() => this.setState({ isLoading: false }))
       .catch((error) =>
@@ -31,17 +34,17 @@ class ListPlaylist extends Component {
 
   render() {
     if (this.state.isLoading) return "";
+    const { playlistArea } = this.props;
+    if (playlistArea.length === 0) return <Blank />;
 
     return (
       <React.Fragment>
         <div className="row">
-          {this.props.playlistArea.map((playlist) => (
+          {playlistArea.map((playlist) => (
             <PlaylistCard key={playlist._id} item={playlist} />
           ))}
         </div>
-        <div className="d-flex justify-content-center mt-2">
-          <MyPagination />
-        </div>
+        <MyPagination />
       </React.Fragment>
     );
   }

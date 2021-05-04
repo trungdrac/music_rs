@@ -4,6 +4,7 @@ import axios from "axios";
 import { setArtistArea } from "../../actions/artistAction";
 import MyPagination from "../general/MyPagination";
 import ArtistCard from "./ArtistCard";
+import Blank from "../general/Blank";
 
 class ListArtist extends Component {
   constructor(props) {
@@ -15,9 +16,11 @@ class ListArtist extends Component {
 
   componentDidMount() {
     const { areaId } = this.props.match.params;
+    const { search } = this.props.history.location;
+    const query = new URLSearchParams(search);
 
     axios
-      .get(`/artist/${areaId}`)
+      .get(`/artist/${areaId}?page=${query.get("page")}`)
       .then((res) => this.props.setArtistArea(res.data))
       .then(() => this.setState({ isLoading: false }))
       .catch((error) =>
@@ -31,17 +34,17 @@ class ListArtist extends Component {
 
   render() {
     if (this.state.isLoading) return "";
+    const { artistArea } = this.props;
+    if (artistArea.length === 0) return <Blank />;
 
     return (
       <React.Fragment>
         <div className="row">
-          {this.props.artistArea.map((artist) => (
+          {artistArea.map((artist) => (
             <ArtistCard key={artist._id} item={artist} />
           ))}
         </div>
-        <div className="d-flex justify-content-center mt-2">
-          <MyPagination />
-        </div>
+        <MyPagination />
       </React.Fragment>
     );
   }

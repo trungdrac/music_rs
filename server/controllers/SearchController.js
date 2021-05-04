@@ -1,6 +1,9 @@
 const Song = require("../models/Song");
 const Playlist = require("../models/Playlist");
 const Artist = require("../models/Artist");
+const {
+  NUMBER_OF_ITEM_PER_PAGE,
+} = require("../../client/src/constants/Config");
 
 class SearchController {
   // [GET] /search
@@ -47,7 +50,8 @@ class SearchController {
       )
         .populate({ path: "artist", select: "name" })
         .sort({ score: { $meta: "textScore" } })
-        .limit(24)
+        .skip(NUMBER_OF_ITEM_PER_PAGE * (page - 1))
+        .limit(NUMBER_OF_ITEM_PER_PAGE)
         .then((result) => res.json(result))
         .catch((error) => res.json({ message: error }));
     }
@@ -66,7 +70,8 @@ class SearchController {
           },
         })
         .sort({ score: { $meta: "textScore" } })
-        .limit(24)
+        .skip(NUMBER_OF_ITEM_PER_PAGE * (page - 1))
+        .limit(NUMBER_OF_ITEM_PER_PAGE)
         .then((result) => res.json(result))
         .catch((error) => res.json({ message: error }));
     }
@@ -77,7 +82,8 @@ class SearchController {
         { select: "name image" }
       )
         .sort({ score: { $meta: "textScore" } })
-        .limit(24)
+        .skip(NUMBER_OF_ITEM_PER_PAGE * (page - 1))
+        .limit(NUMBER_OF_ITEM_PER_PAGE)
         .then((result) => res.json(result))
         .catch((error) => res.json({ message: error }));
     }

@@ -53,7 +53,7 @@ export class Playlists extends Component {
                           >
                             <div className="mt-4 mb-4">
                               {categoryId === category._id ? (
-                                <ListSong match={match} />
+                                <ListSong match={match} history={history} />
                               ) : (
                                 ""
                               )}

@@ -1,3 +1,6 @@
+const {
+  NUMBER_OF_ITEM_PER_PAGE,
+} = require("../../client/src/constants/Config");
 const Playlist = require("../models/Playlist");
 require("../models/Song");
 require("../models/User");
@@ -16,6 +19,7 @@ class PlaylistController {
 
   // [GET] /playlist/:area/
   getPlaylistArea = (req, res, next) => {
+    const { page } = req.query;
     const areaId = req.params.area;
     Playlist.find({ area: areaId }, "title image song")
       .populate({
@@ -27,7 +31,8 @@ class PlaylistController {
         },
       })
       .sort({ _id: 1 })
-      .limit(24)
+      .skip(NUMBER_OF_ITEM_PER_PAGE * (page - 1))
+      .limit(NUMBER_OF_ITEM_PER_PAGE)
       .then((playlists) => res.json(playlists))
       .catch((error) => res.json({ message: error }));
   };

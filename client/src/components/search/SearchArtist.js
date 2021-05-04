@@ -4,6 +4,7 @@ import { connect } from "react-redux";
 import MyPagination from "../general/MyPagination";
 import { setResult } from "../../actions/searchAction";
 import ArtistCard from "../artist/ArtistCard";
+import Blank from "../general/Blank";
 
 class SearchArtist extends Component {
   constructor(props) {
@@ -30,17 +31,17 @@ class SearchArtist extends Component {
   }
   render() {
     if (this.state.isLoading) return "";
+    const { result } = this.props;
+    if (result.length === 0) return <Blank />;
 
     return (
       <React.Fragment>
         <div className="row">
-          {this.props.result.map((item) => (
+          {result.map((item) => (
             <ArtistCard key={item._id} item={item} />
           ))}
         </div>
-        <div className="d-flex justify-content-center mt-2">
-          <MyPagination />
-        </div>
+        <MyPagination />
       </React.Fragment>
     );
   }

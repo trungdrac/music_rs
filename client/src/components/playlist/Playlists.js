@@ -22,7 +22,7 @@ export class Playlists extends Component {
                   <Tab eventKey={area._id} title={area.name} key={area._id}>
                     <div className="mt-4 mb-4">
                       {areaId === area._id ? (
-                        <ListPlaylist match={match} />
+                        <ListPlaylist match={match} history={history} />
                       ) : (
                         ""
                       )}

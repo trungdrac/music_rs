@@ -3,10 +3,10 @@
   --text-color: #495057;
   --border-color: #b3b3b3;
   --bg-sidebar-color: #f8f9fa;
-  --bg-main-content-color: #fff;
   --main-color: #f14170;
   --main-color-opacity: #f1417094;
   --bg-active-color: #f1417025;
+  --bg-input-color: #f77296;
   --shadow-color: #00000026;
   --overlay-color: #0000004d;
   --error-color: #f33a58;
@@ -45,9 +45,7 @@ a {
   transition: 0.2s all ease-in;
 }
 
-a:hover,
-a:focus,
-a:active {
+a:hover {
   text-decoration: none;
   outline: none;
   color: var(--main-color);
@@ -82,10 +80,26 @@ label {
   left: 0;
   background-color: var(--overlay-color);
   display: none;
+  z-index: 1003;
+}
+
+.blank {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 200px;
+  background-color: var(--bg-sidebar-color);
+  color: var(--main-color);
+}
+
+.blank__icon {
+  font-size: 3.5rem;
+  margin-bottom: 1.8rem;
 }
 
 .disabled {
-  opacity: 0.3;
+  opacity: 0.7;
   pointer-events: none;
 }
 
@@ -142,6 +156,57 @@ label {
   text-align: center;
 }
 /* dropdown button options end */
+
+/* page-link bootstrap start */
+.page-link {
+  color: var(--text-color);
+  margin: 0;
+  padding-left: 0;
+  padding-right: 0;
+  height: 40px;
+  width: 40px;
+  text-align: center;
+  border: 1px solid var(--border-color);
+  border-left: none;
+  border-right: none;
+}
+
+.page-link:hover {
+  color: var(--main-color);
+  background: none;
+  border-color: var(--border-color);
+}
+
+.page-item.active .page-link {
+  z-index: 3;
+  color: var(--main-color);
+  background: none;
+  border-color: var(--border-color);
+  border-bottom: 2px solid var(--main-color);
+}
+
+.page-item:first-child .page-link {
+  border-top-left-radius: 50%;
+  border-bottom-left-radius: 50%;
+  border-left: 1px solid var(--border-color);
+  border-right: 1px solid var(--border-color);
+}
+
+.page-item:first-child.disabled .page-link {
+  border-left: 1px solid #e9ebee;
+}
+
+.page-item:last-child .page-link {
+  border-top-right-radius: 50%;
+  border-bottom-right-radius: 50%;
+  border-left: 1px solid var(--border-color);
+  border-right: 1px solid var(--border-color);
+}
+
+.page-item:last-child.disabled .page-link {
+  border-right: 1px solid #e9ebee;
+}
+/* page-link bootstrap end */
 
 .img-detail {
   width: 320px;

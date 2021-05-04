@@ -10,6 +10,7 @@ import {
   faSearch,
   faSignOutAlt,
   faUnlockAlt,
+  faUserCircle,
 } from "@fortawesome/free-solid-svg-icons";
 import Sidebar from "./Sidebar";
 import { Button, Dropdown, DropdownButton, Modal } from "react-bootstrap";
@@ -42,16 +43,16 @@ class Header extends Component {
   }, 500);
 
   handleSelect = (e) => {
+    const input = this.searchRef.current;
     const selectedNode = e.target.closest(".list-song__item.list-group-item");
     const { type, id } = selectedNode.dataset;
     this.props.history.push(`/${type}/detail/${id}`);
-    this.searchRef.current.value = "";
-    this.props.setSuggestion([]);
+    input.blur();
   };
 
   search = () => {
     const input = this.searchRef.current;
-    this.props.history.push(`/search/song?q=${input.value}&page=1`);
+    this.props.history.push(`/search/song?q=${input.value}`);
     input.blur();
   };
 
@@ -213,7 +214,11 @@ class Header extends Component {
               </DropdownButton>
             ) : (
               <Link to="/login" className="auth-link">
-                Đăng nhập
+                <FontAwesomeIcon
+                  icon={faUserCircle}
+                  className="user-circle-icon"
+                />
+                <span className="ml-2 d-none d-xl-block">Đăng nhập</span>
               </Link>
             )}
           </div>

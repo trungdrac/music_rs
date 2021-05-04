@@ -4,6 +4,7 @@ import { connect } from "react-redux";
 import MyPagination from "../general/MyPagination";
 import SongCard from "../song/SongCard";
 import { setResult } from "../../actions/searchAction";
+import Blank from "../general/Blank";
 
 class SearchSong extends Component {
   constructor(props) {
@@ -12,7 +13,7 @@ class SearchSong extends Component {
       isLoading: true,
     };
   }
-  
+
   componentDidMount() {
     const { search } = this.props.history.location;
     const query = new URLSearchParams(search);
@@ -30,17 +31,17 @@ class SearchSong extends Component {
   }
   render() {
     if (this.state.isLoading) return "";
+    const { result } = this.props;
+    if (result.length === 0) return <Blank />;
 
     return (
       <React.Fragment>
         <div className="row">
-          {this.props.result.map((item) => (
+          {result.map((item) => (
             <SongCard key={item._id} item={item} />
           ))}
         </div>
-        <div className="d-flex justify-content-center mt-2">
-          <MyPagination />
-        </div>
+        <MyPagination />
       </React.Fragment>
     );
   }

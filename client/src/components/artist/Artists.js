@@ -21,7 +21,11 @@ export class Artists extends Component {
                 {areas.map((area) => (
                   <Tab eventKey={area._id} title={area.name} key={area._id}>
                     <div className="mt-4 mb-4">
-                      {areaId === area._id ? <ListArtist match={match} /> : ""}
+                      {areaId === area._id ? (
+                        <ListArtist match={match} history={history} />
+                      ) : (
+                        ""
+                      )}
                     </div>
                   </Tab>
                 ))}

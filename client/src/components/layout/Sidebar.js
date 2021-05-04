@@ -3,7 +3,7 @@ import { connect } from "react-redux";
 import { Link, NavLink, Route } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
-  faArrowLeft,
+  faArrowAltCircleLeft,
   faHome,
   faListUl,
   faMicrophone,
@@ -38,7 +38,7 @@ class Sidebar extends Component {
             className="sidebar__header--arrow d-xl-none"
             ref={this.arrowRef}
           >
-            <FontAwesomeIcon icon={faArrowLeft} />
+            <FontAwesomeIcon icon={faArrowAltCircleLeft} />
           </label>
         </div>
         <nav className="sidebar__nav">

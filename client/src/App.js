@@ -77,7 +77,13 @@ class App extends Component {
                     <SongDetail key={props.match.params.id} {...props} />
                   )}
                 />
-                <Route exact path="/song/:area/:category" component={Songs} />
+                <Route
+                  exact
+                  path="/song/:area/:category"
+                  render={(props) => (
+                    <Songs key={props.history.location.search} {...props} />
+                  )}
+                />
 
                 <Route
                   exact
@@ -86,7 +92,13 @@ class App extends Component {
                     <PlaylistDetail key={props.match.params.id} {...props} />
                   )}
                 />
-                <Route exact path="/playlist/:area" component={Playlists} />
+                <Route
+                  exact
+                  path="/playlist/:area"
+                  render={(props) => (
+                    <Playlists key={props.history.location.search} {...props} />
+                  )}
+                />
                 <Route
                   exact
                   path="/artist/detail/:id"
@@ -94,7 +106,13 @@ class App extends Component {
                     <ArtistDetail key={props.match.params.id} {...props} />
                   )}
                 />
-                <Route exact path="/artist/:area" component={Artists} />
+                <Route
+                  exact
+                  path="/artist/:area"
+                  render={(props) => (
+                    <Artists key={props.history.location.search} {...props} />
+                  )}
+                />
                 {!user.userToken ? (
                   <Route exact path="/login" component={Login} />
                 ) : null}
