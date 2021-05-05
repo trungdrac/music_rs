@@ -36,6 +36,14 @@ class PlaylistController {
       .then((playlists) => res.json(playlists))
       .catch((error) => res.json({ message: error }));
   };
+
+  // [GET] /playlist/:area/count
+  countPlaylistArea = (req, res, next) => {
+    const areaId = req.params.area;
+    Playlist.countDocuments({ area: areaId })
+      .then((count) => res.json(count))
+      .catch((error) => res.json({ message: error }));
+  };
 }
 
 module.exports = new PlaylistController();

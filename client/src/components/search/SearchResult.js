@@ -13,12 +13,14 @@ export class SearchTabs extends Component {
         <Route path="/search/:type">
           {({ match, history }) => {
             const { type } = match ? match.params : {};
+            const { search } = this.props.history.location;
+            const query = new URLSearchParams(search);
 
             return (
               <Tabs
                 activeKey={type}
                 onSelect={(nextTab) =>
-                  history.replace(`${nextTab}${history.location.search}`)
+                  history.replace(`${nextTab}?q=${query.get("q")}`)
                 }
               >
                 <Tab eventKey="song" title="Bài hát">

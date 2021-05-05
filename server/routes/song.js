@@ -4,9 +4,9 @@ const SongController = require("../controllers/SongController");
 
 router.get("/detail/:id", SongController.getDetail);
 
-router.get("/:area/:category", SongController.getSongCategory);
-
 router.get("/:area/:category/count", SongController.countSongCategory);
+
+router.get("/:area/:category", SongController.getSongCategory);
 
 router.get("/", SongController.getAll);
 

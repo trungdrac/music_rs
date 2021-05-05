@@ -4,6 +4,8 @@ const ArtistController = require("../controllers/ArtistController");
 
 router.get("/detail/:id", ArtistController.getDetail);
 
+router.get("/:area/count", ArtistController.countArtistArea);
+
 router.get("/:area", ArtistController.getArtistArea);
 
 module.exports = router;

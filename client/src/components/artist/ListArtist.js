@@ -5,12 +5,14 @@ import { setArtistArea } from "../../actions/artistAction";
 import MyPagination from "../general/MyPagination";
 import ArtistCard from "./ArtistCard";
 import Blank from "../general/Blank";
+import { NUMBER_OF_ITEM_PER_PAGE } from "../../constants/Config";
 
 class ListArtist extends Component {
   constructor(props) {
     super(props);
     this.state = {
       isLoading: true,
+      pageNums: null,
     };
   }
 
@@ -30,10 +32,25 @@ class ListArtist extends Component {
           }`
         )
       );
+
+    axios
+      .get(`/artist/${areaId}/count`)
+      .then((res) =>
+        this.setState({
+          pageNums: Math.ceil(res.data / NUMBER_OF_ITEM_PER_PAGE),
+        })
+      )
+      .catch((error) =>
+        alert(
+          `Lỗi! ${
+            error.response.data.message ? error.response.data.message : ""
+          }`
+        )
+      );
   }
 
   render() {
-    if (this.state.isLoading) return "";
+    if (this.state.isLoading || this.state.pageNums === null) return "";
     const { artistArea } = this.props;
     if (artistArea.length === 0) return <Blank />;
 
@@ -44,7 +61,10 @@ class ListArtist extends Component {
             <ArtistCard key={artist._id} item={artist} />
           ))}
         </div>
-        <MyPagination />
+        <MyPagination
+          pageNums={this.state.pageNums}
+          history={this.props.history}
+        />
       </React.Fragment>
     );
   }

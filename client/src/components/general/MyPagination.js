@@ -7,11 +7,13 @@ class MyPagination extends Component {
     this.state = {
       items: [],
       active: 1,
+      query: "",
     };
   }
   componentDidMount() {
     const { search } = this.props.history.location;
     const query = new URLSearchParams(search);
+    if (query.get("q")) this.setState({ query: `q=${query.get("q")}&` });
     let active = Number(query.get("page"));
     if (!active) active = 1;
     this.setState({ active }, () => {
@@ -41,7 +43,9 @@ class MyPagination extends Component {
     const { active } = this.state;
     this.setState({ active: active - 1 }, () => {
       const { history } = this.props;
-      history.push(`${history.location.pathname}?page=${this.state.active}`);
+      history.push(
+        `${history.location.pathname}?${this.state.query}page=${this.state.active}`
+      );
     });
   };
 
@@ -49,19 +53,26 @@ class MyPagination extends Component {
     const { active } = this.state;
     this.setState({ active: active + 1 }, () => {
       const { history } = this.props;
-      history.push(`${history.location.pathname}?page=${this.state.active}`);
+      history.push(
+        `${history.location.pathname}?${this.state.query}page=${this.state.active}`
+      );
     });
   };
 
   selectPage = (e) => {
     const { history } = this.props;
-    history.push(`${history.location.pathname}?page=${e.target.innerText}`);
+    history.push(
+      `${history.location.pathname}?${this.state.query}page=${e.target.innerText}`
+    );
   };
 
   render() {
     const { history } = this.props;
     const { active } = this.state;
     const { pageNums } = this.props;
+
+    if (pageNums === 1) return "";
+
     return (
       <div className="d-flex justify-content-center mt-2">
         <Pagination>
@@ -74,25 +85,29 @@ class MyPagination extends Component {
           >
             {1}
           </Pagination.Item>
-          {active <= 3 ? (
+          {active <= 3 || pageNums <= 5 ? (
             ""
           ) : (
             <Pagination.Ellipsis
               onClick={() =>
                 history.push(
-                  `${history.location.pathname}?page=${this.state.active - 2}`
+                  `${history.location.pathname}?${this.state.query}page=${
+                    this.state.active - 2
+                  }`
                 )
               }
             />
           )}
           {this.state.items}
-          {active >= pageNums - 2 ? (
+          {active >= pageNums - 2 || pageNums <= 5 ? (
             ""
           ) : (
             <Pagination.Ellipsis
               onClick={() =>
                 history.push(
-                  `${history.location.pathname}?page=${this.state.active + 2}`
+                  `${history.location.pathname}?${this.state.query}page=${
+                    this.state.active + 2
+                  }`
                 )
               }
             />

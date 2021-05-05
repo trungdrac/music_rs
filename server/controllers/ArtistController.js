@@ -35,6 +35,14 @@ class ArtistController {
       .then((artists) => res.json(artists))
       .catch((error) => res.json({ message: error }));
   };
+
+  // [GET] /artist/:area/count
+  countArtistArea = (req, res, next) => {
+    const areaId = req.params.area;
+    Artist.countDocuments({ area: areaId })
+      .then((count) => res.json(count))
+      .catch((error) => res.json({ message: error }));
+  };
 }
 
 module.exports = new ArtistController();

@@ -88,6 +88,27 @@ class SearchController {
         .catch((error) => res.json({ message: error }));
     }
   };
+
+  // [GET] /search/count/:type?q=
+  count = (req, res, next) => {
+    const { q } = req.query;
+    const { type } = req.params;
+    if (type === "song") {
+      Song.countDocuments({ $text: { $search: q } })
+        .then((count) => res.json(count))
+        .catch((error) => res.json({ message: error }));
+    }
+    if (type === "playlist") {
+      Playlist.countDocuments({ $text: { $search: q } })
+        .then((count) => res.json(count))
+        .catch((error) => res.json({ message: error }));
+    }
+    if (type === "artist") {
+      Artist.countDocuments({ $text: { $search: q } })
+        .then((count) => res.json(count))
+        .catch((error) => res.json({ message: error }));
+    }
+  };
 }
 
 module.exports = new SearchController();
