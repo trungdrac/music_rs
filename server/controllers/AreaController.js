@@ -7,7 +7,7 @@ class AreaController {
     Area.find({}, "name category")
       .populate({ path: "category", select: "name" })
       .then((areas) => res.json(areas))
-      .catch((error) => res.json({ message: error }));
+      .catch(next);
   };
 }
 

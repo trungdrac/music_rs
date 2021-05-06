@@ -21,7 +21,7 @@ class ArtistController {
     ).exec();
     Promise.all([artistPromise, songPromise])
       .then((artistDetail) => res.json(artistDetail))
-      .catch((error) => res.json({ message: error }));
+      .catch(next);
   };
 
   // [GET] /artist/:area/
@@ -33,7 +33,7 @@ class ArtistController {
       .skip(NUMBER_OF_ITEM_PER_PAGE * (page - 1))
       .limit(NUMBER_OF_ITEM_PER_PAGE)
       .then((artists) => res.json(artists))
-      .catch((error) => res.json({ message: error }));
+      .catch(next);
   };
 
   // [GET] /artist/:area/count
@@ -41,7 +41,7 @@ class ArtistController {
     const areaId = req.params.area;
     Artist.countDocuments({ area: areaId })
       .then((count) => res.json(count))
-      .catch((error) => res.json({ message: error }));
+      .catch(next);
   };
 }
 

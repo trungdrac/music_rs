@@ -13,7 +13,7 @@ class SongController {
       .populate({ path: "artist", select: "name" })
       .limit(NUMBER_OF_ITEM_PER_PAGE)
       .then((songs) => res.json(songs))
-      .catch((error) => res.json({ message: error }));
+      .catch(next);
   };
 
   // [GET] /song/detail/:id
@@ -24,7 +24,7 @@ class SongController {
       .populate({ path: "category", select: "name -_id" })
       .populate({ path: "area", select: "name -_id" })
       .then((song) => res.json(song))
-      .catch((error) => res.json({ message: error }));
+      .catch(next);
   };
 
   // [GET] /song/:area/:category
@@ -37,7 +37,7 @@ class SongController {
       .skip(NUMBER_OF_ITEM_PER_PAGE * (page - 1))
       .limit(NUMBER_OF_ITEM_PER_PAGE)
       .then((songs) => res.json(songs))
-      .catch((error) => res.json({ message: error }));
+      .catch(next);
   };
 
   // [GET] /song/:area/:category/count
@@ -45,7 +45,7 @@ class SongController {
     const categoryId = req.params.category;
     Song.countDocuments({ category: categoryId })
       .then((count) => res.json(count))
-      .catch((error) => res.json({ message: error }));
+      .catch(next);
   };
 }
 

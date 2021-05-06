@@ -1,0 +1,152 @@
+<div class="card mb-4">
+  <div class="card-header d-flex justify-content-between align-items-center">
+    <div><i class="fas fa-table mr-1"></i>Thể loại</div>
+    <div>
+      <a
+        class="btn btn-primary"
+        href="#"
+        data-toggle="modal"
+        data-target="#create"
+        data-backdrop="static"
+        data-keyboard="false"
+        ><i class="fas fa-plus mr-1"></i>Thêm</a
+      >
+    </div>
+  </div>
+  <div class="card-body">
+    <div class="table-responsive">
+      <table
+        class="table table-bordered"
+        id="dataTable"
+        width="100%"
+        cellspacing="0"
+      >
+        <thead>
+          <tr>
+            <th>Thể loại</th>
+            <th>Hành động</th>
+          </tr>
+        </thead>
+        <tbody>
+          <% categories.forEach(category => { %>
+          <tr>
+            <td><%= category.name %></td>
+            <td class="d-flex justify-content-around">
+              <a href="#"><ins>Sửa</ins></a>
+              <a
+                href="#"
+                data-toggle="modal"
+                data-target="#delete"
+                data-id= <%= category._id %> 
+                ><ins>Xóa</ins></a
+              >
+            </td>
+          </tr>
+          <% }) %>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- Create modal -->
+  <div
+    class="modal fade"
+    id="create"
+    tabindex="-1"
+    role="dialog"
+    aria-labelledby="createTitle"
+    aria-hidden="true"
+  >
+    <div class="modal-dialog modal-dialog-centered" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">Thêm thể loại</h5>
+          <button
+            type="button"
+            class="close"
+            data-dismiss="modal"
+            aria-label="Close"
+          >
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <form action="/admin/category/create" method="POST" id="categoryForm">
+            <div class="form-group">
+              <label for="name" class="form-label">Thể loại</label>
+              <input
+                id="name"
+                name="name"
+                type="text"
+                placeholder="Nhập tên thể loại"
+                class="form-control"
+              />
+              <span class="form-message"></span>
+            </div>
+            <div class="modal-footer mt-4">
+              <button class="btn btn-primary">Lưu</button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- delete modal -->
+  <div
+    class="modal fade"
+    id="delete"
+    tabindex="-1"
+    role="dialog"
+    aria-labelledby="deleteTitle"
+    aria-hidden="true"
+  >
+    <div class="modal-dialog modal-dialog-centered" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLongTitle">Modal title</h5>
+          <button
+            type="button"
+            class="close"
+            data-dismiss="modal"
+            aria-label="Close"
+          >
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">Bạn có chắc chắn muốn xóa?</div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">
+            Hủy
+          </button>
+          <button type="button" class="btn btn-danger" id="btn-delete">Xóa bỏ</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  document.addEventListener("DOMContentLoaded", function () {
+    Validator({
+      form: "#categoryForm",
+      formGroupSelector: ".form-group",
+      errorSelector: ".form-message",
+      rules: [Validator.isRequired("#name")],
+    });
+  });
+</script>
+
+<script>
+  document.addEventListener("DOMContentLoaded", () => {
+    var id;
+
+    $("#delete").on("show.bs.modal", function (event) {
+      var button = $(event.relatedTarget);
+      id = button.data("id");
+    });
+
+    const btnDelete = document.getElementById("btn-delete");
+    btnDelete.onclick = () => window.location.href=`/admin/category/${id}/delete`
+  });
+</script>

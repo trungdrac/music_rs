@@ -37,7 +37,7 @@ class UserController {
             res.json({ message: "", field: "username" });
           }
         })
-        .catch((error) => res.json({ message: error }));
+        .catch(next);
     if (req.body.email)
       User.findOne({ email: req.body.email })
         .then((email) => {
@@ -47,7 +47,7 @@ class UserController {
             res.json({ message: "", field: "email" });
           }
         })
-        .catch((error) => res.json({ message: error }));
+        .catch(next);
   };
 
   // [POST] /user/login
@@ -117,9 +117,9 @@ class UserController {
               });
               res.json({ message: "Kiểm tra emaail của bạn!" });
             })
-            .catch((error) => res.json({ message: error }));
+            .catch(next);
         })
-        .catch((error) => res.json({ message: error }));
+        .catch(next);
     });
   };
 
@@ -142,9 +142,9 @@ class UserController {
           .then(() => {
             res.json({ message: "Cập nhật mật khẩu thành công!" });
           })
-          .catch((error) => res.json({ message: error }));
+          .catch(next);
       })
-      .catch((error) => res.json({ message: error }));
+      .catch(next);
   };
 }
 

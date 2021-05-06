@@ -14,7 +14,7 @@ class PlaylistController {
       .populate({ path: "song", select: "title artist image url" })
       .populate({ path: "own", select: "username" })
       .then((playlist) => res.json(playlist))
-      .catch((error) => res.json({ message: error }));
+      .catch(next);
   };
 
   // [GET] /playlist/:area/
@@ -34,7 +34,7 @@ class PlaylistController {
       .skip(NUMBER_OF_ITEM_PER_PAGE * (page - 1))
       .limit(NUMBER_OF_ITEM_PER_PAGE)
       .then((playlists) => res.json(playlists))
-      .catch((error) => res.json({ message: error }));
+      .catch(next);
   };
 
   // [GET] /playlist/:area/count
@@ -42,7 +42,7 @@ class PlaylistController {
     const areaId = req.params.area;
     Playlist.countDocuments({ area: areaId })
       .then((count) => res.json(count))
-      .catch((error) => res.json({ message: error }));
+      .catch(next);
   };
 }
 

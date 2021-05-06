@@ -6,6 +6,7 @@ const category = require("./category");
 const user = require("./user");
 const interaction = require("./interaction");
 const search = require("./search");
+const admin = require("./admin");
 
 function route(app) {
   app.use("/playlist", playlist);
@@ -16,6 +17,7 @@ function route(app) {
   app.use("/user", user);
   app.use("/interaction", interaction);
   app.use("/search", search);
+  app.use("/admin", admin);
 }
 
 module.exports = route;

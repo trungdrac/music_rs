@@ -35,7 +35,7 @@ class SearchController {
       .exec();
     Promise.all([songPromise, playlistPromise, artistPromise])
       .then((suggestion) => res.json(suggestion))
-      .catch((error) => res.json({ message: error }));
+      .catch(next);
   };
 
   // [GET] /search/:type?q=&page=
@@ -53,7 +53,7 @@ class SearchController {
         .skip(NUMBER_OF_ITEM_PER_PAGE * (page - 1))
         .limit(NUMBER_OF_ITEM_PER_PAGE)
         .then((result) => res.json(result))
-        .catch((error) => res.json({ message: error }));
+        .catch(next);
     }
     if (type === "playlist") {
       Playlist.find(
@@ -73,7 +73,7 @@ class SearchController {
         .skip(NUMBER_OF_ITEM_PER_PAGE * (page - 1))
         .limit(NUMBER_OF_ITEM_PER_PAGE)
         .then((result) => res.json(result))
-        .catch((error) => res.json({ message: error }));
+        .catch(next);
     }
     if (type === "artist") {
       Artist.find(
@@ -85,7 +85,7 @@ class SearchController {
         .skip(NUMBER_OF_ITEM_PER_PAGE * (page - 1))
         .limit(NUMBER_OF_ITEM_PER_PAGE)
         .then((result) => res.json(result))
-        .catch((error) => res.json({ message: error }));
+        .catch(next);
     }
   };
 
@@ -96,17 +96,17 @@ class SearchController {
     if (type === "song") {
       Song.countDocuments({ $text: { $search: q } })
         .then((count) => res.json(count))
-        .catch((error) => res.json({ message: error }));
+        .catch(next);
     }
     if (type === "playlist") {
       Playlist.countDocuments({ $text: { $search: q } })
         .then((count) => res.json(count))
-        .catch((error) => res.json({ message: error }));
+        .catch(next);
     }
     if (type === "artist") {
       Artist.countDocuments({ $text: { $search: q } })
         .then((count) => res.json(count))
-        .catch((error) => res.json({ message: error }));
+        .catch(next);
     }
   };
 }
