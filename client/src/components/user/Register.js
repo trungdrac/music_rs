@@ -44,8 +44,10 @@ class Register extends Component {
             })
             .catch((error) =>
               alert(
-                `Lỗi! ${
-                  error.response.data.message ? error.response.data.message : ""
+                `Lỗi: ${
+                  error.response.data.message
+                    ? JSON.stringify(error.response.data.message)
+                    : ""
                 }`
               )
             );
@@ -68,8 +70,10 @@ class Register extends Component {
       })
       .catch((error) =>
         alert(
-          `Lỗi! ${
-            error.response.data.message ? error.response.data.message : ""
+          `Lỗi: ${
+            error.response.data.message
+              ? JSON.stringify(error.response.data.message)
+              : ""
           }`
         )
       );

@@ -23,7 +23,7 @@ db.connect();
 route(app);
 
 // Handle error middleware
-app.use(function (err, req, res, next) {
+app.use((err, req, res, next) => {
   res.json({ message: err });
 });
 

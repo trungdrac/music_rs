@@ -11,69 +11,13 @@
         data-keyboard="false"
         ><i class="fas fa-plus mr-1"></i>Thêm</a
       >
-      <!-- Modal -->
-      <div
-        class="modal fade"
-        id="create"
-        tabindex="-1"
-        role="dialog"
-        aria-labelledby="createTitle"
-        aria-hidden="true"
-      >
-        <div class="modal-dialog modal-dialog-centered" role="document">
-          <div class="modal-content">
-            <div class="modal-header">
-              <h5 class="modal-title">Thêm khu vực</h5>
-              <button
-                type="button"
-                class="close"
-                data-dismiss="modal"
-                aria-label="Close"
-              >
-                <span aria-hidden="true">&times;</span>
-              </button>
-            </div>
-            <div class="modal-body">
-              <form action="" method="POST" id="areaForm">
-                <div class="form-group">
-                  <label for="name" class="form-label">Khu vực</label>
-                  <input
-                    id="name"
-                    name="name"
-                    type="text"
-                    placeholder="Nhập tên khu vực"
-                    class="form-control"
-                  />
-                  <span class="form-message"></span>
-                </div>
-                <div class="form-group">
-                  <label for="email" class="form-label">Email</label>
-                  <input
-                    id="email"
-                    name="email"
-                    type="text"
-                    placeholder="VD: email@domain.com"
-                    class="form-control"
-                  />
-                  <span class="form-message"></span>
-                </div>
-                <div class="modal-footer mt-4">
-                  <button type="button" class="btn btn-primary">
-                    Lưu
-                  </button>
-                </div>
-              </form>
-            </div>
-          </div>
-        </div>
-      </div>
     </div>
   </div>
   <div class="card-body">
     <div class="table-responsive">
       <table
         class="table table-bordered"
-        id="dataTable"
+        id="data-table"
         width="100%"
         cellspacing="0"
       >
@@ -88,17 +32,179 @@
           <% areas.forEach(area => { %>
           <tr>
             <td><%= area.name %></td>
-            <td>
-              <%= area.category.map(category => category.name).join(", ") %>
-            </td>
+            <td><%= area.category.map(item => item.name).join(", ") %></td>
             <td class="d-flex justify-content-around">
-              <a href="#"><ins>Sửa</ins></a>
-              <a href="#"><ins>Xóa</ins></a>
+              <!-- prettier-ignore -->
+              <a href="#"
+                data-toggle="modal"
+                data-target="#update"
+                data-backdrop="static"
+                data-keyboard="false"
+                data-id=<%= area._id %>
+                data-type=<%= "area" %>        
+              ><ins>Sửa</ins>
+              </a>
+              <!-- prettier-ignore -->
+              <a
+                href="#"
+                data-toggle="modal"
+                data-target="#delete"
+                data-id=<%= area._id %>
+                data-type=<%= "area" %> 
+              ><ins>Xóa</ins>
+              </a>
             </td>
           </tr>
           <% }) %>
         </tbody>
       </table>
+    </div>
+  </div>
+</div>
+
+<!-- Create modal -->
+<div
+  class="modal fade"
+  id="create"
+  tabindex="-1"
+  role="dialog"
+  aria-labelledby="createTitle"
+  aria-hidden="true"
+>
+  <div class="modal-dialog modal-dialog-centered" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Thêm dữ liệu</h5>
+        <button
+          type="button"
+          class="close"
+          data-dismiss="modal"
+          aria-label="Close"
+        >
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <form action="/admin/area/create" method="POST" id="create-area-form">
+          <div class="form-group">
+            <label for="create-name" class="form-label">Khu vực</label>
+            <input
+              id="create-name"
+              name="name"
+              type="text"
+              class="form-control"
+            />
+            <span class="form-message"></span>
+          </div>
+          <div class="form-group">
+            <label for="create-category" class="form-label"
+              >Thể loại (Ctrl + click để chọn nhiều)</label
+            >
+            <select name="category" id="create-category" multiple>
+              <% categories.forEach(category => { %>
+              <!-- prettier-ignore -->
+              <option value=<%= category._id %> >
+                <%= category.name %> 
+              </option>
+              <% }) %>
+            </select>
+            <span class="form-message"></span>
+          </div>
+          <div class="modal-footer mt-4">
+            <button class="btn btn-primary">Lưu</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- update modal -->
+<div
+  class="modal fade"
+  id="update"
+  tabindex="-1"
+  role="dialog"
+  aria-labelledby="updateTitle"
+  aria-hidden="true"
+>
+  <div class="modal-dialog modal-dialog-centered" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Cập nhật dữ liệu</h5>
+        <button
+          type="button"
+          class="close"
+          data-dismiss="modal"
+          aria-label="Close"
+        >
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <form method="POST" id="update-area-form">
+          <div class="form-group">
+            <label for="update-name" class="form-label">Khu vực</label>
+            <input
+              id="update-name"
+              name="name"
+              type="text"
+              class="form-control"
+            />
+            <span class="form-message"></span>
+          </div>
+          <div class="form-group">
+            <label for="update-category" class="form-label"
+              >Thể loại (Ctrl + click để chọn nhiều)</label
+            >
+            <select name="category" id="update-category" multiple>
+              <% categories.forEach(category => { %>
+              <!-- prettier-ignore -->
+              <option value=<%= category._id %> >
+                <%= category.name %> 
+              </option>
+              <% }) %>
+            </select>
+            <span class="form-message"></span>
+          </div>
+          <div class="modal-footer mt-4">
+            <button class="btn btn-primary" id="btn-update">Lưu</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- delete modal -->
+<div
+  class="modal fade"
+  id="delete"
+  tabindex="-1"
+  role="dialog"
+  aria-labelledby="deleteTitle"
+  aria-hidden="true"
+>
+  <div class="modal-dialog modal-dialog-centered" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Xóa dữ liệu</h5>
+        <button
+          type="button"
+          class="close"
+          data-dismiss="modal"
+          aria-label="Close"
+        >
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">Bạn có chắc chắn muốn xóa?</div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">
+          Hủy
+        </button>
+        <button class="btn btn-danger" id="btn-delete">Xóa bỏ</button>
+      </div>
     </div>
   </div>
 </div>

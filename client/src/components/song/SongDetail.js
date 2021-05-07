@@ -30,8 +30,10 @@ class SongDetail extends Component {
       .then(() => this.setState({ isLoading: false }))
       .catch((error) =>
         alert(
-          `Lỗi! ${
-            error.response.data.message ? error.response.data.message : ""
+          `Lỗi: ${
+            error.response.data.message
+              ? JSON.stringify(error.response.data.message)
+              : ""
           }`
         )
       );

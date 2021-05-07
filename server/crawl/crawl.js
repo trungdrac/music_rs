@@ -240,7 +240,7 @@ function createPlaylist() {
             category: mongoose.Types.ObjectId(category._id),
           },
           "_id"
-        );
+        ).exec();
         Promise.all([titlePromise, songPromise, areaPromise])
           .then((res) => {
             const playlist = new Playlist({
