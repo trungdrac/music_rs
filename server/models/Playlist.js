@@ -8,9 +8,9 @@ const playlistSchema = new Schema(
     own: {
       type: Schema.Types.ObjectId,
       ref: "User",
-      default: "607eb77ffa10cb50bdeac678",
+      default: process.env.MUSICRS_ID,
     },
-    image: { type: String, default: "/images/song-image-default/default.jpg" },
+    image: { type: String, required: true },
     area: { type: Schema.Types.ObjectId, ref: "Area", required: true },
   },
   { timestamps: true }

@@ -37,6 +37,22 @@
       },
     });
 
+    // Multiselect
+    $(
+      "#create-category-select, #update-category-select, #create-artist-select, #update-artist-select"
+    ).multiselect({
+      templates: {
+        filter:
+          '<div class="multiselect-filter d-flex align-items-center m-2"><input type="search" class="multiselect-search form-control" /></div>',
+      },
+      enableCaseInsensitiveFiltering: true,
+      filterPlaceholder: "Tìm...",
+      nonSelectedText: "Hãy lựa chọn!",
+      nSelectedText: " lựa chọn",
+      maxHeight: 400,
+      buttonWidth: "100%",
+    });
+
     // Validate
     Validator({
       form: "#create-category-form",
@@ -49,6 +65,42 @@
       formGroupSelector: ".form-group",
       errorSelector: ".form-message",
       rules: [Validator.isRequired("#update-name")],
+    });
+    Validator({
+      form: "#create-area-form",
+      formGroupSelector: ".form-group",
+      errorSelector: ".form-message",
+      rules: [Validator.isRequired("#create-name")],
+    });
+    Validator({
+      form: "#update-area-form",
+      formGroupSelector: ".form-group",
+      errorSelector: ".form-message",
+      rules: [Validator.isRequired("#update-name")],
+    });
+    Validator({
+      form: "#create-song-form",
+      formGroupSelector: ".form-group",
+      errorSelector: ".form-message",
+      rules: [
+        Validator.isRequired("#create-title"),
+        Validator.isRequired("#create-url"),
+        Validator.isRequired("#create-image"),
+        Validator.isRequired("#create-artist-select"),
+        Validator.isRequired("#create-category-select"),
+      ],
+    });
+    Validator({
+      form: "#update-song-form",
+      formGroupSelector: ".form-group",
+      errorSelector: ".form-message",
+      rules: [
+        Validator.isRequired("#update-title"),
+        Validator.isRequired("#update-url"),
+        Validator.isRequired("#update-image"),
+        Validator.isRequired("#update-artist-select"),
+        Validator.isRequired("#update-category-select"),
+      ],
     });
 
     // Toast message
@@ -68,12 +120,29 @@
         .then((item) => {
           var modal = $(this);
           modal.find('.modal-body input[name="name"]').val(item.name);
+          modal.find('.modal-body input[name="title"]').val(item.title);
+          modal.find('.modal-body input[name="image"]').val(item.image);
+          modal.find('.modal-body input[name="url"]').val(item.url);
+          modal.find('.modal-body input[name="lyrics"]').val(item.lyrics);
           if (item.category) {
-            item.category.map((categoryId) =>
+            if (Array.isArray(item.category)) {
+              item.category.map((categoryId) => {
+                modal
+                  .find(`.modal-body option[value="${categoryId}"]`)
+                  .attr("selected", true);
+              });
+            } else {
               modal
-                .find(`.modal-body option[value="${categoryId}"]`)
-                .attr("selected", "selected")
-            );
+                .find(`.modal-body option[value="${item.category}"]`)
+                .attr("selected", true);
+            }
+          }
+          if (item.artist) {
+            item.artist.map((artistId) => {
+              modal
+                .find(`.modal-body option[value="${artistId}"]`)
+                .attr("selected", true);
+            });
           }
           modal.find("#btn-update").on("click", function () {
             modal

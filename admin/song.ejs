@@ -1,0 +1,300 @@
+<div class="card mb-4">
+  <div class="card-header d-flex justify-content-between align-items-center">
+    <div><i class="fas fa-table mr-1"></i>Bài hát</div>
+    <div>
+      <a
+        class="btn btn-primary"
+        href="#"
+        data-toggle="modal"
+        data-target="#create"
+        data-backdrop="static"
+        data-keyboard="false"
+        ><i class="fas fa-plus mr-1"></i>Thêm</a
+      >
+    </div>
+  </div>
+  <div class="card-body">
+    <div class="table-responsive">
+      <table
+        class="table table-bordered"
+        id="data-table"
+        width="100%"
+        cellspacing="0"
+      >
+        <thead>
+          <tr>
+            <th>Tiêu đề</th>
+            <th>Nghệ sỹ</th>
+            <th>Thể loại</th>
+            <th>Ảnh</th>
+            <th>Link</th>
+            <th>Lời</th>
+            <th>Hành động</th>
+          </tr>
+        </thead>
+        <tbody>
+          <% songs.forEach(song => { %>
+          <tr>
+            <td><%= song.title %></td>
+            <td><%= song.artist.map(item => item.name).join(", ") %></td>
+            <td><%= song.category.name %></td>
+            <td><%= `${song.image.slice(0,20)}...` %></td>
+            <td><%= `${song.url.slice(0,20)}...` %></td>
+            <td><%= `${song.lyrics.slice(0,100)}...` %></td>
+            <td class="d-flex justify-content-around">
+              <!-- prettier-ignore -->
+              <a href="#"
+                  data-toggle="modal"
+                  data-target="#update"
+                  data-backdrop="static"
+                  data-keyboard="false"
+                  data-id=<%= song._id %>
+                  data-type=<%= "song" %>        
+                ><ins>Sửa</ins>
+                </a>
+              <!-- prettier-ignore -->
+              <a
+                  href="#"
+                  data-toggle="modal"
+                  data-target="#delete"
+                  data-id=<%= song._id %>
+                  data-type=<%= "song" %> 
+                ><ins>Xóa</ins>
+                </a>
+            </td>
+          </tr>
+          <% }) %>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<!-- Create modal -->
+<div
+  class="modal fade"
+  id="create"
+  tabindex="-1"
+  role="dialog"
+  aria-labelledby="createTitle"
+  aria-hidden="true"
+>
+  <div class="modal-dialog modal-dialog-centered" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Thêm dữ liệu</h5>
+        <button
+          type="button"
+          class="close"
+          data-dismiss="modal"
+          aria-label="Close"
+        >
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <form action="/admin/song/create" method="POST" id="create-song-form">
+          <div class="form-group">
+            <label for="create-title" class="form-label">Tiêu đề</label>
+            <input
+              id="create-title"
+              name="title"
+              type="text"
+              class="form-control"
+            />
+            <span class="form-message"></span>
+          </div>
+          <div class="form-group">
+            <label for="create-artist" class="form-label">Nghệ sỹ</label>
+            <select name="artist" id="create-artist-select" multiple>
+              <% artists.forEach(artist => { %>
+              <!-- prettier-ignore -->
+              <option value=<%= artist._id %> >
+                  <%= artist.name %> 
+                </option>
+              <% }) %>
+            </select>
+            <span class="form-message"></span>
+          </div>
+          <div class="form-group">
+            <label for="create-category" class="form-label">Thể loại</label>
+            <select name="category" id="create-category-select">
+              <option disabled selected value="">Hãy lựa chọn!</option>
+              <% categories.forEach(category => { %>
+              <!-- prettier-ignore -->
+              <option value=<%= category._id %> >
+                  <%= category.name %> 
+                </option>
+              <% }) %>
+            </select>
+            <span class="form-message"></span>
+          </div>
+          <div class="form-group">
+            <label for="create-image" class="form-label">Ảnh</label>
+            <input
+              id="create-image"
+              name="image"
+              type="text"
+              class="form-control"
+            />
+            <span class="form-message"></span>
+          </div>
+          <div class="form-group">
+            <label for="create-url" class="form-label">Link</label>
+            <input
+              id="create-url"
+              name="url"
+              type="text"
+              class="form-control"
+            />
+            <span class="form-message"></span>
+          </div>
+          <div class="form-group">
+            <label for="create-lyrics" class="form-label">Lời</label>
+            <input
+              id="create-lyrics"
+              name="lyrics"
+              type="text"
+              class="form-control"
+            />
+            <span class="form-message"></span>
+          </div>
+          <div class="modal-footer mt-4">
+            <button class="btn btn-primary">Lưu</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- update modal -->
+<div
+  class="modal fade"
+  id="update"
+  tabindex="-1"
+  role="dialog"
+  aria-labelledby="updateTitle"
+  aria-hidden="true"
+>
+  <div class="modal-dialog modal-dialog-centered" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Cập nhật dữ liệu</h5>
+        <button
+          type="button"
+          class="close"
+          data-dismiss="modal"
+          aria-label="Close"
+        >
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <form method="POST" id="update-song-form">
+          <div class="form-group">
+            <label for="update-title" class="form-label">Tiêu đề</label>
+            <input
+              id="update-title"
+              name="title"
+              type="text"
+              class="form-control"
+            />
+            <span class="form-message"></span>
+          </div>
+          <div class="form-group">
+            <label for="update-artist" class="form-label">Nghệ sỹ</label>
+            <select name="artist" id="update-artist-select" multiple>
+              <% artists.forEach(artist => { %>
+              <!-- prettier-ignore -->
+              <option value=<%= artist._id %> >
+                  <%= artist.name %> 
+                </option>
+              <% }) %>
+            </select>
+            <span class="form-message"></span>
+          </div>
+          <div class="form-group">
+            <label for="update-category" class="form-label">Thể loại</label>
+            <select name="category" id="update-category-select">
+              <option disabled selected value="">Hãy lựa chọn!</option>
+              <% categories.forEach(category => { %>
+              <!-- prettier-ignore -->
+              <option value=<%= category._id %> >
+                  <%= category.name %> 
+                </option>
+              <% }) %>
+            </select>
+            <span class="form-message"></span>
+          </div>
+          <div class="form-group">
+            <label for="update-image" class="form-label">Ảnh</label>
+            <input
+              id="update-image"
+              name="image"
+              type="text"
+              class="form-control"
+            />
+            <span class="form-message"></span>
+          </div>
+          <div class="form-group">
+            <label for="update-url" class="form-label">Link</label>
+            <input
+              id="update-url"
+              name="url"
+              type="text"
+              class="form-control"
+            />
+            <span class="form-message"></span>
+          </div>
+          <div class="form-group">
+            <label for="update-lyrics" class="form-label">Lời</label>
+            <input
+              id="update-lyrics"
+              name="lyrics"
+              type="text"
+              class="form-control"
+            />
+            <span class="form-message"></span>
+          </div>
+          <div class="modal-footer mt-4">
+            <button class="btn btn-primary" id="btn-update">Lưu</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- delete modal -->
+<div
+  class="modal fade"
+  id="delete"
+  tabindex="-1"
+  role="dialog"
+  aria-labelledby="deleteTitle"
+  aria-hidden="true"
+>
+  <div class="modal-dialog modal-dialog-centered" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Xóa dữ liệu</h5>
+        <button
+          type="button"
+          class="close"
+          data-dismiss="modal"
+          aria-label="Close"
+        >
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">Bạn có chắc chắn muốn xóa?</div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">
+          Hủy
+        </button>
+        <button class="btn btn-danger" id="btn-delete">Xóa bỏ</button>
+      </div>
+    </div>
+  </div>
+</div>
