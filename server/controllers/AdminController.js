@@ -242,16 +242,14 @@ class AdminController {
       .populate({ path: "song", select: "title" })
       .exec();
     const areaPromise = Area.find({}).exec();
-    const userPromise = User.find({}).exec();
     const songPromise = Song.find({}).exec();
-    Promise.all([playlistPromise, areaPromise, userPromise, songPromise])
+    Promise.all([playlistPromise, areaPromise, songPromise])
       .then((result) =>
         res.render("layout", {
           page: "playlist",
           playlists: result[0],
           areas: result[1],
-          users: result[2],
-          songs: result[3],
+          songs: result[2],
         })
       )
       .catch(next);

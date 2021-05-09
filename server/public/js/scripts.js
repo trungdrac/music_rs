@@ -35,15 +35,22 @@
           sLast: "Cuối",
         },
       },
+      scrollX: true,
     });
 
     // Multiselect
-    $(
-      "#create-category-select, #update-category-select, #create-artist-select, #update-artist-select"
-    ).multiselect({
+    $(`#create-category-select,
+       #update-category-select,
+       #create-artist-select,
+       #update-artist-select,
+       #create-song-select,
+       #update-song-select,
+       #create-area-select,
+       #update-area-select`).multiselect({
       templates: {
-        filter:
-          '<div class="multiselect-filter d-flex align-items-center m-2"><input type="search" class="multiselect-search form-control" /></div>',
+        filter: `<div class="multiselect-filter d-flex align-items-center m-2">
+                  <input class="multiselect-search form-control" />
+                 </div>`,
       },
       enableCaseInsensitiveFiltering: true,
       filterPlaceholder: "Tìm...",
@@ -102,6 +109,48 @@
         Validator.isRequired("#update-category-select"),
       ],
     });
+    Validator({
+      form: "#create-playlist-form",
+      formGroupSelector: ".form-group",
+      errorSelector: ".form-message",
+      rules: [
+        Validator.isRequired("#create-title"),
+        Validator.isRequired("#create-image"),
+        Validator.isRequired("#create-song-select"),
+        Validator.isRequired("#create-area-select"),
+      ],
+    });
+    Validator({
+      form: "#update-playlist-form",
+      formGroupSelector: ".form-group",
+      errorSelector: ".form-message",
+      rules: [
+        Validator.isRequired("#update-title"),
+        Validator.isRequired("#update-image"),
+        Validator.isRequired("#update-song-select"),
+        Validator.isRequired("#update-area-select"),
+      ],
+    });
+    Validator({
+      form: "#create-artist-form",
+      formGroupSelector: ".form-group",
+      errorSelector: ".form-message",
+      rules: [
+        Validator.isRequired("#create-name"),
+        Validator.isRequired("#create-image"),
+        Validator.isRequired("#create-area-select"),
+      ],
+    });
+    Validator({
+      form: "#update-artist-form",
+      formGroupSelector: ".form-group",
+      errorSelector: ".form-message",
+      rules: [
+        Validator.isRequired("#update-name"),
+        Validator.isRequired("#update-image"),
+        Validator.isRequired("#update-area-select"),
+      ],
+    });
 
     // Toast message
     const urlParams = new URLSearchParams(window.location.search);
@@ -123,7 +172,7 @@
           modal.find('.modal-body input[name="title"]').val(item.title);
           modal.find('.modal-body input[name="image"]').val(item.image);
           modal.find('.modal-body input[name="url"]').val(item.url);
-          modal.find('.modal-body input[name="lyrics"]').val(item.lyrics);
+          modal.find('.modal-body textarea[name="lyrics"]').val(item.lyrics);
           if (item.category) {
             if (Array.isArray(item.category)) {
               item.category.map((categoryId) => {
@@ -143,6 +192,18 @@
                 .find(`.modal-body option[value="${artistId}"]`)
                 .attr("selected", true);
             });
+          }
+          if (item.song) {
+            item.song.map((songId) => {
+              modal
+                .find(`.modal-body option[value="${songId}"]`)
+                .attr("selected", true);
+            });
+          }
+          if (item.area) {
+            modal
+              .find(`.modal-body option[value="${item.area}"]`)
+              .attr("selected", true);
           }
           modal.find("#btn-update").on("click", function () {
             modal
