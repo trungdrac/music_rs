@@ -23,7 +23,13 @@ class SongDetail extends Component {
   componentDidMount() {
     const songId = this.props.match.params.id;
     axios
-      .get(`/song/detail/${songId}`)
+      .get(`/song/detail/${songId}`
+      // ,{
+      //   headers: {
+      //     'Authorization': `Bearer ${this.props.userToken}`
+      //   },
+      // }
+      )
       .then((res) => {
         this.props.setSongDetail(res.data);
       })
@@ -127,6 +133,7 @@ class SongDetail extends Component {
 const mapStateToProps = (state) => ({
   songDetail: state.song.songDetail,
   currentSongId: state.player.currentSongId,
+  // userToken: state.user.userToken
 });
 
 const mapDispatchToProps = (dispatch) => ({

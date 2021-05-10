@@ -152,13 +152,6 @@
       ],
     });
 
-    // Toast message
-    const urlParams = new URLSearchParams(window.location.search);
-    const success_msg = urlParams.get("s");
-    const error_msg = urlParams.get("e");
-    if (success_msg) toastr.success(success_msg);
-    if (error_msg) toastr.error(error_msg);
-
     // Update
     $("#update").on("show.bs.modal", function (event) {
       var button = $(event.relatedTarget);

@@ -3,29 +3,44 @@ require("dotenv").config();
 const express = require("express");
 const app = express();
 
-const route = require("./routes");
-const db = require("./config/db");
-
 // View engine setup
 app.set("views", "../admin");
 app.set("view engine", "ejs");
 
 app.use(express.static("public"));
 
-// body-parser
+// Use body-parser
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 
+// Use passport and session to authorization
+const passport = require("passport");
+const session = require("express-session");
+app.use(
+  session({
+    secret: "process.env.APP_SECRET",
+    resave: false,
+    saveUninitialized: false,
+    cookie: {
+      secure: false,
+      maxAge: 1000 * 60 * 60,
+    },
+  })
+);
+app.use(passport.initialize());
+app.use(passport.session());
+
+// Use flash
+const flash = require("connect-flash");
+app.use(flash());
+
 // Connect to DB
+const db = require("./config/db");
 db.connect();
 
 // Routes init
+const route = require("./routes");
 route(app);
-
-// Handle error middleware
-app.use((err, req, res, next) => {
-  res.json({ message: err });
-});
 
 app.listen(process.env.APP_PORT, () => {
   console.log(`Server is running on port ${process.env.APP_PORT}`);

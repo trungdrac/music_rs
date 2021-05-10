@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>MusicRS Admin</title>
+
+    <!-- Bootstrap style -->
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/css/bootstrap.min.css"
+      integrity="sha384-B0vP5xmATw1+K9KRQjQERJvTumQW0nPEzvF6L/Z6nronJ3oUOFUFpCjEUQouq2+l"
+      crossorigin="anonymous"
+    />
+
+    <!-- Toast style -->
+    <link
+      href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css"
+      rel="stylesheet"
+    />
+
+    <!-- Custom style -->
+    <link href="/css/styles.css" rel="stylesheet" />
+  </head>
+  <body>
+    <div class="auth">
+      <form action="" method="POST" class="form shadow" id="login-form">
+        <div class="d-flex align-items-center justify-content-around">
+          <h3 class="heading">Đăng nhập admin</h3>
+          <img src="/images/logos/logo.svg" alt="logo-app" />
+        </div>
+        <div class="spacer"></div>
+        <div class="form-group">
+          <label htmlFor="username" class="form-label"> Tên đăng nhập </label>
+          <!-- prettier-ignore -->
+          <input
+            id="username"
+            name="username"
+            type="text"
+            placeholder="Nhập tên đăng nhập"
+            class="form-control"
+          >
+        </div>
+        <div class="form-group">
+          <label htmlFor="password" class="form-label"> Mật khẩu </label>
+          <input
+            id="password"
+            name="password"
+            type="password"
+            placeholder="Nhập mật khẩu"
+            class="form-control"
+          />
+        </div>
+        <button class="form-submit">Đăng nhập</button>
+      </form>
+    </div>
+
+    <!-- Bootstrap scripts-->
+    <script
+      src="https://code.jquery.com/jquery-3.6.0.js"
+      integrity="sha256-H+K7U5CnXl1h5ywQfKtSj8PCmoN9aaq30gDh27Xc0jk="
+      crossorigin="anonymous"
+    ></script>
+    <script
+      src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/js/bootstrap.bundle.min.js"
+      crossorigin="anonymous"
+    ></script>
+
+    <!-- Toast script -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
+
+    <% if (error.length > 0) { %>
+    <script>
+      toastr.error(`<%= error %>`);
+    </script>
+    <% } %>
+  </body>
+</html>

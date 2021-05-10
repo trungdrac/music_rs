@@ -8,15 +8,31 @@ const Category = require("../models/Category");
 const Interaction = require("../models/Interaction");
 
 class AdminController {
+  // [GET] /admin/login
+  login = (req, res, next) => {
+    res.render("login", { error: req.flash("error") });
+  };
+
   // [GET] /admin
   index = (req, res, next) => {
-    res.render("layout", { page: "dashboard" });
+    res.render("layout", {
+      page: "dashboard",
+      error: req.flash("error"),
+      success: req.flash("success"),
+    });
   };
 
   // [GET] /admin/user
   indexUser = (req, res, next) => {
     User.find({})
-      .then((users) => res.render("layout", { page: "user", users }))
+      .then((users) =>
+        res.render("layout", {
+          page: "user",
+          users,
+          error: req.flash("error"),
+          success: req.flash("success"),
+        })
+      )
       .catch(next);
   };
 
@@ -34,9 +50,15 @@ class AdminController {
             user: mongoose.Types.ObjectId(userId),
           }).exec();
           Promise.all([userPromise, playlistPromise, interactionPromise])
-            .then(() => res.redirect("/admin/user?s=Xóa thành công!"))
+            .then(() => {
+              req.flash("success", "Xóa thành công!");
+              res.redirect("/admin/user");
+            })
             .catch(next);
-        } else res.redirect("/admin/user?e=Không thể xóa admin!");
+        } else {
+          req.flash("error", "Không thể xóa admin!");
+          res.redirect("/admin/user");
+        }
       })
       .catch(next);
   };
@@ -45,7 +67,12 @@ class AdminController {
   indexCategory = (req, res, next) => {
     Category.find({})
       .then((categories) =>
-        res.render("layout", { page: "category", categories })
+        res.render("layout", {
+          page: "category",
+          categories,
+          error: req.flash("error"),
+          success: req.flash("success"),
+        })
       )
       .catch(next);
   };
@@ -62,7 +89,10 @@ class AdminController {
   createCategory = (req, res, next) => {
     const category = req.body;
     Category.create(category)
-      .then(() => res.redirect("/admin/category?s=Thêm thành công!"))
+      .then(() => {
+        req.flash("success", "Thêm thành công!");
+        res.redirect("/admin/category");
+      })
       .catch(next);
   };
 
@@ -71,7 +101,10 @@ class AdminController {
     const categoryId = req.params.id;
     const category = req.body;
     Category.updateOne({ _id: categoryId }, category)
-      .then(() => res.redirect("/admin/category?s=Cập nhật thành công!"))
+      .then(() => {
+        req.flash("success", "Cập nhật thành công!");
+        res.redirect("/admin/category");
+      })
       .catch(next);
   };
 
@@ -88,12 +121,17 @@ class AdminController {
       .then((result) => {
         if (result[0].length === 0 && result[1].length === 0) {
           Category.deleteOne({ _id: categoryId })
-            .then(() => res.redirect("/admin/category?s=Xoá thành công!"))
+            .then(() => {
+              req.flash("success", "Xoá thành công!");
+              res.redirect("/admin/category");
+            })
             .catch(next);
         } else {
-          res.redirect(
-            "/admin/category?e=Dữ liệu có liên quan đến bài hát và khu vực. Không thể xóa!"
+          req.flash(
+            "error",
+            "Dữ liệu có liên quan đến bài hát và khu vực. Không thể xóa!"
           );
+          res.redirect("/admin/category");
         }
       })
       .catch(next);
@@ -111,6 +149,8 @@ class AdminController {
           page: "area",
           areas: result[0],
           categories: result[1],
+          error: req.flash("error"),
+          success: req.flash("success"),
         })
       )
       .catch(next);
@@ -128,7 +168,10 @@ class AdminController {
   createArea = (req, res, next) => {
     const area = req.body;
     Area.create(area)
-      .then(() => res.redirect("/admin/area?s=Thêm thành công!"))
+      .then(() => {
+        req.flash("success", "Thêm thành công!");
+        res.redirect("/admin/area");
+      })
       .catch(next);
   };
 
@@ -137,7 +180,10 @@ class AdminController {
     const areaId = req.params.id;
     const area = req.body;
     Area.updateOne({ _id: areaId }, area)
-      .then(() => res.redirect("/admin/area?s=Cập nhật thành công!"))
+      .then(() => {
+        req.flash("success", "Cập nhật thành công!");
+        res.redirect("/admin/area");
+      })
       .catch(next);
   };
 
@@ -154,12 +200,17 @@ class AdminController {
       .then((result) => {
         if (result[0].length === 0 && result[1].length === 0) {
           Area.deleteOne({ _id: areaId })
-            .then(() => res.redirect("/admin/area?s=Xoá thành công!"))
+            .then(() => {
+              req.flash("success", "Xoá thành công!");
+              res.redirect("/admin/area");
+            })
             .catch(next);
         } else {
-          res.redirect(
-            "/admin/area?e=Dữ liệu có liên quan đến playlist và nghệ sỹ. Không thể xóa!"
+          req.flash(
+            "error",
+            "Dữ liệu có liên quan đến playlist và nghệ sỹ. Không thể xóa!"
           );
+          res.redirect("/admin/area");
         }
       })
       .catch(next);
@@ -180,6 +231,8 @@ class AdminController {
           songs: result[0],
           categories: result[1],
           artists: result[2],
+          error: req.flash("error"),
+          success: req.flash("success"),
         })
       )
       .catch(next);
@@ -197,7 +250,10 @@ class AdminController {
   createSong = (req, res, next) => {
     const song = req.body;
     Song.create(song)
-      .then(() => res.redirect("/admin/song?s=Thêm thành công!"))
+      .then(() => {
+        req.flash("success", "Thêm thành công!");
+        res.redirect("/admin/song");
+      })
       .catch(next);
   };
 
@@ -206,7 +262,10 @@ class AdminController {
     const songId = req.params.id;
     const song = req.body;
     Song.updateOne({ _id: songId }, song)
-      .then(() => res.redirect("/admin/song?s=Cập nhật thành công!"))
+      .then(() => {
+        req.flash("success", "Cập nhật thành công!");
+        res.redirect("/admin/song");
+      })
       .catch(next);
   };
 
@@ -223,12 +282,17 @@ class AdminController {
       .then((result) => {
         if (result[0].length === 0 && result[1].length === 0) {
           Song.deleteOne({ _id: songId })
-            .then(() => res.redirect("/admin/song?s=Xoá thành công!"))
+            .then(() => {
+              req.flash("success", "Xoá thành công!");
+              res.redirect("/admin/song");
+            })
             .catch(next);
         } else {
-          res.redirect(
-            "/admin/song?e=Dữ liệu có liên quan đến playlist và tương tác người dùng. Không thể xóa!"
+          req.flash(
+            "error",
+            "Dữ liệu có liên quan đến playlist và tương tác người dùng. Không thể xóa!"
           );
+          res.redirect("/admin/song");
         }
       })
       .catch(next);
@@ -250,6 +314,8 @@ class AdminController {
           playlists: result[0],
           areas: result[1],
           songs: result[2],
+          error: req.flash("error"),
+          success: req.flash("success"),
         })
       )
       .catch(next);
@@ -267,7 +333,10 @@ class AdminController {
   createPlaylist = (req, res, next) => {
     const playlist = req.body;
     Playlist.create(playlist)
-      .then(() => res.redirect("/admin/playlist?s=Thêm thành công!"))
+      .then(() => {
+        req.flash("success", "Thêm thành công!");
+        res.redirect("/admin/playlist");
+      })
       .catch(next);
   };
 
@@ -276,7 +345,10 @@ class AdminController {
     const playlistId = req.params.id;
     const playlist = req.body;
     Playlist.updateOne({ _id: playlistId }, playlist)
-      .then(() => res.redirect("/admin/playlist?s=Cập nhật thành công!"))
+      .then(() => {
+        req.flash("success", "Cập nhật thành công!");
+        res.redirect("/admin/playlist");
+      })
       .catch(next);
   };
 
@@ -284,7 +356,10 @@ class AdminController {
   deletePlaylist = (req, res, next) => {
     const playlistId = req.params.id;
     Playlist.deleteOne({ _id: playlistId })
-      .then(() => res.redirect("/admin/playlist?s=Xoá thành công!"))
+      .then(() => {
+        req.flash("success", "Xoá thành công!");
+        res.redirect("/admin/playlist");
+      })
       .catch(next);
   };
 
@@ -300,6 +375,8 @@ class AdminController {
           page: "artist",
           artists: result[0],
           areas: result[1],
+          error: req.flash("error"),
+          success: req.flash("success"),
         })
       )
       .catch(next);
@@ -317,7 +394,10 @@ class AdminController {
   createArtist = (req, res, next) => {
     const artist = req.body;
     Artist.create(artist)
-      .then(() => res.redirect("/admin/artist?s=Thêm thành công!"))
+      .then(() => {
+        req.flash("success", "Thêm thành công!");
+        res.redirect("/admin/artist");
+      })
       .catch(next);
   };
 
@@ -326,7 +406,10 @@ class AdminController {
     const artistId = req.params.id;
     const artist = req.body;
     Artist.updateOne({ _id: artistId }, artist)
-      .then(() => res.redirect("/admin/artist?s=Cập nhật thành công!"))
+      .then(() => {
+        req.flash("success", "Cập nhật thành công!");
+        res.redirect("/admin/artist");
+      })
       .catch(next);
   };
 
@@ -339,12 +422,17 @@ class AdminController {
       .then((result) => {
         if (result.length === 0) {
           Artist.deleteOne({ _id: artistId })
-            .then(() => res.redirect("/admin/artist?s=Xoá thành công!"))
+            .then(() => {
+              req.flash("success", "Xoá thành công!");
+              res.redirect("/admin/artist");
+            })
             .catch(next);
         } else {
-          res.redirect(
-            "/admin/artist?e=Dữ liệu có liên quan đến bài hát. Không thể xóa!"
+          req.flash(
+            "error",
+            "Dữ liệu có liên quan đến bài hát. Không thể xóa!"
           );
+          res.redirect("/admin/artist");
         }
       })
       .catch(next);
