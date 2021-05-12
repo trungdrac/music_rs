@@ -6,6 +6,7 @@ import MyPagination from "../general/MyPagination";
 import PlaylistCard from "../playlist/PlaylistCard";
 import Blank from "../general/Blank";
 import { NUMBER_OF_ITEM_PER_PAGE } from "../../constants/Config";
+import toast from "../../helpers/toast";
 
 class ListPlaylist extends Component {
   constructor(props) {
@@ -25,14 +26,12 @@ class ListPlaylist extends Component {
       .get(`/playlist/${areaId}?page=${query.get("page")}`)
       .then((res) => this.props.setPlaylistArea(res.data))
       .then(() => this.setState({ isLoading: false }))
-      .catch((error) =>
-        alert(
-          `Lỗi: ${
-            error.response.data.message
-              ? JSON.stringify(error.response.data.message)
-              : ""
-          }`
-        )
+      .catch(() =>
+        toast({
+          title: "Thất bại!",
+          message: "Có lỗi xảy ra!",
+          type: "error",
+        })
       );
 
     axios
@@ -42,14 +41,12 @@ class ListPlaylist extends Component {
           pageNums: Math.ceil(res.data / NUMBER_OF_ITEM_PER_PAGE),
         })
       )
-      .catch((error) =>
-        alert(
-          `Lỗi: ${
-            error.response.data.message
-              ? JSON.stringify(error.response.data.message)
-              : ""
-          }`
-        )
+      .catch(() =>
+        toast({
+          title: "Thất bại!",
+          message: "Có lỗi xảy ra!",
+          type: "error",
+        })
       );
   }
 

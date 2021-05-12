@@ -11,6 +11,7 @@ import Section from "../general/Section";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPlay } from "@fortawesome/free-solid-svg-icons";
 import axios from "axios";
+import toast from "../../helpers/toast";
 
 class SongDetail extends Component {
   constructor(props) {
@@ -23,25 +24,17 @@ class SongDetail extends Component {
   componentDidMount() {
     const songId = this.props.match.params.id;
     axios
-      .get(`/song/detail/${songId}`
-      // ,{
-      //   headers: {
-      //     'Authorization': `Bearer ${this.props.userToken}`
-      //   },
-      // }
-      )
+      .get(`/song/detail/${songId}`)
       .then((res) => {
         this.props.setSongDetail(res.data);
       })
       .then(() => this.setState({ isLoading: false }))
-      .catch((error) =>
-        alert(
-          `Lỗi: ${
-            error.response.data.message
-              ? JSON.stringify(error.response.data.message)
-              : ""
-          }`
-        )
+      .catch(() =>
+        toast({
+          title: "Thất bại!",
+          message: "Có lỗi xảy ra!",
+          type: "error",
+        })
       );
   }
 
@@ -54,14 +47,8 @@ class SongDetail extends Component {
   render() {
     if (this.state.isLoading) return "";
 
-    const {
-      _id,
-      title,
-      artist,
-      image,
-      lyrics,
-      category,
-    } = this.props.songDetail;
+    const { _id, title, artist, image, lyrics, category } =
+      this.props.songDetail;
     const { currentSongId } = this.props;
 
     return (
@@ -133,7 +120,6 @@ class SongDetail extends Component {
 const mapStateToProps = (state) => ({
   songDetail: state.song.songDetail,
   currentSongId: state.player.currentSongId,
-  // userToken: state.user.userToken
 });
 
 const mapDispatchToProps = (dispatch) => ({

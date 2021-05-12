@@ -137,6 +137,7 @@ label {
 }
 
 .dropdown-menu {
+  z-index: 1005;
   padding: 0;
   background-color: var(--bg-sidebar-color);
   border: none;
@@ -151,9 +152,19 @@ label {
   padding: 0.45rem 1.2rem 0.45rem 0.5rem;
 }
 
+.options-list__item:hover {
+  color: #16181b;
+  text-decoration: none;
+  background-color: #e9ecef;
+}
+
 .option-list__item--icon {
   width: 2rem;
   text-align: center;
+}
+
+.option-list__item--icon.active {
+  color: var(--main-color);
 }
 /* dropdown button options end */
 
@@ -212,3 +223,120 @@ label {
   width: 320px;
   border-radius: 1.5rem;
 }
+
+/* Toast start */
+#my-toast {
+  position: fixed;
+  top: 58px;
+  right: 0;
+  margin-left: -140px;
+  z-index: 5000;
+}
+
+.my-toast {
+  display: flex;
+  align-items: center;
+  background-color: var(--bg-sidebar-color);
+  border-radius: 2px;
+  padding: 10px 16px;
+  min-width: 400px;
+  max-width: 450px;
+  border-left: 5px solid;
+  -webkit-box-shadow: 0 1px 10px 2px var(--shadow-color);
+  -moz-box-shadow: 0 1px 10px 2px var(--shadow-color);
+  box-shadow: 0 1px 10px 2px var(--shadow-color);
+  -webkit-transition: 0.3s all linear;
+  -moz-transition: 0.3s all linear;
+  transition: 0.3s all linear;
+}
+
+@-ms-keyframes slideInLeft {
+  from {
+    opacity: 0;
+    transform: translateX(100%);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+@-webkit-keyframes slideInLeft {
+  from {
+    opacity: 0;
+    transform: translateX(100%);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+@keyframes slideInLeft {
+  from {
+    opacity: 0;
+    transform: translateX(100%);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@-ms-keyframes fadeOut {
+  to {
+    opacity: 0;
+  }
+}
+@-webkit-keyframes fadeOut {
+  to {
+    opacity: 0;
+  }
+}
+@keyframes fadeOut {
+  to {
+    opacity: 0;
+  }
+}
+
+.toast--success {
+  border-color: #47d864;
+}
+
+.toast--info {
+  border-color: #2f86eb;
+}
+
+.toast--warning {
+  border-color: #ffc021;
+}
+
+.toast--error {
+  border-color: #ff623d;
+}
+
+.my-toast + .my-toast {
+  margin-top: 10px;
+}
+
+.toast__content {
+  flex-grow: 1;
+}
+
+.toast__title {
+  margin-bottom: 5px;
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--text-color);
+}
+
+.toast__msg {
+  font-size: 14px;
+  color: var(--text-color);
+}
+
+.toast__close {
+  font-size: 20px;
+  color: var(--text-color);
+  cursor: pointer;
+}
+
+/* Toast end */

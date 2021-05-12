@@ -6,6 +6,7 @@ import { setResult } from "../../actions/searchAction";
 import ArtistCard from "../artist/ArtistCard";
 import Blank from "../general/Blank";
 import { NUMBER_OF_ITEM_PER_PAGE } from "../../constants/Config";
+import toast from "../../helpers/toast";
 
 class SearchArtist extends Component {
   constructor(props) {
@@ -23,14 +24,12 @@ class SearchArtist extends Component {
       .get(`/search/artist?q=${query.get("q")}&page=${query.get("page")}`)
       .then((res) => this.props.setResult(res.data))
       .then(() => this.setState({ isLoading: false }))
-      .catch((error) =>
-        alert(
-          `Lỗi: ${
-            error.response.data.message
-              ? JSON.stringify(error.response.data.message)
-              : ""
-          }`
-        )
+      .catch(() =>
+        toast({
+          title: "Thất bại!",
+          message: "Có lỗi xảy ra!",
+          type: "error",
+        })
       );
 
     axios
@@ -40,14 +39,12 @@ class SearchArtist extends Component {
           pageNums: Math.ceil(res.data / NUMBER_OF_ITEM_PER_PAGE),
         })
       )
-      .catch((error) =>
-        alert(
-          `Lỗi: ${
-            error.response.data.message
-              ? JSON.stringify(error.response.data.message)
-              : ""
-          }`
-        )
+      .catch(() =>
+        toast({
+          title: "Thất bại!",
+          message: "Có lỗi xảy ra!",
+          type: "error",
+        })
       );
   }
 

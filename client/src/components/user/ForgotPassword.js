@@ -2,6 +2,7 @@ import React, { Component } from "react";
 import { Link } from "react-router-dom";
 import axios from "axios";
 import Validator from "../../helpers/validator";
+import toast from "../../helpers/toast";
 
 class ForgotPassword extends Component {
   constructor(props) {
@@ -26,14 +27,12 @@ class ForgotPassword extends Component {
             .then(() => {
               this.setState({ isSended: true });
             })
-            .catch((error) =>
-              alert(
-                `Lỗi: ${
-                  error.response.data.message
-                    ? JSON.stringify(error.response.data.message)
-                    : ""
-                }`
-              )
+            .catch(() =>
+              toast({
+                title: "Thất bại!",
+                message: "Có lỗi xảy ra!",
+                type: "error",
+              })
             );
         }
       },
@@ -55,14 +54,12 @@ class ForgotPassword extends Component {
             emailMessage: "Email không khớp với bất kỳ tài khoản nào!",
           });
       })
-      .catch((error) =>
-        alert(
-          `Lỗi: ${
-            error.response.data.message
-              ? JSON.stringify(error.response.data.message)
-              : ""
-          }`
-        )
+      .catch(() =>
+        toast({
+          title: "Thất bại!",
+          message: "Có lỗi xảy ra!",
+          type: "error",
+        })
       );
   };
 

@@ -16,6 +16,7 @@ import Sidebar from "./Sidebar";
 import { Button, Dropdown, DropdownButton, Modal } from "react-bootstrap";
 import debounce from "../../helpers/debounce";
 import axios from "axios";
+import toast from "../../helpers/toast";
 
 class Header extends Component {
   constructor(props) {
@@ -33,14 +34,12 @@ class Header extends Component {
         const suggestion = res.data;
         this.props.setSuggestion(suggestion);
       })
-      .catch((error) =>
-        alert(
-          `Lỗi: ${
-            error.response.data.message
-              ? JSON.stringify(error.response.data.message)
-              : ""
-          }`
-        )
+      .catch(() =>
+        toast({
+          title: "Thất bại!",
+          message: "Có lỗi xảy ra!",
+          type: "error",
+        })
       );
   }, 500);
 
@@ -68,7 +67,7 @@ class Header extends Component {
   };
 
   render() {
-    const { username } = this.props.user;
+    const { username } = this.props;
     const { suggestion } = this.props;
     return (
       <div className="header">
@@ -87,7 +86,7 @@ class Header extends Component {
           />
           <label htmlFor="sidebar-checkbox" className="overlay"></label>
           <Sidebar />
-          <div className="header__content--search">
+          <div className="header__content--search box-shadow">
             <button className="search-icon" onClick={this.search}>
               <FontAwesomeIcon icon={faSearch} />
             </button>
@@ -190,7 +189,18 @@ class Header extends Component {
           </div>
           <div className="header__content--auth">
             {username ? (
-              <DropdownButton id="dropdown-auth" title={username}>
+              <DropdownButton
+                id="dropdown-auth"
+                title={
+                  <div className="auth-link">
+                    <FontAwesomeIcon
+                      icon={faUserCircle}
+                      className="user-circle-icon"
+                    />
+                    <span className="ml-2 d-none d-xl-block">{username}</span>
+                  </div>
+                }
+              >
                 <Dropdown.Item href="#/action-1" className="options-list__item">
                   <div className="option-list__item--icon">
                     <FontAwesomeIcon icon={faSignOutAlt} />
@@ -252,7 +262,7 @@ class Header extends Component {
 }
 
 const mapStateToProps = (state) => ({
-  user: state.user,
+  username: state.user.username,
   suggestion: state.search.suggestion,
 });
 

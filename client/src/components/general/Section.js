@@ -3,6 +3,7 @@ import { connect } from "react-redux";
 import { setSongs } from "../../actions/songAction";
 import axios from "axios";
 import SongCard from "../song/SongCard";
+import toast from "../../helpers/toast";
 
 class Section extends Component {
   constructor(props) {
@@ -19,14 +20,12 @@ class Section extends Component {
         this.props.setSongs(res.data);
       })
       .then(() => this.setState({ isLoading: false }))
-      .catch((error) =>
-        alert(
-          `Lỗi: ${
-            error.response.data.message
-              ? JSON.stringify(error.response.data.message)
-              : ""
-          }`
-        )
+      .catch(() =>
+        toast({
+          title: "Thất bại!",
+          message: "Có lỗi xảy ra!",
+          type: "error",
+        })
       );
   }
   render() {

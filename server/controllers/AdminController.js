@@ -10,29 +10,24 @@ const Interaction = require("../models/Interaction");
 class AdminController {
   // [GET] /admin/login
   login = (req, res, next) => {
-    res.render("login", { error: req.flash("error") });
+    res.render("login");
+  };
+
+  // [GET] /admin/logout
+  logout = (req, res, next) => {
+    req.logout();
+    res.redirect("/admin/login");
   };
 
   // [GET] /admin
   index = (req, res, next) => {
-    res.render("layout", {
-      page: "dashboard",
-      error: req.flash("error"),
-      success: req.flash("success"),
-    });
+    res.render("layout", { page: "dashboard" });
   };
 
   // [GET] /admin/user
   indexUser = (req, res, next) => {
     User.find({})
-      .then((users) =>
-        res.render("layout", {
-          page: "user",
-          users,
-          error: req.flash("error"),
-          success: req.flash("success"),
-        })
-      )
+      .then((users) => res.render("layout", { page: "user", users }))
       .catch(next);
   };
 
@@ -67,12 +62,7 @@ class AdminController {
   indexCategory = (req, res, next) => {
     Category.find({})
       .then((categories) =>
-        res.render("layout", {
-          page: "category",
-          categories,
-          error: req.flash("error"),
-          success: req.flash("success"),
-        })
+        res.render("layout", { page: "category", categories })
       )
       .catch(next);
   };
@@ -149,8 +139,6 @@ class AdminController {
           page: "area",
           areas: result[0],
           categories: result[1],
-          error: req.flash("error"),
-          success: req.flash("success"),
         })
       )
       .catch(next);
@@ -231,8 +219,6 @@ class AdminController {
           songs: result[0],
           categories: result[1],
           artists: result[2],
-          error: req.flash("error"),
-          success: req.flash("success"),
         })
       )
       .catch(next);
@@ -314,8 +300,6 @@ class AdminController {
           playlists: result[0],
           areas: result[1],
           songs: result[2],
-          error: req.flash("error"),
-          success: req.flash("success"),
         })
       )
       .catch(next);
@@ -375,8 +359,6 @@ class AdminController {
           page: "artist",
           artists: result[0],
           areas: result[1],
-          error: req.flash("error"),
-          success: req.flash("success"),
         })
       )
       .catch(next);

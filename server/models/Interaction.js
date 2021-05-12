@@ -12,4 +12,6 @@ const interactionSchema = new Schema(
   { timestamps: true }
 );
 
+interactionSchema.index({ user: 1, song: 1 }, { unique: true });
+
 module.exports = mongoose.model("Interaction", interactionSchema);

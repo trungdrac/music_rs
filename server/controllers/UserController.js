@@ -14,6 +14,7 @@ class UserController {
           process.env.APP_SECRET
         );
         res.status(200).json({
+          userId: user._id,
           username: user.username,
           userToken,
         });
@@ -60,6 +61,7 @@ class UserController {
             process.env.APP_SECRET
           );
           res.status(200).json({
+            userId: user._id,
             username: user.username,
             userToken,
           });

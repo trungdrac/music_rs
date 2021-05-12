@@ -4,10 +4,13 @@ import { Link, NavLink, Route } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faArrowAltCircleLeft,
+  faHeart,
+  faHistory,
   faHome,
-  faListUl,
+  faClipboardList,
   faMicrophone,
   faMusic,
+  faListAlt,
 } from "@fortawesome/free-solid-svg-icons";
 
 class Sidebar extends Component {
@@ -43,7 +46,7 @@ class Sidebar extends Component {
         </div>
         <nav className="sidebar__nav">
           <ul className="list-group">
-            <li className="sidebar__nav--header">Bài hát</li>
+            <li className="sidebar__nav--header">Music RS</li>
             <li onClick={this.slideOff}>
               <NavLink
                 exact
@@ -95,7 +98,7 @@ class Sidebar extends Component {
                       activeClassName="active"
                     >
                       <FontAwesomeIcon
-                        icon={faListUl}
+                        icon={faClipboardList}
                         className="sidebar-icon"
                       />
                       <span>Playlist</span>
@@ -128,13 +131,47 @@ class Sidebar extends Component {
                 }}
               </Route>
             </li>
+            <li className="sidebar__nav--header">Cá nhân</li>
+            <li onClick={this.slideOff}>
+              <NavLink
+                exact
+                to="/user/:id/liked"
+                className="sidebar__nav--link"
+                activeClassName="active"
+              >
+                <FontAwesomeIcon icon={faHeart} className="sidebar-icon" />
+                <span>Bài hát yêu thích</span>
+              </NavLink>
+            </li>
+            <li onClick={this.slideOff}>
+              <NavLink
+                exact
+                to="/user/:id/my-playlist"
+                className="sidebar__nav--link"
+                activeClassName="active"
+              >
+                <FontAwesomeIcon icon={faListAlt} className="sidebar-icon" />
+                <span>Playlist của tôi</span>
+              </NavLink>
+            </li>
+            <li onClick={this.slideOff}>
+              <NavLink
+                exact
+                to="/user/:id/history"
+                className="sidebar__nav--link"
+                activeClassName="active"
+              >
+                <FontAwesomeIcon icon={faHistory} className="sidebar-icon" />
+                <span>Lịch sử</span>
+              </NavLink>
+            </li>
           </ul>
         </nav>
-        <div className="sidebar__footer">
+        {/* <div className="sidebar__footer">
           <Link to="/" className="btn btn-block btn-danger">
             <span>Thêm nhạc</span>
           </Link>
-        </div>
+        </div> */}
       </div>
     );
   }

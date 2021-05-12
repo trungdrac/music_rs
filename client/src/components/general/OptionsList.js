@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import { withRouter } from "react-router-dom";
 import { connect } from "react-redux";
+import axios from "axios";
 import { setListPlaying, setCurrentIndex } from "../../actions/playerAction";
 import { Dropdown } from "react-bootstrap";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -10,14 +11,66 @@ import {
   faHeart,
   faInfoCircle,
   faLink,
-  faListUl,
+  faClipboardList,
   faPlus,
   faStepForward,
   faTrashAlt,
 } from "@fortawesome/free-solid-svg-icons";
+import toast from "../../helpers/toast";
 
 class OptionsList extends Component {
-  like = () => {};
+  constructor(props) {
+    super(props);
+    this.state = { interaction: {} };
+  }
+  componentDidMount() {
+    const songId = this.props.song._id;
+    const { user } = this.props;
+    if (user.userId) {
+      axios
+        .get(`/interaction/detail?user=${user.userId}&song=${songId}`, {
+          headers: {
+            Authorization: `Bearer ${user.userToken}`,
+          },
+        })
+        .then((res) => this.setState({ interaction: res.data }))
+        .catch(() =>
+          toast({
+            title: "Thất bại!",
+            message: "Có lỗi xảy ra!",
+            type: "error",
+          })
+        );
+    }
+  }
+
+  like = () => {
+    const songId = this.props.song._id;
+    const { user } = this.props;
+    axios
+      .get(`/interaction/like?user=${user.userId}&song=${songId}`, {
+        headers: {
+          Authorization: `Bearer ${user.userToken}`,
+        },
+      })
+      .then((res) => this.setState({ interaction: res.data }))
+      .then(() =>
+        toast({
+          title: "Thành công!",
+          message: `Đã ${
+            this.state.interaction.like ? "thêm vào" : "xóa khỏi"
+          } bài hát yêu thích!`,
+          type: "success",
+        })
+      )
+      .catch(() =>
+        toast({
+          title: "Thất bại!",
+          message: "Có lỗi xảy ra!",
+          type: "error",
+        })
+      );
+  };
 
   addToPlaylist = () => {};
 
@@ -39,6 +92,11 @@ class OptionsList extends Component {
       newList.splice(currentIndex + 1, 0, song);
     }
     this.props.setListPlaying(newList);
+    toast({
+      title: "Thành công!",
+      message: "Bài hát sẽ được phát tiếp theo!",
+      type: "success",
+    });
   };
 
   playLast = () => {
@@ -53,6 +111,11 @@ class OptionsList extends Component {
     }
     newList.splice(newList.length, 0, song);
     this.props.setListPlaying(newList);
+    toast({
+      title: "Thành công!",
+      message: "Đã thêm vào danh sách chờ phát!",
+      type: "success",
+    });
   };
 
   comment = () => {};
@@ -64,6 +127,11 @@ class OptionsList extends Component {
     if (songIndex < currentIndex) this.props.setCurrentIndex(currentIndex - 1);
     newList.splice(songIndex, 1);
     this.props.setListPlaying(newList);
+    toast({
+      title: "Thành công!",
+      message: "Đã xóa khỏi chờ phát!",
+      type: "success",
+    });
   };
 
   getInfo = () => {
@@ -73,22 +141,52 @@ class OptionsList extends Component {
       this.props.history.push(`/playlist/detail/${this.props.playlist._id}`);
   };
 
-  copyLink = () => {};
+  copyLink = () => {
+    navigator.permissions.query({ name: "clipboard-write" }).then((result) => {
+      if (result.state === "granted" || result.state === "prompt") {
+        navigator.clipboard
+          .writeText(
+            `${window.location.host}/song/detail/${this.props.song._id}`
+          )
+          .then(
+            () =>
+              toast({
+                title: "Thành công!",
+                message: "Đã copy link vào clipboard!",
+                type: "success",
+              }),
+            () =>
+              toast({
+                title: "Thất bại!",
+                message: "Link chưa được copy!",
+                type: "error",
+              })
+          );
+      }
+    });
+  };
 
   download = () => {
-    this.props.history.push(this.props.song.url);
+    window.open(this.props.song.url);
   };
 
   render() {
+    const { userId } = this.props.user;
+    const { interaction } = this.state;
+
     return (
       <div className="options-list">
         {this.props.like ? (
-          <Dropdown.Item className="options-list__item" onClick={this.like}>
-            <div className="option-list__item--icon">
+          <Dropdown.ItemText className="options-list__item" onClick={this.like}>
+            <div
+              className={`option-list__item--icon ${
+                userId && interaction.like === true ? "active" : ""
+              }`}
+            >
               <FontAwesomeIcon icon={faHeart} />
             </div>
             <span>Yêu thích</span>
-          </Dropdown.Item>
+          </Dropdown.ItemText>
         ) : (
           ""
         )}
@@ -118,7 +216,7 @@ class OptionsList extends Component {
         {this.props.playLast ? (
           <Dropdown.Item className="options-list__item" onClick={this.playLast}>
             <div className="option-list__item--icon">
-              <FontAwesomeIcon icon={faListUl} />
+              <FontAwesomeIcon icon={faClipboardList} />
             </div>
             <span>Thêm vào chờ phát</span>
           </Dropdown.Item>
@@ -156,12 +254,15 @@ class OptionsList extends Component {
           ""
         )}
         {this.props.copyLink ? (
-          <Dropdown.Item className="options-list__item" onClick={this.copyLink}>
+          <Dropdown.ItemText
+            className="options-list__item"
+            onClick={this.copyLink}
+          >
             <div className="option-list__item--icon">
               <FontAwesomeIcon icon={faLink} />
             </div>
             <span>Sao chép link</span>
-          </Dropdown.Item>
+          </Dropdown.ItemText>
         ) : (
           ""
         )}
@@ -183,6 +284,7 @@ class OptionsList extends Component {
 const mapStateToProps = (state) => ({
   currentIndex: state.player.currentIndex,
   listPlaying: state.player.listPlaying,
+  user: state.user,
 });
 
 const mapDispatchToProps = (dispatch) => ({

@@ -115,6 +115,9 @@ class Player extends Component {
     //set current song
     const currentSongId = this.props.listPlaying[this.props.currentIndex]._id;
     this.props.setCurrentSongId(currentSongId);
+
+    // if (this.props.user.userId)
+    //   localStorage.setItem("count", Number(localStorage.getItem("count")) + 1);
   };
 
   handlePrev = () => {
@@ -423,6 +426,7 @@ const mapStateToProps = (state) => ({
   currentTime: state.player.currentTime,
   duration: state.player.duration,
   listPlaying: state.player.listPlaying,
+  user: state.user,
 });
 
 const mapDispatchToProps = (dispatch) => ({

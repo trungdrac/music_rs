@@ -4,6 +4,7 @@ import { connect } from "react-redux";
 import { setCurrentUser } from "../../actions/userAction";
 import axios from "axios";
 import Validator from "../../helpers/validator";
+import toast from "../../helpers/toast";
 
 class Register extends Component {
   constructor(props) {
@@ -42,14 +43,12 @@ class Register extends Component {
               this.props.setCurrentUser(user);
               this.props.history.replace("/");
             })
-            .catch((error) =>
-              alert(
-                `Lỗi: ${
-                  error.response.data.message
-                    ? JSON.stringify(error.response.data.message)
-                    : ""
-                }`
-              )
+            .catch(() =>
+              toast({
+                title: "Thất bại!",
+                message: "Có lỗi xảy ra!",
+                type: "error",
+              })
             );
         }
       },
@@ -68,14 +67,12 @@ class Register extends Component {
         if (result.field === "email")
           this.setState({ emailMessage: result.message });
       })
-      .catch((error) =>
-        alert(
-          `Lỗi: ${
-            error.response.data.message
-              ? JSON.stringify(error.response.data.message)
-              : ""
-          }`
-        )
+      .catch(() =>
+        toast({
+          title: "Thất bại!",
+          message: "Có lỗi xảy ra!",
+          type: "error",
+        })
       );
   };
 

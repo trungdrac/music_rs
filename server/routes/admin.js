@@ -63,6 +63,8 @@ router.post(
   })
 );
 
+router.get("/logout", AdminController.logout);
+
 router.get("/user/:id/delete", requireAdmin, AdminController.deleteUser);
 router.get("/user", requireAdmin, AdminController.indexUser);
 

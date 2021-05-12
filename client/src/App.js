@@ -24,6 +24,7 @@ import Register from "./components/user/Register";
 import ForgotPassword from "./components/user/ForgotPassword";
 import ResetPassword from "./components/user/ResetPassword";
 import SearchResult from "./components/search/SearchResult";
+import toast from "./helpers/toast";
 
 class App extends Component {
   constructor(props) {
@@ -38,14 +39,12 @@ class App extends Component {
         this.props.setAreas(res.data);
       })
       .then(() => this.setState({ isLoading: false }))
-      .catch((error) =>
-        alert(
-          `Lỗi: ${
-            error.response.data.message
-              ? JSON.stringify(error.response.data.message)
-              : ""
-          }`
-        )
+      .catch(() =>
+        toast({
+          title: "Thất bại!",
+          message: "Có lỗi xảy ra!",
+          type: "error",
+        })
       );
   }
 
@@ -57,6 +56,7 @@ class App extends Component {
     return (
       <Router>
         <div className="wrapper">
+          <div id="my-toast"></div>
           <Sidebar />
           <div className="content">
             <Header />

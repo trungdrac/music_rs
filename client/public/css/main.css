@@ -289,13 +289,12 @@
 }
 
 .user-circle-icon {
-  font-size: 1.7rem;
+  font-size: 1.5rem;
 }
 
 .auth-link {
   color: var(--white-color);
   display: block;
-  padding: 0.4rem;
   cursor: pointer;
   margin-right: 0;
   display: flex;
@@ -712,7 +711,7 @@
   right: 0;
   bottom: 0;
   left: 0;
-  z-index: 1005;
+  z-index: 2000;
 }
 
 .form {
@@ -1014,5 +1013,8 @@
   }
   .player__song--info {
     width: 12rem;
+  }
+  .my-toast {
+    min-width: 17.5rem;
   }
 }
