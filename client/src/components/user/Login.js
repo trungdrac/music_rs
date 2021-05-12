@@ -4,6 +4,7 @@ import { connect } from "react-redux";
 import { setCurrentUser } from "../../actions/userAction";
 import axios from "axios";
 import Validator from "../../helpers/validator";
+import toast from "../../helpers/toast";
 
 class Login extends Component {
   constructor(props) {
@@ -31,6 +32,11 @@ class Login extends Component {
             const user = res.data;
             this.props.setCurrentUser(user);
             this.props.history.replace("/");
+            toast({
+              title: "Thành công!",
+              message: "Bạn đã đăng nhập thành công!",
+              type: "success",
+            });
           })
           .catch((error) => {
             const errorData = error.response.data;

@@ -35,10 +35,14 @@ class ResetPassword extends Component {
           .then(() => {
             this.setState({ isSuccessed: true });
           })
-          .catch(() =>
+          .catch((error) =>
             toast({
               title: "Thất bại!",
-              message: "Có lỗi xảy ra!",
+              message: `${
+                error.response.data.message
+                  ? error.response.data.message
+                  : "Có lỗi xảy ra!"
+              }`,
               type: "error",
             })
           );

@@ -27,10 +27,14 @@ class ForgotPassword extends Component {
             .then(() => {
               this.setState({ isSended: true });
             })
-            .catch(() =>
+            .catch((error) =>
               toast({
                 title: "Thất bại!",
-                message: "Có lỗi xảy ra!",
+                message: `${
+                  error.response.data.message
+                    ? error.response.data.message
+                    : "Có lỗi xảy ra!"
+                }`,
                 type: "error",
               })
             );
@@ -54,10 +58,14 @@ class ForgotPassword extends Component {
             emailMessage: "Email không khớp với bất kỳ tài khoản nào!",
           });
       })
-      .catch(() =>
+      .catch((error) =>
         toast({
           title: "Thất bại!",
-          message: "Có lỗi xảy ra!",
+          message: `${
+            error.response.data.message
+              ? error.response.data.message
+              : "Có lỗi xảy ra!"
+          }`,
           type: "error",
         })
       );

@@ -71,7 +71,6 @@ class RightSidebar extends Component {
                     >
                       <OptionsList
                         song={song}
-                        like
                         addToPlaylist
                         playNext
                         playLast

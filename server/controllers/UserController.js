@@ -72,7 +72,7 @@ class UserController {
           });
         }
       })
-      .catch(() => {
+      .catch((error) => {
         res.status(401).json({
           message: "Tên đăng nhập không chính xác!",
           field: "username",
@@ -117,7 +117,7 @@ class UserController {
                   <p>Nhấp vào <a href="http://localhost:3000/reset-password/${token}">đây</a> để thay đổi lại mật khẩu!</p>
                   `,
               });
-              res.json({ message: "Kiểm tra emaail của bạn!" });
+              res.json({ message: "Kiểm tra email của bạn!" });
             })
             .catch(next);
         })

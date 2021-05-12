@@ -34,10 +34,14 @@ class Header extends Component {
         const suggestion = res.data;
         this.props.setSuggestion(suggestion);
       })
-      .catch(() =>
+      .catch((error) =>
         toast({
           title: "Thất bại!",
-          message: "Có lỗi xảy ra!",
+          message: `${
+            error.response.data.message
+              ? error.response.data.message
+              : "Có lỗi xảy ra!"
+          }`,
           type: "error",
         })
       );
@@ -64,6 +68,11 @@ class Header extends Component {
   logout = () => {
     this.props.setCurrentUser(null);
     this.setState({ showDialog: false });
+    toast({
+      title: "Thành công!",
+      message: "Bạn đã đăng xuất khỏi hệ thống!",
+      type: "success",
+    });
   };
 
   render() {

@@ -42,11 +42,20 @@ class Register extends Component {
               const user = res.data;
               this.props.setCurrentUser(user);
               this.props.history.replace("/");
+              toast({
+                title: "Thành công!",
+                message: "Bạn đã đăng ký thành công!",
+                type: "success",
+              });
             })
-            .catch(() =>
+            .catch((error) =>
               toast({
                 title: "Thất bại!",
-                message: "Có lỗi xảy ra!",
+                message: `${
+                  error.response.data.message
+                    ? error.response.data.message
+                    : "Có lỗi xảy ra!"
+                }`,
                 type: "error",
               })
             );
@@ -67,10 +76,14 @@ class Register extends Component {
         if (result.field === "email")
           this.setState({ emailMessage: result.message });
       })
-      .catch(() =>
+      .catch((error) =>
         toast({
           title: "Thất bại!",
-          message: "Có lỗi xảy ra!",
+          message: `${
+            error.response.data.message
+              ? error.response.data.message
+              : "Có lỗi xảy ra!"
+          }`,
           type: "error",
         })
       );

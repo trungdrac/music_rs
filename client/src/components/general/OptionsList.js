@@ -34,10 +34,14 @@ class OptionsList extends Component {
           },
         })
         .then((res) => this.setState({ interaction: res.data }))
-        .catch(() =>
+        .catch((error) =>
           toast({
             title: "Thất bại!",
-            message: "Có lỗi xảy ra!",
+            message: `${
+              error.response.data.message
+                ? error.response.data.message
+                : "Có lỗi xảy ra!"
+            }`,
             type: "error",
           })
         );
@@ -63,10 +67,14 @@ class OptionsList extends Component {
           type: "success",
         })
       )
-      .catch(() =>
+      .catch((error) =>
         toast({
           title: "Thất bại!",
-          message: "Có lỗi xảy ra!",
+          message: `${
+            error.response.data.message
+              ? error.response.data.message
+              : "Có lỗi xảy ra!"
+          }`,
           type: "error",
         })
       );

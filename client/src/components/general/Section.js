@@ -20,10 +20,14 @@ class Section extends Component {
         this.props.setSongs(res.data);
       })
       .then(() => this.setState({ isLoading: false }))
-      .catch(() =>
+      .catch((error) =>
         toast({
           title: "Thất bại!",
-          message: "Có lỗi xảy ra!",
+          message: `${
+            error.response.data.message
+              ? error.response.data.message
+              : "Có lỗi xảy ra!"
+          }`,
           type: "error",
         })
       );

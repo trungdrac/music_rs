@@ -26,10 +26,14 @@ class ListArtist extends Component {
       .get(`/artist/${areaId}?page=${query.get("page")}`)
       .then((res) => this.props.setArtistArea(res.data))
       .then(() => this.setState({ isLoading: false }))
-      .catch(() =>
+      .catch((error) =>
         toast({
           title: "Thất bại!",
-          message: "Có lỗi xảy ra!",
+          message: `${
+            error.response.data.message
+              ? error.response.data.message
+              : "Có lỗi xảy ra!"
+          }`,
           type: "error",
         })
       );
@@ -41,10 +45,14 @@ class ListArtist extends Component {
           pageNums: Math.ceil(res.data / NUMBER_OF_ITEM_PER_PAGE),
         })
       )
-      .catch(() =>
+      .catch((error) =>
         toast({
           title: "Thất bại!",
-          message: "Có lỗi xảy ra!",
+          message: `${
+            error.response.data.message
+              ? error.response.data.message
+              : "Có lỗi xảy ra!"
+          }`,
           type: "error",
         })
       );

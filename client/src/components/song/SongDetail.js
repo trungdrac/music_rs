@@ -29,10 +29,14 @@ class SongDetail extends Component {
         this.props.setSongDetail(res.data);
       })
       .then(() => this.setState({ isLoading: false }))
-      .catch(() =>
+      .catch((error) =>
         toast({
           title: "Thất bại!",
-          message: "Có lỗi xảy ra!",
+          message: `${
+            error.response.data.message
+              ? error.response.data.message
+              : "Có lỗi xảy ra!"
+          }`,
           type: "error",
         })
       );
