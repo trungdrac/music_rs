@@ -1,25 +1,58 @@
 import React, { Component } from "react";
+import { connect } from "react-redux";
+import { setPlaylistDetail } from "../../actions/playlistAction";
+import {
+  setListPlaying,
+  setCurrentIndex,
+  playAudio,
+} from "../../actions/playerAction";
 import Section from "../general/Section";
+import axios from "axios";
+import toast from "../../helpers/toast";
 
 class PlaylistDetail extends Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      isLoading: true,
+    };
+  }
+
+  componentDidMount() {
+    const playlistId = this.props.match.params.id;
+    axios
+      .get(`/playlist/detail/${playlistId}`)
+      .then((res) => this.props.setPlaylistDetail(res.data))
+      .then(() => this.setState({ isLoading: false }))
+      .catch((error) =>
+        toast({
+          title: "Thất bại!",
+          message: `${
+            error.response.data.message
+              ? error.response.data.message
+              : "Có lỗi xảy ra!"
+          }`,
+          type: "error",
+        })
+      );
+  }
+
   render() {
+    if (this.state.isLoading) return "";
+
+    const { title, own, image, song } = this.props.playlistDetail;
+
     return (
       <React.Fragment>
         <div className="row section text-center text-lg-left">
           <div className="col-xl-3 col-lg-4 col-sm-5">
-            <img
-              src={
-                "https://avatar-ex-swe.nixcdn.com/song/2021/03/08/1/3/2/2/1615183865420_300.jpg"
-              }
-              alt=""
-              className="img-detail box-shadow"
-            />
+            <img src={image} alt="" className="img-detail box-shadow" />
           </div>
           <div className="col-xl-9 col-lg-8 col-sm-7">
             <div className="row pt-5">
               <div className="col-xl-8 col-lg-6">
-                <h5>Shack your butty</h5>
-                <p>Gerrina Linda</p>
+                <h5>{title}</h5>
+                <p>Tạo bởi: {own.username}</p>
                 <div className="mt-4">
                   <a
                     href="/"
@@ -89,4 +122,16 @@ class PlaylistDetail extends Component {
   }
 }
 
-export default PlaylistDetail;
+const mapStateToProps = (state) => ({
+  playlistDetail: state.playlist.playlistDetail,
+  currentSongId: state.player.currentSongId,
+});
+
+const mapDispatchToProps = (dispatch) => ({
+  setPlaylistDetail: (playlist) => dispatch(setPlaylistDetail(playlist)),
+  setListPlaying: (playlist) => dispatch(setListPlaying(playlist)),
+  setCurrentIndex: (newIndex) => dispatch(setCurrentIndex(newIndex)),
+  playAudio: () => dispatch(playAudio()),
+});
+
+export default connect(mapStateToProps, mapDispatchToProps)(PlaylistDetail);

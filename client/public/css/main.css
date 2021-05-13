@@ -927,8 +927,23 @@
   padding: 1rem 3em;
   color: var(--text-color);
 }
+
 .lyrics__header {
   font-size: 1.5rem;
+}
+
+.lyrics__content {
+  margin: 8px 0;
+}
+
+.partially-hidden {
+  height: 10.5rem;
+  overflow: hidden;
+}
+
+.lyrics__collapse {
+  cursor: pointer;
+  color: var(--main-color);
 }
 /* Lyrics end */
 

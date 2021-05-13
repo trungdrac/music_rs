@@ -7,9 +7,16 @@ export const setPlaylistArea = (playlists) => {
   };
 };
 
-export const setPlaylistUser = (playlists) => {
+export const setMyPlaylist = (playlists) => {
   return {
-    type: types.SET_PLAYLIST_USER,
+    type: types.SET_MY_PLAYLIST,
     playlists,
+  };
+};
+
+export const setPlaylistDetail = (playlist) => {
+  return {
+    type: types.SET_PLAYLIST_DETAIL,
+    playlist,
   };
 };

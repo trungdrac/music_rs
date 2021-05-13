@@ -337,6 +337,7 @@ class Player extends Component {
           </div>
           <div className="d-flex align-items-center">
             <audio
+              id="player-audio"
               ref={this.audioRef}
               src={listPlaying[currentIndex].url}
               onLoadedData={this.handleLoadedData}

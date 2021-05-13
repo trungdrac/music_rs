@@ -13,9 +13,9 @@ router.post("/forgot-password", UserController.forgotPassWord);
 
 router.post("/reset-password", UserController.resetPassword);
 
-router.get("/:id/liked", requireLogin, UserController.getLikedSong);
+router.get("/:id/liked-song", requireLogin, UserController.getLikedSong);
 
-router.get("/:id/liked/count", requireLogin, UserController.countLikedSong);
+router.get("/:id/liked-song/count", requireLogin, UserController.countLikedSong);
 
 router.get("/:id/my-playlist", requireLogin, UserController.getPlaylist);
 

@@ -1,4 +1,5 @@
 import React, { Component } from "react";
+import { withRouter } from "react-router-dom";
 import { connect } from "react-redux";
 import { Link, NavLink, Route } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -26,8 +27,9 @@ class Sidebar extends Component {
   };
 
   render() {
-    const { areas, userToken } = this.props;
+    const { areas, userToken, location } = this.props;
     const areaParam = areas.map((area) => area._id);
+
     return (
       <div className="sidebar translate-on-md">
         <div className="sidebar__header">
@@ -137,7 +139,7 @@ class Sidebar extends Component {
                 <li onClick={this.slideOff}>
                   <NavLink
                     exact
-                    to={`/user/liked-songs`}
+                    to={`/user/liked-song`}
                     className="sidebar__nav--link"
                     activeClassName="active"
                   >
@@ -179,7 +181,13 @@ class Sidebar extends Component {
                 <p className="text-center mb-2">
                   Đăng nhập để có trải nghiệm tốt hơn tại MusicRS!
                 </p>
-                <Link to="/login" className="btn btn-block btn-danger">
+                <Link
+                  to={{
+                    pathname: "/login",
+                    state: { prevPath: location.pathname },
+                  }}
+                  className="btn btn-block btn-danger"
+                >
                   <span>Đăng nhập</span>
                 </Link>
               </div>
@@ -196,4 +204,5 @@ const mapStateToProps = (state) => ({
   userToken: state.user.userToken,
 });
 
-export default connect(mapStateToProps)(Sidebar);
+const SidebarWithRouter = withRouter(Sidebar);
+export default connect(mapStateToProps)(SidebarWithRouter);

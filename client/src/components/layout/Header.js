@@ -68,7 +68,7 @@ class Header extends Component {
   logout = () => {
     this.props.setCurrentUser(null);
     this.setState({ showDialog: false });
-    this.props.history.push("/");
+    this.props.history.push(this.props.location.pathname);
     toast({
       title: "Thành công!",
       message: "Bạn đã đăng xuất khỏi hệ thống!",
@@ -77,8 +77,8 @@ class Header extends Component {
   };
 
   render() {
-    const { username } = this.props;
-    const { suggestion } = this.props;
+    const { username, suggestion, location } = this.props;
+
     return (
       <div className="header">
         <div className="header__content">
@@ -235,7 +235,13 @@ class Header extends Component {
                 </Dropdown.Item>
               </DropdownButton>
             ) : (
-              <Link to="/login" className="auth-link">
+              <Link
+                to={{
+                  pathname: "/login",
+                  state: { prevPath: location.pathname },
+                }}
+                className="auth-link"
+              >
                 <FontAwesomeIcon
                   icon={faUserCircle}
                   className="user-circle-icon"

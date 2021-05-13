@@ -154,7 +154,7 @@ class OptionsList extends Component {
         message: "Tên playlist không được rỗng!",
         type: "error",
       });
-    else
+    else {
       axios
         .post(`/user/${user.userId}/my-playlist/create`, data, {
           headers: {
@@ -168,6 +168,7 @@ class OptionsList extends Component {
               message: res.data.success,
               type: "success",
             });
+            e.target[0].value = "";
             this.getPlaylist();
           }
           if (res.data.error)
@@ -188,6 +189,7 @@ class OptionsList extends Component {
             type: "error",
           })
         );
+    }
   };
 
   playNext = () => {

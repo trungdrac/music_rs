@@ -31,7 +31,10 @@ class Login extends Component {
           .then((res) => {
             const user = res.data;
             this.props.setCurrentUser(user);
-            this.props.history.replace("/");
+            const nextPath = this.props.location.state
+              ? this.props.location.state.prevPath
+              : "/";
+            this.props.history.replace(nextPath);
             toast({
               title: "Thành công!",
               message: "Bạn đã đăng nhập thành công!",

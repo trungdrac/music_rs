@@ -142,6 +142,7 @@ class UserController {
             .status(422)
             .json({ message: "Link hết hạn, hãy thử lại!" });
         }
+
         user.password = newPassword;
         user.resetToken = undefined;
         user.expireToken = undefined;
@@ -195,6 +196,7 @@ class UserController {
   // [GET] /user/:id/my-playlist?page=
   getPlaylist = (req, res, next) => {
     const userId = req.params.id;
+    const { page } = req.query;
     Playlist.find({ own: mongoose.Types.ObjectId(userId) }, "title image song")
       .populate({
         path: "song",
@@ -204,7 +206,7 @@ class UserController {
           select: "name",
         },
       })
-      .sort({ createdAt: 1 })
+      .sort({ _id: 1 })
       .skip(NUMBER_OF_ITEM_PER_PAGE * (page - 1))
       .limit(NUMBER_OF_ITEM_PER_PAGE)
       .then((playlists) => res.json(playlists))
@@ -218,7 +220,7 @@ class UserController {
       { own: mongoose.Types.ObjectId(userId) },
       "title song updatedAt"
     )
-      .sort({ _id: -1 })
+      .sort({ createdAt: -1 })
       .then((playlists) => res.json(playlists))
       .catch(next);
   };

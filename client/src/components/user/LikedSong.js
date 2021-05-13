@@ -24,7 +24,7 @@ class LikedSong extends Component {
     const query = new URLSearchParams(search);
 
     function getLikedSong() {
-      return axios.get(`/user/${user.userId}/liked?page=${query.get("page")}`, {
+      return axios.get(`/user/${user.userId}/liked-song?page=${query.get("page")}`, {
         headers: {
           Authorization: `Bearer ${user.userToken}`,
         },
@@ -32,7 +32,7 @@ class LikedSong extends Component {
     }
 
     function getCount() {
-      return axios.get(`/user/${user.userId}/liked/count`, {
+      return axios.get(`/user/${user.userId}/liked-song/count`, {
         headers: {
           Authorization: `Bearer ${user.userToken}`,
         },

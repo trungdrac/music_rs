@@ -25,6 +25,7 @@ import ForgotPassword from "./components/user/ForgotPassword";
 import ResetPassword from "./components/user/ResetPassword";
 import SearchResult from "./components/search/SearchResult";
 import LikedSong from "./components/user/LikedSong";
+import MyPlaylist from "./components/user/MyPlaylist";
 import toast from "./helpers/toast";
 
 function PrivateRoute({ component: Component, token, ...rest }) {
@@ -35,7 +36,12 @@ function PrivateRoute({ component: Component, token, ...rest }) {
         token ? (
           <Component key={props.history.location.search} {...props} />
         ) : (
-          <Redirect to="/login" />
+          <Redirect
+            to={{
+              pathname: "/login",
+              state: { prevPath: props.location.pathname },
+            }}
+          />
         )
       }
     />
@@ -77,7 +83,7 @@ class App extends Component {
       <Router>
         <div className="wrapper">
           <div id="my-toast"></div>
-          <Sidebar />
+          <Sidebar location={this.props.location} />
           <div className="content">
             <Header />
             <div className="main-content container-fruit">
@@ -155,9 +161,15 @@ class App extends Component {
                 />
                 <PrivateRoute
                   exact
-                  path="/user/liked-songs"
+                  path="/user/liked-song"
                   token={user.userToken}
                   component={LikedSong}
+                />
+                <PrivateRoute
+                  exact
+                  path="/user/my-playlist"
+                  token={user.userToken}
+                  component={MyPlaylist}
                 />
                 <Route exact path="/" component={Home} />
                 <Route render={() => <Redirect to="/" />} />
