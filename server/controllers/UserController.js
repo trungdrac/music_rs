@@ -1,4 +1,10 @@
+const mongoose = require("mongoose");
 const User = require("../models/User");
+const Playlist = require("../models/Playlist");
+const Interaction = require("../models/Interaction");
+const {
+  NUMBER_OF_ITEM_PER_PAGE,
+} = require("../../client/src/constants/Config");
 const jwt = require("jsonwebtoken");
 const bcrypt = require("bcryptjs");
 const crypto = require("crypto");
@@ -145,6 +151,125 @@ class UserController {
             res.json({ message: "Cập nhật mật khẩu thành công!" });
           })
           .catch(next);
+      })
+      .catch(next);
+  };
+
+  // [GET] /user/:id/liked?page=
+  getLikedSong = (req, res, next) => {
+    const { page } = req.query;
+    const userId = req.params.id;
+    Interaction.find(
+      { user: mongoose.Types.ObjectId(userId), like: true },
+      "song -_id"
+    )
+      .populate({
+        path: "song",
+        select: "title artist image url",
+        populate: {
+          path: "artist",
+          select: "name",
+        },
+      })
+      .sort({ _id: 1 })
+      .skip(NUMBER_OF_ITEM_PER_PAGE * (page - 1))
+      .limit(NUMBER_OF_ITEM_PER_PAGE)
+      .then((results) => {
+        const songs = results.map((result) => result.song);
+        res.json(songs);
+      })
+      .catch(next);
+  };
+
+  // [GET] /user/:id/liked/count
+  countLikedSong = (req, res, next) => {
+    const userId = req.params.id;
+    Interaction.countDocuments({
+      user: mongoose.Types.ObjectId(userId),
+      like: true,
+    })
+      .then((count) => res.json(count))
+      .catch(next);
+  };
+
+  // [GET] /user/:id/my-playlist?page=
+  getPlaylist = (req, res, next) => {
+    const userId = req.params.id;
+    Playlist.find({ own: mongoose.Types.ObjectId(userId) }, "title image song")
+      .populate({
+        path: "song",
+        select: "title artist image url",
+        populate: {
+          path: "artist",
+          select: "name",
+        },
+      })
+      .sort({ createdAt: 1 })
+      .skip(NUMBER_OF_ITEM_PER_PAGE * (page - 1))
+      .limit(NUMBER_OF_ITEM_PER_PAGE)
+      .then((playlists) => res.json(playlists))
+      .catch(next);
+  };
+
+  // [GET] /user/:id/my-playlist/all
+  getPlaylistAll = (req, res, next) => {
+    const userId = req.params.id;
+    Playlist.find(
+      { own: mongoose.Types.ObjectId(userId) },
+      "title song updatedAt"
+    )
+      .sort({ _id: -1 })
+      .then((playlists) => res.json(playlists))
+      .catch(next);
+  };
+
+  // [GET] /user/:id/my-playlist/count
+  countPlaylist = (req, res, next) => {
+    const userId = req.params.id;
+    Playlist.countDocuments({ own: mongoose.Types.ObjectId(userId) })
+      .then((count) => res.json(count))
+      .catch(next);
+  };
+
+  // [GET] /user/my-playlist/:playlistId/add/:songId
+  addToPlaylist = (req, res, next) => {
+    const { playlistId, songId } = req.params;
+    Playlist.findById(playlistId)
+      .then((playlist) => {
+        if (playlist.song.includes(songId))
+          res.json({ error: "Bài hát đã tồn tại trong playlist!" });
+        else {
+          playlist.song.push(songId);
+          playlist
+            .save()
+            .then((result) =>
+              res.json({
+                success: `Đã thêm bài hát vào playlist "${result.title}"`,
+              })
+            )
+            .catch(next);
+        }
+      })
+      .catch(next);
+  };
+
+  // [POST] /user/:id/my-playlist/create
+  createPlaylist = (req, res, next) => {
+    const userId = req.params.id;
+    const playlist = req.body;
+    Playlist.findOne({
+      own: mongoose.Types.ObjectId(userId),
+      title: playlist.title,
+    })
+      .then((result) => {
+        if (result) res.json({ error: "Tên playlist đã tồn tại!" });
+        else {
+          playlist.image = "/images/song-image-default/default.jpg";
+          playlist.own = userId;
+          Playlist.create(playlist)
+            .then(() => res.json({ success: "Tạo playlist mới thành công!" }))
+            .catch(next);
+        }
       })
       .catch(next);
   };

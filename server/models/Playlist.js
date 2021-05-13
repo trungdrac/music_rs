@@ -4,14 +4,14 @@ const Schema = mongoose.Schema;
 const playlistSchema = new Schema(
   {
     title: { type: String, required: true },
-    song: [{ type: Schema.Types.ObjectId, ref: "Song", required: true }],
+    song: [{ type: Schema.Types.ObjectId, ref: "Song" }],
     own: {
       type: Schema.Types.ObjectId,
       ref: "User",
       default: process.env.MUSICRS_ID,
     },
     image: { type: String, required: true },
-    area: { type: Schema.Types.ObjectId, ref: "Area", required: true },
+    area: { type: Schema.Types.ObjectId, ref: "Area" },
   },
   { timestamps: true }
 );

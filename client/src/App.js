@@ -24,7 +24,23 @@ import Register from "./components/user/Register";
 import ForgotPassword from "./components/user/ForgotPassword";
 import ResetPassword from "./components/user/ResetPassword";
 import SearchResult from "./components/search/SearchResult";
+import LikedSong from "./components/user/LikedSong";
 import toast from "./helpers/toast";
+
+function PrivateRoute({ component: Component, token, ...rest }) {
+  return (
+    <Route
+      {...rest}
+      render={(props) =>
+        token ? (
+          <Component key={props.history.location.search} {...props} />
+        ) : (
+          <Redirect to="/login" />
+        )
+      }
+    />
+  );
+}
 
 class App extends Component {
   constructor(props) {
@@ -136,6 +152,12 @@ class App extends Component {
                   exact
                   path="/reset-password/:token"
                   component={ResetPassword}
+                />
+                <PrivateRoute
+                  exact
+                  path="/user/liked-songs"
+                  token={user.userToken}
+                  component={LikedSong}
                 />
                 <Route exact path="/" component={Home} />
                 <Route render={() => <Redirect to="/" />} />

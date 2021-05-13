@@ -24,7 +24,7 @@ class ArtistController {
       .catch(next);
   };
 
-  // [GET] /artist/:area/
+  // [GET] /artist/:area?page=
   getArtistArea = (req, res, next) => {
     const { page } = req.query;
     const areaId = req.params.area;

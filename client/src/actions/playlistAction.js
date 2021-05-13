@@ -6,3 +6,10 @@ export const setPlaylistArea = (playlists) => {
     playlists,
   };
 };
+
+export const setPlaylistUser = (playlists) => {
+  return {
+    type: types.SET_PLAYLIST_USER,
+    playlists,
+  };
+};

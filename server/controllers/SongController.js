@@ -27,7 +27,7 @@ class SongController {
       .catch(next);
   };
 
-  // [GET] /song/:area/:category
+  // [GET] /song/:area/:category?page=
   getSongCategory = (req, res, next) => {
     const { page } = req.query;
     const categoryId = req.params.category;

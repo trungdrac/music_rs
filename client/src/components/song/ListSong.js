@@ -23,29 +23,26 @@ class ListSong extends Component {
     const { search } = this.props.history.location;
     const query = new URLSearchParams(search);
 
-    axios
-      .get(`/song/${areaId}/${categoryId}?page=${query.get("page")}`)
-      .then((res) => this.props.setSongCategory(res.data))
-      .then(() => this.setState({ isLoading: false }))
-      .catch((error) =>
-        toast({
-          title: "Thất bại!",
-          message: `${
-            error.response.data.message
-              ? error.response.data.message
-              : "Có lỗi xảy ra!"
-          }`,
-          type: "error",
-        })
+    function getSongCategory() {
+      return axios.get(
+        `/song/${areaId}/${categoryId}?page=${query.get("page")}`
       );
+    }
 
-    axios
-      .get(`/song/${areaId}/${categoryId}/count`)
-      .then((res) =>
+    function getCount() {
+      return axios.get(`/song/${areaId}/${categoryId}/count`);
+    }
+
+    Promise.all([getSongCategory(), getCount()])
+      .then((results) => {
+        const songCategory = results[0].data;
+        const count = results[1].data;
+        this.props.setSongCategory(songCategory);
         this.setState({
-          pageNums: Math.ceil(res.data / NUMBER_OF_ITEM_PER_PAGE),
-        })
-      )
+          pageNums: Math.ceil(count / NUMBER_OF_ITEM_PER_PAGE),
+        });
+      })
+      .then(() => this.setState({ isLoading: false }))
       .catch((error) =>
         toast({
           title: "Thất bại!",

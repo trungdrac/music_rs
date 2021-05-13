@@ -1,3 +1,4 @@
+const mongoose = require("mongoose");
 const {
   NUMBER_OF_ITEM_PER_PAGE,
 } = require("../../client/src/constants/Config");
@@ -17,11 +18,14 @@ class PlaylistController {
       .catch(next);
   };
 
-  // [GET] /playlist/:area/
+  // [GET] /playlist/:area?page=
   getPlaylistArea = (req, res, next) => {
     const { page } = req.query;
     const areaId = req.params.area;
-    Playlist.find({ area: areaId }, "title image song")
+    Playlist.find(
+      { area: areaId, own: mongoose.Types.ObjectId(process.env.MUSICRS_ID) },
+      "title image song"
+    )
       .populate({
         path: "song",
         select: "title artist image url",
@@ -40,7 +44,10 @@ class PlaylistController {
   // [GET] /playlist/:area/count
   countPlaylistArea = (req, res, next) => {
     const areaId = req.params.area;
-    Playlist.countDocuments({ area: areaId })
+    Playlist.countDocuments({
+      area: areaId,
+      own: mongoose.Types.ObjectId(process.env.MUSICRS_ID),
+    })
       .then((count) => res.json(count))
       .catch(next);
   };

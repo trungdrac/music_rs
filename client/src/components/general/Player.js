@@ -211,40 +211,40 @@ class Player extends Component {
     let volume = this.props.volume;
     if (audio) volume = audio.volume;
 
-    window.onkeydown = (e) => {
-      if (audio !== null) {
-        switch (e.keyCode) {
-          case 32:
-            if (
-              document.querySelector(".search-input") !== document.activeElement
-            ) {
-              e.preventDefault();
-              this.handlePlayPause();
-            }
-            break;
-          case 37:
-            audio.currentTime -= 5;
-            break;
-          case 39:
-            audio.currentTime += 5;
-            break;
-          case 38:
-            e.preventDefault();
-            if (audio.volume <= 0.9) audio.volume += 0.1;
-            else audio.volume = 1;
-            this.props.setVolume(audio.volume);
-            break;
-          case 40:
-            e.preventDefault();
-            if (audio.volume >= 0.1) audio.volume -= 0.1;
-            else audio.volume = 0;
-            this.props.setVolume(audio.volume);
-            break;
-          default:
-            break;
-        }
-      }
-    };
+    // window.onkeydown = (e) => {
+    //   if (audio !== null) {
+    //     switch (e.keyCode) {
+    //       case 32:
+    //         if (
+    //           document.querySelector(".search-input") !== document.activeElement
+    //         ) {
+    //           e.preventDefault();
+    //           this.handlePlayPause();
+    //         }
+    //         break;
+    //       case 37:
+    //         audio.currentTime -= 5;
+    //         break;
+    //       case 39:
+    //         audio.currentTime += 5;
+    //         break;
+    //       case 38:
+    //         e.preventDefault();
+    //         if (audio.volume <= 0.9) audio.volume += 0.1;
+    //         else audio.volume = 1;
+    //         this.props.setVolume(audio.volume);
+    //         break;
+    //       case 40:
+    //         e.preventDefault();
+    //         if (audio.volume >= 0.1) audio.volume -= 0.1;
+    //         else audio.volume = 0;
+    //         this.props.setVolume(audio.volume);
+    //         break;
+    //       default:
+    //         break;
+    //     }
+    //   }
+    // };
 
     return (
       <div className="player box-shadow">

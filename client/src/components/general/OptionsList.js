@@ -3,7 +3,7 @@ import { withRouter } from "react-router-dom";
 import { connect } from "react-redux";
 import axios from "axios";
 import { setListPlaying, setCurrentIndex } from "../../actions/playerAction";
-import { Dropdown } from "react-bootstrap";
+import { Dropdown, Modal } from "react-bootstrap";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faCommentDots,
@@ -15,14 +15,17 @@ import {
   faPlus,
   faStepForward,
   faTrashAlt,
+  faChevronRight,
 } from "@fortawesome/free-solid-svg-icons";
 import toast from "../../helpers/toast";
+import { convertTZ } from "../../helpers/convertTime";
 
 class OptionsList extends Component {
   constructor(props) {
     super(props);
-    this.state = { interaction: {} };
+    this.state = { like: false, showPlaylistModal: false, listPlaylist: [] };
   }
+
   componentDidMount() {
     const songId = this.props.song._id;
     const { user } = this.props;
@@ -33,7 +36,7 @@ class OptionsList extends Component {
             Authorization: `Bearer ${user.userToken}`,
           },
         })
-        .then((res) => this.setState({ interaction: res.data }))
+        .then((res) => this.setState({ like: res.data }))
         .catch((error) =>
           toast({
             title: "Thất bại!",
@@ -57,12 +60,12 @@ class OptionsList extends Component {
           Authorization: `Bearer ${user.userToken}`,
         },
       })
-      .then((res) => this.setState({ interaction: res.data }))
+      .then((res) => this.setState({ like: res.data }))
       .then(() =>
         toast({
           title: "Thành công!",
           message: `Đã ${
-            this.state.interaction.like ? "thêm vào" : "xóa khỏi"
+            this.state.like ? "thêm vào" : "xóa khỏi"
           } bài hát yêu thích!`,
           type: "success",
         })
@@ -80,7 +83,112 @@ class OptionsList extends Component {
       );
   };
 
-  addToPlaylist = () => {};
+  getPlaylist = () => {
+    const { user } = this.props;
+    axios
+      .get(`/user/${user.userId}/my-playlist/all`, {
+        headers: {
+          Authorization: `Bearer ${user.userToken}`,
+        },
+      })
+      .then((res) => this.setState({ listPlaylist: res.data }))
+      .then(() => this.setState({ showPlaylistModal: true }))
+      .catch((error) =>
+        toast({
+          title: "Thất bại!",
+          message: `${
+            error.response.data.message
+              ? error.response.data.message
+              : "Có lỗi xảy ra!"
+          }`,
+          type: "error",
+        })
+      );
+  };
+
+  addToPlaylist = (playlistId) => {
+    const songId = this.props.song._id;
+    const { user } = this.props;
+    axios
+      .get(`/user/my-playlist/${playlistId}/add/${songId}`, {
+        headers: {
+          Authorization: `Bearer ${user.userToken}`,
+        },
+      })
+      .then((res) => {
+        if (res.data.success) {
+          toast({
+            title: "Thành công!",
+            message: res.data.success,
+            type: "success",
+          });
+          this.getPlaylist();
+        }
+        if (res.data.error)
+          toast({
+            title: "Thất bại!",
+            message: res.data.error,
+            type: "error",
+          });
+      })
+      .catch((error) =>
+        toast({
+          title: "Thất bại!",
+          message: `${
+            error.response.data.message
+              ? error.response.data.message
+              : "Có lỗi xảy ra!"
+          }`,
+          type: "error",
+        })
+      );
+  };
+
+  createPlaylist = (e) => {
+    e.preventDefault();
+    const { user } = this.props;
+    const data = { [e.target[0].name]: e.target[0].value };
+    if (data.title === "")
+      toast({
+        title: "Thất bại!",
+        message: "Tên playlist không được rỗng!",
+        type: "error",
+      });
+    else
+      axios
+        .post(`/user/${user.userId}/my-playlist/create`, data, {
+          headers: {
+            Authorization: `Bearer ${user.userToken}`,
+          },
+        })
+        .then((res) => {
+          if (res.data.success) {
+            toast({
+              title: "Thành công!",
+              message: res.data.success,
+              type: "success",
+            });
+            this.getPlaylist();
+          }
+          if (res.data.error)
+            toast({
+              title: "Thất bại!",
+              message: res.data.error,
+              type: "error",
+            });
+        })
+        .catch((error) =>
+          toast({
+            title: "Thất bại!",
+            message: `${
+              error.response.data.message
+                ? error.response.data.message
+                : "Có lỗi xảy ra!"
+            }`,
+            type: "error",
+          })
+        );
+  };
 
   playNext = () => {
     const { currentIndex, listPlaying, song } = this.props;
@@ -180,7 +288,7 @@ class OptionsList extends Component {
 
   render() {
     const { userId } = this.props.user;
-    const { interaction } = this.state;
+    const { like, listPlaylist } = this.state;
 
     return (
       <div className="options-list">
@@ -188,7 +296,7 @@ class OptionsList extends Component {
           <Dropdown.ItemText className="options-list__item" onClick={this.like}>
             <div
               className={`option-list__item--icon ${
-                userId && interaction.like === true ? "active" : ""
+                userId && like === true ? "active" : ""
               }`}
             >
               <FontAwesomeIcon icon={faHeart} />
@@ -201,7 +309,7 @@ class OptionsList extends Component {
         {this.props.addToPlaylist ? (
           <Dropdown.Item
             className="options-list__item"
-            onClick={this.addToPlaylist}
+            onClick={this.getPlaylist}
           >
             <div className="option-list__item--icon">
               <FontAwesomeIcon icon={faPlus} />
@@ -284,6 +392,63 @@ class OptionsList extends Component {
         ) : (
           ""
         )}
+
+        <Modal
+          show={this.state.showPlaylistModal}
+          onHide={() => this.setState({ showPlaylistModal: false })}
+          aria-labelledby="contained-modal-title-vcenter"
+          centered
+        >
+          <Modal.Header closeButton className="bg-light">
+            <h5 className="mb-0">Chọn playlist muốn thêm!</h5>
+          </Modal.Header>
+          <Modal.Body className="playlist-modal-body bg-light">
+            <div className="list-playlist-modal">
+              <ul className="list-group list-group-flush">
+                {listPlaylist.length === 0 ? (
+                  <span className="text-center font-weight-light mt-5">
+                    <i>Bạn chưa có playlist nào!</i>
+                  </span>
+                ) : (
+                  listPlaylist.map((playlist) => (
+                    <li
+                      key={playlist._id}
+                      className="list-playlist-item list-group-item"
+                      onClick={() => this.addToPlaylist(playlist._id)}
+                    >
+                      <div className="d-flex justify-content-between align-items-center">
+                        <div>
+                          <h6>{`${playlist.title} (${playlist.song.length})`}</h6>
+                          <span>{`Cập nhật: ${convertTZ(
+                            playlist.updatedAt
+                          )}`}</span>
+                        </div>
+                        <FontAwesomeIcon icon={faChevronRight} />
+                      </div>
+                    </li>
+                  ))
+                )}
+              </ul>
+            </div>
+            <form
+              onSubmit={this.createPlaylist}
+              method="POST"
+              id="create-playlist-form"
+            >
+              <div className="d-flex">
+                <div className="flex-grow-1">
+                  <input
+                    name="title"
+                    type="text"
+                    placeholder="Nhập tên playlist cần tạo!"
+                    className="h-100 w-100 bg-light form-control"
+                  />
+                </div>
+                <button className="btn btn-info ml-2">Tạo playlist</button>
+              </div>
+            </form>
+          </Modal.Body>
+        </Modal>
       </div>
     );
   }

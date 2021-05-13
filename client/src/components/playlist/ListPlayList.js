@@ -22,29 +22,24 @@ class ListPlaylist extends Component {
     const { search } = this.props.history.location;
     const query = new URLSearchParams(search);
 
-    axios
-      .get(`/playlist/${areaId}?page=${query.get("page")}`)
-      .then((res) => this.props.setPlaylistArea(res.data))
-      .then(() => this.setState({ isLoading: false }))
-      .catch((error) =>
-        toast({
-          title: "Thất bại!",
-          message: `${
-            error.response.data.message
-              ? error.response.data.message
-              : "Có lỗi xảy ra!"
-          }`,
-          type: "error",
-        })
-      );
+    function getPlaylistArea() {
+      return axios.get(`/playlist/${areaId}?page=${query.get("page")}`);
+    }
 
-    axios
-      .get(`/playlist/${areaId}/count`)
-      .then((res) =>
+    function getCount() {
+      return axios.get(`/playlist/${areaId}/count`);
+    }
+
+    Promise.all([getPlaylistArea(), getCount()])
+      .then((results) => {
+        const playlistArea = results[0].data;
+        const count = results[1].data;
+        this.props.setPlaylistArea(playlistArea);
         this.setState({
-          pageNums: Math.ceil(res.data / NUMBER_OF_ITEM_PER_PAGE),
-        })
-      )
+          pageNums: Math.ceil(count / NUMBER_OF_ITEM_PER_PAGE),
+        });
+      })
+      .then(() => this.setState({ isLoading: false }))
       .catch((error) =>
         toast({
           title: "Thất bại!",

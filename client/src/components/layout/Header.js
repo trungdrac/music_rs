@@ -68,6 +68,7 @@ class Header extends Component {
   logout = () => {
     this.props.setCurrentUser(null);
     this.setState({ showDialog: false });
+    this.props.history.push("/");
     toast({
       title: "Thành công!",
       message: "Bạn đã đăng xuất khỏi hệ thống!",

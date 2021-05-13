@@ -20,3 +20,10 @@ export const setSongCategory = (songs) => {
     songs,
   };
 };
+
+export const setLikedSong = (songs) => {
+  return {
+    type: types.SET_LIKED_SONG,
+    songs,
+  };
+};

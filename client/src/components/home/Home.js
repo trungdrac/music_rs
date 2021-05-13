@@ -6,8 +6,6 @@ class Home extends Component {
     return (
       <React.Fragment>
         <Section />
-        <Section />
-        <Section />
       </React.Fragment>
     );
   }

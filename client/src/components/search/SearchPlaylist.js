@@ -20,29 +20,27 @@ class SearchPlaylist extends Component {
   componentDidMount() {
     const { search } = this.props.history.location;
     const query = new URLSearchParams(search);
-    axios
-      .get(`/search/playlist?q=${query.get("q")}&page=${query.get("page")}`)
-      .then((res) => this.props.setResult(res.data))
-      .then(() => this.setState({ isLoading: false }))
-      .catch((error) =>
-        toast({
-          title: "Thất bại!",
-          message: `${
-            error.response.data.message
-              ? error.response.data.message
-              : "Có lỗi xảy ra!"
-          }`,
-          type: "error",
-        })
-      );
 
-    axios
-      .get(`/search/count/playlist?q=${query.get("q")}`)
-      .then((res) =>
+    function getSearchPlaylist() {
+      return axios.get(
+        `/search/playlist?q=${query.get("q")}&page=${query.get("page")}`
+      );
+    }
+
+    function getCount() {
+      return axios.get(`/search/count/playlist?q=${query.get("q")}`);
+    }
+
+    Promise.all([getSearchPlaylist(), getCount()])
+      .then((results) => {
+        const searchPlaylist = results[0].data;
+        const count = results[1].data;
+        this.props.setResult(searchPlaylist);
         this.setState({
-          pageNums: Math.ceil(res.data / NUMBER_OF_ITEM_PER_PAGE),
-        })
-      )
+          pageNums: Math.ceil(count / NUMBER_OF_ITEM_PER_PAGE),
+        });
+      })
+      .then(() => this.setState({ isLoading: false }))
       .catch((error) =>
         toast({
           title: "Thất bại!",

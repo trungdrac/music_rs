@@ -1,3 +1,4 @@
+const mongoose = require("mongoose");
 const Song = require("../models/Song");
 const Playlist = require("../models/Playlist");
 const Artist = require("../models/Artist");
@@ -18,7 +19,10 @@ class SearchController {
       .limit(4)
       .exec();
     const playlistPromise = Playlist.find(
-      { $text: { $search: q } },
+      {
+        $text: { $search: q },
+        own: mongoose.Types.ObjectId(process.env.MUSICRS_ID),
+      },
       { score: { $meta: "textScore" } },
       { select: "title image" }
     )
@@ -57,7 +61,10 @@ class SearchController {
     }
     if (type === "playlist") {
       Playlist.find(
-        { $text: { $search: q } },
+        {
+          $text: { $search: q },
+          own: mongoose.Types.ObjectId(process.env.MUSICRS_ID),
+        },
         { score: { $meta: "textScore" } },
         { select: "title image song" }
       )
@@ -99,7 +106,10 @@ class SearchController {
         .catch(next);
     }
     if (type === "playlist") {
-      Playlist.countDocuments({ $text: { $search: q } })
+      Playlist.countDocuments({
+        $text: { $search: q },
+        own: mongoose.Types.ObjectId(process.env.MUSICRS_ID),
+      })
         .then((count) => res.json(count))
         .catch(next);
     }

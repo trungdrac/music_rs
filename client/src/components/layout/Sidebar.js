@@ -26,7 +26,7 @@ class Sidebar extends Component {
   };
 
   render() {
-    const { areas } = this.props;
+    const { areas, userToken } = this.props;
     const areaParam = areas.map((area) => area._id);
     return (
       <div className="sidebar translate-on-md">
@@ -131,47 +131,61 @@ class Sidebar extends Component {
                 }}
               </Route>
             </li>
-            <li className="sidebar__nav--header">Cá nhân</li>
-            <li onClick={this.slideOff}>
-              <NavLink
-                exact
-                to="/user/:id/liked"
-                className="sidebar__nav--link"
-                activeClassName="active"
-              >
-                <FontAwesomeIcon icon={faHeart} className="sidebar-icon" />
-                <span>Bài hát yêu thích</span>
-              </NavLink>
-            </li>
-            <li onClick={this.slideOff}>
-              <NavLink
-                exact
-                to="/user/:id/my-playlist"
-                className="sidebar__nav--link"
-                activeClassName="active"
-              >
-                <FontAwesomeIcon icon={faListAlt} className="sidebar-icon" />
-                <span>Playlist của tôi</span>
-              </NavLink>
-            </li>
-            <li onClick={this.slideOff}>
-              <NavLink
-                exact
-                to="/user/:id/history"
-                className="sidebar__nav--link"
-                activeClassName="active"
-              >
-                <FontAwesomeIcon icon={faHistory} className="sidebar-icon" />
-                <span>Lịch sử</span>
-              </NavLink>
-            </li>
+            {userToken ? (
+              <React.Fragment>
+                <li className="sidebar__nav--header">Cá nhân</li>
+                <li onClick={this.slideOff}>
+                  <NavLink
+                    exact
+                    to={`/user/liked-songs`}
+                    className="sidebar__nav--link"
+                    activeClassName="active"
+                  >
+                    <FontAwesomeIcon icon={faHeart} className="sidebar-icon" />
+                    <span>Bài hát yêu thích</span>
+                  </NavLink>
+                </li>
+                <li onClick={this.slideOff}>
+                  <NavLink
+                    exact
+                    to="/user/my-playlist"
+                    className="sidebar__nav--link"
+                    activeClassName="active"
+                  >
+                    <FontAwesomeIcon
+                      icon={faListAlt}
+                      className="sidebar-icon"
+                    />
+                    <span>Playlist của tôi</span>
+                  </NavLink>
+                </li>
+                <li onClick={this.slideOff}>
+                  <NavLink
+                    exact
+                    to="/user/history"
+                    className="sidebar__nav--link"
+                    activeClassName="active"
+                  >
+                    <FontAwesomeIcon
+                      icon={faHistory}
+                      className="sidebar-icon"
+                    />
+                    <span>Lịch sử</span>
+                  </NavLink>
+                </li>
+              </React.Fragment>
+            ) : (
+              <div className="sidebar__footer box-shadow">
+                <p className="text-center mb-2">
+                  Đăng nhập để có trải nghiệm tốt hơn tại MusicRS!
+                </p>
+                <Link to="/login" className="btn btn-block btn-danger">
+                  <span>Đăng nhập</span>
+                </Link>
+              </div>
+            )}
           </ul>
         </nav>
-        {/* <div className="sidebar__footer">
-          <Link to="/" className="btn btn-block btn-danger">
-            <span>Thêm nhạc</span>
-          </Link>
-        </div> */}
       </div>
     );
   }
@@ -179,6 +193,7 @@ class Sidebar extends Component {
 
 const mapStateToProps = (state) => ({
   areas: state.area,
+  userToken: state.user.userToken,
 });
 
 export default connect(mapStateToProps)(Sidebar);

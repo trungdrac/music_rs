@@ -13,10 +13,10 @@ class InteractionController {
       song: mongoose.Types.ObjectId(songId),
     })
       .then((result) => {
-        if (result) res.json(result);
+        if (result) res.json(result.like);
         else {
           Interaction.create({ user: userId, song: songId })
-            .then((result) => res.json(result))
+            .then((result) => res.json(result.like))
             .catch(next);
         }
       })
@@ -35,7 +35,7 @@ class InteractionController {
         result.like = !result.like;
         result
           .save()
-          .then((newResult) => res.json(newResult))
+          .then((newResult) => res.json(newResult.like))
           .catch(next);
       })
       .catch(next);
