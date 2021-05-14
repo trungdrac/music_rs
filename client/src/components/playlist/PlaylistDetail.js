@@ -4,7 +4,6 @@ import { setPlaylistDetail } from "../../actions/playlistAction";
 import {
   setListPlaying,
   setCurrentIndex,
-  playAudio,
   toggleRandom,
 } from "../../actions/playerAction";
 import axios from "axios";
@@ -53,7 +52,7 @@ class PlaylistDetail extends Component {
     if (this.state.isLoading) return "";
 
     const { title, own, image, song, area } = this.props.playlistDetail;
-    const { currentSongId, isPlaying } = this.props;
+    const { currentSongId } = this.props;
 
     return (
       <React.Fragment>
@@ -135,7 +134,6 @@ const mapDispatchToProps = (dispatch) => ({
   setPlaylistDetail: (playlist) => dispatch(setPlaylistDetail(playlist)),
   setListPlaying: (playlist) => dispatch(setListPlaying(playlist)),
   setCurrentIndex: (newIndex) => dispatch(setCurrentIndex(newIndex)),
-  playAudio: () => dispatch(playAudio()),
   toggleRandom: () => dispatch(toggleRandom()),
 });
 

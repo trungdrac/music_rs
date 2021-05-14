@@ -19,6 +19,8 @@ import {
   faVolumeMute,
   faVolumeUp,
 } from "@fortawesome/free-solid-svg-icons";
+import handleKeyboardEvent from "../../helpers/handelKeyboardEvent";
+import { setHistoryListen } from "../../actions/songAction";
 
 class Player extends Component {
   constructor(props) {
@@ -42,6 +44,8 @@ class Player extends Component {
       audio.currentTime = this.props.currentTime;
       audio.volume = this.props.volume;
     }
+
+    window.addEventListener("keydown", handleKeyboardEvent);
   }
 
   componentDidUpdate(prevProps) {
@@ -108,16 +112,26 @@ class Player extends Component {
 
   handleLoadedData = () => {
     const audio = this.audioRef.current;
+    const { listPlaying, currentIndex, historyListen } = this.props;
 
     //set duration
     this.props.setDuration(audio.duration);
 
     //set current song
-    const currentSongId = this.props.listPlaying[this.props.currentIndex]._id;
+    const currentSongId = listPlaying[currentIndex]._id;
     this.props.setCurrentSongId(currentSongId);
 
-    // if (this.props.user.userId)
-    //   localStorage.setItem("count", Number(localStorage.getItem("count")) + 1);
+    //set history listen
+    let newHistory = [...historyListen];
+    const indexExisted = newHistory.findIndex(
+      (song) => song._id === currentSongId
+    );
+    if (indexExisted !== -1) newHistory.splice(indexExisted, 1);
+    if (newHistory.length >= 24) {
+      newHistory.pop();
+    }
+    newHistory.unshift(listPlaying[currentIndex]);
+    this.props.setHistoryListen(newHistory);
   };
 
   handlePrev = () => {
@@ -210,41 +224,6 @@ class Player extends Component {
     const audio = this.audioRef.current;
     let volume = this.props.volume;
     if (audio) volume = audio.volume;
-
-    // window.onkeydown = (e) => {
-    //   if (audio !== null) {
-    //     switch (e.keyCode) {
-    //       case 32:
-    //         if (
-    //           document.querySelector(".search-input") !== document.activeElement
-    //         ) {
-    //           e.preventDefault();
-    //           this.handlePlayPause();
-    //         }
-    //         break;
-    //       case 37:
-    //         audio.currentTime -= 5;
-    //         break;
-    //       case 39:
-    //         audio.currentTime += 5;
-    //         break;
-    //       case 38:
-    //         e.preventDefault();
-    //         if (audio.volume <= 0.9) audio.volume += 0.1;
-    //         else audio.volume = 1;
-    //         this.props.setVolume(audio.volume);
-    //         break;
-    //       case 40:
-    //         e.preventDefault();
-    //         if (audio.volume >= 0.1) audio.volume -= 0.1;
-    //         else audio.volume = 0;
-    //         this.props.setVolume(audio.volume);
-    //         break;
-    //       default:
-    //         break;
-    //     }
-    //   }
-    // };
 
     return (
       <div className="player box-shadow">
@@ -345,6 +324,7 @@ class Player extends Component {
               onPause={() => this.props.pauseAudio()}
               onTimeUpdate={this.handleTimeUpdate}
               onEnded={this.handleEnded}
+              onVolumeChange={() => this.props.setVolume(audio.volume)}
             />
             <div className="progress-time">{msToISO(currentTime)}</div>
             <input
@@ -426,6 +406,7 @@ const mapStateToProps = (state) => ({
   duration: state.player.duration,
   listPlaying: state.player.listPlaying,
   user: state.user,
+  historyListen: state.song.historyListen,
 });
 
 const mapDispatchToProps = (dispatch) => ({
@@ -445,6 +426,7 @@ const mapDispatchToProps = (dispatch) => ({
   setVolume: (newVolume) => dispatch(playerActions.setVolume(newVolume)),
   setListPlaying: (listPlaying) =>
     dispatch(playerActions.setListPlaying(listPlaying)),
+  setHistoryListen: (songs) => dispatch(setHistoryListen(songs)),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(Player);

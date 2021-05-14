@@ -78,7 +78,6 @@ class MyPlaylist extends Component {
   render() {
     if (this.state.isLoading || this.state.pageNums === null) return "";
     const { myPlaylist } = this.props;
-    if (myPlaylist.length === 0) return <Blank />;
 
     return (
       <div className="section">
@@ -91,15 +90,21 @@ class MyPlaylist extends Component {
           </div>
           <hr />
         </div>
-        <div className="row">
-          {myPlaylist.map((playlist) => (
-            <PlaylistCard key={playlist._id} item={playlist} />
-          ))}
-        </div>
-        <MyPagination
-          pageNums={this.state.pageNums}
-          history={this.props.history}
-        />
+        {myPlaylist.length === 0 ? (
+          <Blank />
+        ) : (
+          <React.Fragment>
+            <div className="row">
+              {myPlaylist.map((playlist) => (
+                <PlaylistCard key={playlist._id} item={playlist} />
+              ))}
+            </div>
+            <MyPagination
+              pageNums={this.state.pageNums}
+              history={this.props.history}
+            />
+          </React.Fragment>
+        )}
       </div>
     );
   }

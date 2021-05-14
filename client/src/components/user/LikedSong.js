@@ -78,7 +78,6 @@ class LikedSong extends Component {
   render() {
     if (this.state.isLoading || this.state.pageNums === null) return "";
     const { likedSong } = this.props;
-    if (likedSong.length === 0) return <Blank />;
 
     return (
       <div className="section">
@@ -89,15 +88,21 @@ class LikedSong extends Component {
           </div>
           <hr />
         </div>
-        <div className="row">
-          {likedSong.map((song) => (
-            <SongCard key={song._id} item={song} />
-          ))}
-        </div>
-        <MyPagination
-          pageNums={this.state.pageNums}
-          history={this.props.history}
-        />
+        {likedSong.length === 0 ? (
+          <Blank />
+        ) : (
+          <React.Fragment>
+            <div className="row">
+              {likedSong.map((song) => (
+                <SongCard key={song._id} item={song} />
+              ))}
+            </div>
+            <MyPagination
+              pageNums={this.state.pageNums}
+              history={this.props.history}
+            />
+          </React.Fragment>
+        )}
       </div>
     );
   }

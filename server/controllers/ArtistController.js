@@ -10,15 +10,18 @@ class ArtistController {
   // [GET] /artist/detail/:id
   getDetail = (req, res, next) => {
     const artistId = req.params.id;
-    const artistPromise = Artist.findById(artistId)
-      .populate({ path: "area" })
+    const artistPromise = Artist.findById(artistId, "name image area")
+      .populate({ path: "area", select: "name" })
       .exec();
     const songPromise = Song.find(
       {
         artist: mongoose.Types.ObjectId(artistId),
       },
-      "-lyrics"
-    ).exec();
+      "title image url artist"
+    )
+      .populate({ path: "artist", select: "name" })
+      .sort({ createdAt: -1 })
+      .exec();
     Promise.all([artistPromise, songPromise])
       .then((artistDetail) => res.json(artistDetail))
       .catch(next);

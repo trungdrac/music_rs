@@ -22,6 +22,7 @@ import { Button, Dropdown, DropdownButton, Modal } from "react-bootstrap";
 import debounce from "../../helpers/debounce";
 import axios from "axios";
 import toast from "../../helpers/toast";
+import handleKeyboardEvent from "../../helpers/handelKeyboardEvent";
 
 class Header extends Component {
   constructor(props) {
@@ -116,6 +117,12 @@ class Header extends Component {
               onChange={this.suggest}
               ref={this.searchRef}
               onKeyPress={this.onEnter}
+              onFocus={() =>
+                window.removeEventListener("keydown", handleKeyboardEvent)
+              }
+              onBlur={() =>
+                window.addEventListener("keydown", handleKeyboardEvent)
+              }
             />
             <div className="search-suggest box-shadow">
               <ul className="list-group list-group-flush">

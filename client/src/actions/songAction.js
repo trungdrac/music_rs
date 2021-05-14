@@ -34,3 +34,10 @@ export const setLikedSongCount = (count) => {
     count,
   };
 };
+
+export const setHistoryListen = (songs) => {
+  return {
+    type: types.SET_HISTORY_LISTEN,
+    songs,
+  };
+};

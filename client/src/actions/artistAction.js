@@ -6,3 +6,10 @@ export const setArtistArea = (artists) => {
     artists,
   };
 };
+
+export const setArtistDetail = (artist) => {
+  return {
+    type: types.SET_ARTIST_DETAIL,
+    artist,
+  };
+};

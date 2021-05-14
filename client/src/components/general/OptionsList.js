@@ -20,6 +20,7 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import toast from "../../helpers/toast";
 import { convertTZ } from "../../helpers/convertTime";
+import handleKeyboardEvent from "../../helpers/handelKeyboardEvent";
 
 class OptionsList extends Component {
   constructor(props) {
@@ -513,6 +514,12 @@ class OptionsList extends Component {
                     type="text"
                     placeholder="Nhập tên playlist cần tạo!"
                     className="h-100 w-100 bg-light form-control"
+                    onFocus={() =>
+                      window.removeEventListener("keydown", handleKeyboardEvent)
+                    }
+                    onBlur={() =>
+                      window.addEventListener("keydown", handleKeyboardEvent)
+                    }
                   />
                 </div>
                 <button className="btn btn-info ml-2">Tạo playlist</button>

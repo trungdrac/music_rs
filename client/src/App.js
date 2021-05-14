@@ -26,6 +26,7 @@ import ResetPassword from "./components/user/ResetPassword";
 import SearchResult from "./components/search/SearchResult";
 import LikedSong from "./components/user/LikedSong";
 import MyPlaylist from "./components/user/MyPlaylist";
+import History from "./components/user/History";
 import toast from "./helpers/toast";
 
 function PrivateRoute({ component: Component, token, ...rest }) {
@@ -170,6 +171,12 @@ class App extends Component {
                   path="/user/my-playlist"
                   token={user.userToken}
                   component={MyPlaylist}
+                />
+                <PrivateRoute
+                  exact
+                  path="/user/history"
+                  token={user.userToken}
+                  component={History}
                 />
                 <Route exact path="/" component={Home} />
                 <Route render={() => <Redirect to="/" />} />
