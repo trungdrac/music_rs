@@ -13,6 +13,7 @@
   --btn-color: #1dbfaf;
   --btn-hover-color: #1ac7b6;
   --item-header-color: #f0f0f0;
+  --li-hover-color: #e9ecef;
 }
 
 * {
@@ -118,8 +119,8 @@ label {
 
 .detail-btn {
   width: 8rem;
-  margin-top: 1rem;
-  margin-bottom: 1rem;
+  margin-top: 0.5rem;
+  margin-bottom: 1.5rem;
 }
 
 /* dropdown button options start */

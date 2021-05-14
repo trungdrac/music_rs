@@ -23,7 +23,7 @@ class InteractionController {
       .catch(next);
   };
 
-  // [GET] /interaction/like?user=song=
+  // [PUT] /interaction/like?user=song=
   toggleLike = (req, res, next) => {
     const userId = req.query.user;
     const songId = req.query.song;
@@ -35,7 +35,8 @@ class InteractionController {
         result.like = !result.like;
         result
           .save()
-          .then((newResult) => res.json(newResult.like))
+          .then((newResult) => res.json(newResult.like
+          ))
           .catch(next);
       })
       .catch(next);

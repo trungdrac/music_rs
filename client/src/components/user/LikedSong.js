@@ -18,17 +18,20 @@ class LikedSong extends Component {
     };
   }
 
-  componentDidMount() {
+  getLikedSong = () => {
     const { user } = this.props;
     const { search } = this.props.history.location;
     const query = new URLSearchParams(search);
 
     function getLikedSong() {
-      return axios.get(`/user/${user.userId}/liked-song?page=${query.get("page")}`, {
-        headers: {
-          Authorization: `Bearer ${user.userToken}`,
-        },
-      });
+      return axios.get(
+        `/user/${user.userId}/liked-song?page=${query.get("page")}`,
+        {
+          headers: {
+            Authorization: `Bearer ${user.userToken}`,
+          },
+        }
+      );
     }
 
     function getCount() {
@@ -61,6 +64,15 @@ class LikedSong extends Component {
           type: "error",
         })
       );
+  };
+
+  componentDidMount() {
+    this.getLikedSong();
+  }
+
+  componentDidUpdate(prevProps) {
+    if (prevProps.likedSongCount !== this.props.likedSongCount)
+      this.getLikedSong();
   }
 
   render() {
@@ -94,6 +106,7 @@ class LikedSong extends Component {
 const mapStateToProps = (state) => ({
   likedSong: state.song.likedSong,
   user: state.user,
+  likedSongCount: state.song.likedSongCount,
 });
 
 const mapDispatchToProps = (dispatch) => ({

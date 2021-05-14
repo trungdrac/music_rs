@@ -383,7 +383,6 @@ class Player extends Component {
           </div>
           <DropdownButton
             id="dropdown-options"
-            key="left"
             drop="left"
             title={<FontAwesomeIcon icon={faEllipsisV} />}
           >
@@ -391,7 +390,6 @@ class Player extends Component {
               song={listPlaying[currentIndex]}
               like
               addToPlaylist
-              comment
               info
               copyLink
               download

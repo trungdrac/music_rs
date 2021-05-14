@@ -5,10 +5,15 @@ import {
   setListPlaying,
   setCurrentIndex,
   playAudio,
+  toggleRandom,
 } from "../../actions/playerAction";
-import Section from "../general/Section";
 import axios from "axios";
 import toast from "../../helpers/toast";
+import { DropdownButton } from "react-bootstrap";
+import { faCaretSquareDown, faPlay } from "@fortawesome/free-solid-svg-icons";
+import OptionsList from "../general/OptionsList";
+import SongCard from "../song/SongCard";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
 class PlaylistDetail extends Component {
   constructor(props) {
@@ -37,10 +42,18 @@ class PlaylistDetail extends Component {
       );
   }
 
+  playPlaylist = () => {
+    const listPlaying = this.props.playlistDetail.song;
+    this.props.setListPlaying(listPlaying);
+    this.props.setCurrentIndex(0);
+    if (this.props.isRandom) this.props.toggleRandom();
+  };
+
   render() {
     if (this.state.isLoading) return "";
 
-    const { title, own, image, song } = this.props.playlistDetail;
+    const { title, own, image, song, area } = this.props.playlistDetail;
+    const { currentSongId, isPlaying } = this.props;
 
     return (
       <React.Fragment>
@@ -50,73 +63,62 @@ class PlaylistDetail extends Component {
           </div>
           <div className="col-xl-9 col-lg-8 col-sm-7">
             <div className="row pt-5">
-              <div className="col-xl-8 col-lg-6">
-                <h5>{title}</h5>
-                <p>Tạo bởi: {own.username}</p>
-                <div className="mt-4">
-                  <a
-                    href="/"
-                    className="btn btn-pill btn-air btn-bold btn-danger"
-                  >
-                    Play
-                  </a>
-                </div>
+              <div className="col-lg-8">
+                <h3>{title}</h3>
+                <p>
+                  <b>Tạo bởi: </b>
+                  {own.username}
+                </p>
+                {area ? (
+                  <p>
+                    <b>Khu vực: </b>
+                    {area.name}
+                  </p>
+                ) : (
+                  ""
+                )}
               </div>
-              <div className="col-xl-4 col-lg-6">
-                <table className="table table-borderless">
-                  <tbody>
-                    <tr>
-                      <th>Thể loại</th>
-                      <td>Âu Mỹ</td>
-                    </tr>
-                    <tr>
-                      <th></th>
-                      <td>Pop</td>
-                    </tr>
-                  </tbody>
-                </table>
+              <div className="col-lg-4 d-flex flex-column align-items-center">
+                <button
+                  className="detail-btn btn btn-danger box-shadow"
+                  disabled={currentSongId === song[0]._id}
+                  onClick={this.playPlaylist}
+                >
+                  <FontAwesomeIcon icon={faPlay} />
+                  <span> PHÁT</span>
+                </button>
+
+                <DropdownButton
+                  className="box-shadow"
+                  id="detail-dropdown-options"
+                  drop="left"
+                  title={
+                    <React.Fragment>
+                      <FontAwesomeIcon icon={faCaretSquareDown} />
+                      <span> LỰA CHỌN</span>
+                    </React.Fragment>
+                  }
+                >
+                  <OptionsList song={this.props.songDetail} copyLink />
+                </DropdownButton>
               </div>
             </div>
           </div>
         </div>
-        <div className="header-table-song">Danh sách bài hát</div>
-        <div className="table-song box-shadow section">
-          <table className="table table-borderless table-striped">
-            <thead>
-              <tr className="table-secondary">
-                <th scope="col">TIÊU ĐỀ</th>
-                <th scope="col">NGHỆ SỸ</th>
-                <th scope="col"></th>
-                <th scope="col"></th>
-              </tr>
-              <tr className="spacer" />
-            </thead>
-            <tbody>
-              <tr className="table-song__row">
-                <th scope="row">1</th>
-                <td>Mark</td>
-                <td>Otto</td>
-                <td>@mdo</td>
-              </tr>
-              <tr className="spacer" />
-              <tr className="table-song__row">
-                <th scope="row">2</th>
-                <td>Jacob</td>
-                <td>Thornton</td>
-                <td>@fat</td>
-              </tr>
-              <tr className="spacer"></tr>
-              <tr className="table-song__row">
-                <th scope="row">3</th>
-                <td>Larry</td>
-                <td>the Bird</td>
-                <td>@twitter</td>
-              </tr>
-              <tr className="spacer" />
-            </tbody>
-          </table>
+        <div className="section">
+          <div className="heading">
+            <div className="d-flex align-items-end justify-content-between">
+              <h4 className="mb-0 p-2 rounded box-shadow">Danh sách bài hát</h4>
+              <p className="p-2 rounded box-shadow">{song.length} bài hát</p>
+            </div>
+            <hr />
+          </div>
+          <div className="row">
+            {song.map((song) => (
+              <SongCard key={song._id} item={song} />
+            ))}
+          </div>
         </div>
-        <Section />
       </React.Fragment>
     );
   }
@@ -125,6 +127,8 @@ class PlaylistDetail extends Component {
 const mapStateToProps = (state) => ({
   playlistDetail: state.playlist.playlistDetail,
   currentSongId: state.player.currentSongId,
+  isPlaying: state.player.isPlaying,
+  isRandom: state.player.isRandom,
 });
 
 const mapDispatchToProps = (dispatch) => ({
@@ -132,6 +136,7 @@ const mapDispatchToProps = (dispatch) => ({
   setListPlaying: (playlist) => dispatch(setListPlaying(playlist)),
   setCurrentIndex: (newIndex) => dispatch(setCurrentIndex(newIndex)),
   playAudio: () => dispatch(playAudio()),
+  toggleRandom: () => dispatch(toggleRandom()),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(PlaylistDetail);

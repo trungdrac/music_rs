@@ -19,6 +19,7 @@ class PlaylistCard extends Component {
     this.props.setCurrentIndex(0);
     if (this.props.isRandom) this.props.toggleRandom();
   };
+
   render() {
     const { item, currentSongId } = this.props;
     return (
@@ -34,27 +35,22 @@ class PlaylistCard extends Component {
                 alt="..."
               />
             </Link>
-            {item._id !== currentSongId ? (
-              <div>
-                <DropdownButton
-                  className="btn-ellipsis"
-                  id="dropdown-options"
-                  key={item._id}
-                  drop="left"
-                  title={<FontAwesomeIcon icon={faEllipsisV} />}
-                >
-                  <OptionsList playlist={item} info copyLink />
-                </DropdownButton>
+            <div>
+              <DropdownButton
+                className="btn-ellipsis"
+                id="dropdown-options"
+                drop="left"
+                title={<FontAwesomeIcon icon={faEllipsisV} />}
+              >
+                <OptionsList playlist={item} deleteMyPlaylist info copyLink />
+              </DropdownButton>
 
-                <div className="card-img__overlay">
-                  <div className="btn-toggle-play" onClick={this.playPlaylist}>
-                    <FontAwesomeIcon icon={faPlay} />
-                  </div>
+              <div className="card-img__overlay">
+                <div className="btn-toggle-play" onClick={this.playPlaylist}>
+                  <FontAwesomeIcon icon={faPlay} />
                 </div>
               </div>
-            ) : (
-              ""
-            )}
+            </div>
           </div>
           <div className="card-body pl-0 pr-0">
             <h6 className="card-title">

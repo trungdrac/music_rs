@@ -65,17 +65,16 @@ class RightSidebar extends Component {
                   <div className="song-options">
                     <DropdownButton
                       id="dropdown-options"
-                      key="left"
                       drop="left"
                       title={<FontAwesomeIcon icon={faEllipsisH} />}
                     >
                       <OptionsList
                         song={song}
+                        like
                         addToPlaylist
                         playNext
                         playLast
                         remove
-                        comment
                         info
                         copyLink
                         download

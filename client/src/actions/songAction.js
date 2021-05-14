@@ -27,3 +27,10 @@ export const setLikedSong = (songs) => {
     songs,
   };
 };
+
+export const setLikedSongCount = (count) => {
+  return {
+    type: types.SET_LIKED_SONG_COUNT,
+    count,
+  };
+};

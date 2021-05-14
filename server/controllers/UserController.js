@@ -172,7 +172,7 @@ class UserController {
           select: "name",
         },
       })
-      .sort({ _id: 1 })
+      .sort({ updatedAt: -1 })
       .skip(NUMBER_OF_ITEM_PER_PAGE * (page - 1))
       .limit(NUMBER_OF_ITEM_PER_PAGE)
       .then((results) => {
@@ -206,7 +206,7 @@ class UserController {
           select: "name",
         },
       })
-      .sort({ _id: 1 })
+      .sort({ createdAt: -1 })
       .skip(NUMBER_OF_ITEM_PER_PAGE * (page - 1))
       .limit(NUMBER_OF_ITEM_PER_PAGE)
       .then((playlists) => res.json(playlists))
@@ -273,6 +273,17 @@ class UserController {
             .catch(next);
         }
       })
+      .catch(next);
+  };
+
+  // [DELETE] /user/:userId/my-playlist/delete/:playlistId
+  deleteMyPlaylist = (req, res, next) => {
+    const { userId, playlistId } = req.params;
+    Playlist.deleteOne({
+      _id: mongoose.Types.ObjectId(playlistId),
+      own: mongoose.Types.ObjectId(userId),
+    })
+      .then(() => res.json({ success: "Đã xóa playlist!" }))
       .catch(next);
   };
 }

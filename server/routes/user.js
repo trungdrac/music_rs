@@ -15,7 +15,11 @@ router.post("/reset-password", UserController.resetPassword);
 
 router.get("/:id/liked-song", requireLogin, UserController.getLikedSong);
 
-router.get("/:id/liked-song/count", requireLogin, UserController.countLikedSong);
+router.get(
+  "/:id/liked-song/count",
+  requireLogin,
+  UserController.countLikedSong
+);
 
 router.get("/:id/my-playlist", requireLogin, UserController.getPlaylist);
 
@@ -37,6 +41,12 @@ router.get(
   "/my-playlist/:playlistId/add/:songId",
   requireLogin,
   UserController.addToPlaylist
+);
+
+router.get(
+  "/:userId/my-playlist/delete/:playlistId",
+  requireLogin,
+  UserController.deleteMyPlaylist
 );
 
 module.exports = router;

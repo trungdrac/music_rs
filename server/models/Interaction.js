@@ -7,7 +7,7 @@ const interactionSchema = new Schema(
     song: { type: Schema.Types.ObjectId, ref: "Song", required: true },
     playing: { type: Number, default: 0 },
     like: { type: Boolean, default: false },
-    comment: { type: String },
+    // comment: { type: String },
   },
   { timestamps: true }
 );

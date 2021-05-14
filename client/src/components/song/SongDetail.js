@@ -97,7 +97,7 @@ class SongDetail extends Component {
                   {category.name}
                 </p>
               </div>
-              <div className="col-lg-4 text-center d-flex flex-column align-items-center">
+              <div className="col-lg-4 d-flex flex-column align-items-center">
                 {currentSongId !== _id || !isPlaying ? (
                   <button
                     className="detail-btn btn btn-danger box-shadow"
@@ -120,7 +120,6 @@ class SongDetail extends Component {
                 <DropdownButton
                   className="box-shadow"
                   id="detail-dropdown-options"
-                  key={_id}
                   drop="left"
                   title={
                     <React.Fragment>
@@ -131,10 +130,10 @@ class SongDetail extends Component {
                 >
                   <OptionsList
                     song={this.props.songDetail}
+                    like
                     addToPlaylist
                     playNext
                     playLast
-                    comment
                     copyLink
                     download
                   />

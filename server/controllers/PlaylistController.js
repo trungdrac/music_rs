@@ -11,7 +11,7 @@ class PlaylistController {
   //[GET] /playlist/detail/:id
   getDetail = (req, res, next) => {
     const playlistId = req.params.id;
-    Playlist.findById(playlistId, "title image song own")
+    Playlist.findById(playlistId, "title image song own area")
       .populate({
         path: "song",
         select: "title artist image url",
@@ -21,6 +21,7 @@ class PlaylistController {
         },
       })
       .populate({ path: "own", select: "username" })
+      .populate({ path: "area", select: "name" })
       .then((playlist) => res.json(playlist))
       .catch(next);
   };

@@ -4,6 +4,11 @@ import { withRouter } from "react-router-dom";
 import { connect } from "react-redux";
 import { setCurrentUser } from "../../actions/userAction";
 import { setSuggestion } from "../../actions/searchAction";
+import { setLikedSong, setLikedSongCount } from "../../actions/songAction";
+import {
+  setMyPlaylist,
+  setMyPlaylistCount,
+} from "../../actions/playlistAction";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faBars,
@@ -67,8 +72,12 @@ class Header extends Component {
 
   logout = () => {
     this.props.setCurrentUser(null);
+    this.props.setLikedSong(null);
+    this.props.setLikedSongCount(null);
+    this.props.setMyPlaylist(null);
+    this.props.setMyPlaylistCount(null);
     this.setState({ showDialog: false });
-    this.props.history.push(this.props.location.pathname);
+    this.props.history.push("/");
     toast({
       title: "Thành công!",
       message: "Bạn đã đăng xuất khỏi hệ thống!",
@@ -267,7 +276,7 @@ class Header extends Component {
             >
               Trở lại
             </Button>
-            <Button variant="primary" onClick={this.logout}>
+            <Button variant="danger" onClick={this.logout}>
               Đăng xuất
             </Button>
           </Modal.Footer>
@@ -285,6 +294,10 @@ const mapStateToProps = (state) => ({
 const mapDispatchToProps = (dispatch) => ({
   setCurrentUser: (user) => dispatch(setCurrentUser(user)),
   setSuggestion: (suggestion) => dispatch(setSuggestion(suggestion)),
+  setLikedSong: (songs) => dispatch(setLikedSong(songs)),
+  setLikedSongCount: (count) => dispatch(setLikedSongCount(count)),
+  setMyPlaylist: (playlists) => dispatch(setMyPlaylist(playlists)),
+  setMyPlaylistCount: (count) => dispatch(setMyPlaylistCount(count)),
 });
 
 const HeaderWithRouter = withRouter(Header);

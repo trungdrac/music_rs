@@ -3,10 +3,11 @@ import { withRouter } from "react-router-dom";
 import { connect } from "react-redux";
 import axios from "axios";
 import { setListPlaying, setCurrentIndex } from "../../actions/playerAction";
-import { Dropdown, Modal } from "react-bootstrap";
+import { setLikedSongCount } from "../../actions/songAction";
+import { setMyPlaylistCount } from "../../actions/playlistAction";
+import { Button, Dropdown, Modal } from "react-bootstrap";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
-  faCommentDots,
   faDownload,
   faHeart,
   faInfoCircle,
@@ -23,37 +24,53 @@ import { convertTZ } from "../../helpers/convertTime";
 class OptionsList extends Component {
   constructor(props) {
     super(props);
-    this.state = { like: false, showPlaylistModal: false, listPlaylist: [] };
+    this.state = {
+      like: false,
+      showPlaylistModal: false,
+      showDeleteModal: false,
+      listPlaylist: [],
+    };
   }
 
   componentDidMount() {
-    const songId = this.props.song._id;
-    const { user } = this.props;
-    if (user.userId) {
-      axios
-        .get(`/interaction/detail?user=${user.userId}&song=${songId}`, {
-          headers: {
-            Authorization: `Bearer ${user.userToken}`,
-          },
-        })
-        .then((res) => this.setState({ like: res.data }))
-        .catch((error) =>
-          toast({
-            title: "Thất bại!",
-            message: `${
-              error.response.data.message
-                ? error.response.data.message
-                : "Có lỗi xảy ra!"
-            }`,
-            type: "error",
-          })
-        );
-    }
+    this.getLike();
   }
+
+  componentDidUpdate(prevProps) {
+    if (prevProps.likedSongCount !== this.props.likedSongCount) this.getLike();
+  }
+
+  getLike = () => {
+    if (this.props.song) {
+      const songId = this.props.song._id;
+      const { user } = this.props;
+      if (user.userId) {
+        axios
+          .get(`/interaction/detail?user=${user.userId}&song=${songId}`, {
+            headers: {
+              Authorization: `Bearer ${user.userToken}`,
+            },
+          })
+          .then((res) => this.setState({ like: res.data }))
+          .catch((error) =>
+            toast({
+              title: "Thất bại!",
+              message: `${
+                error.response.data.message
+                  ? error.response.data.message
+                  : "Có lỗi xảy ra!"
+              }`,
+              type: "error",
+            })
+          );
+      }
+    }
+  };
 
   like = () => {
     const songId = this.props.song._id;
     const { user } = this.props;
+    const { likedSongCount } = this.props;
     axios
       .get(`/interaction/like?user=${user.userId}&song=${songId}`, {
         headers: {
@@ -61,6 +78,11 @@ class OptionsList extends Component {
         },
       })
       .then((res) => this.setState({ like: res.data }))
+      .then(() => {
+        if (this.state.like === true)
+          this.props.setLikedSongCount(likedSongCount + 1);
+        else this.props.setLikedSongCount(likedSongCount - 1);
+      })
       .then(() =>
         toast({
           title: "Thành công!",
@@ -170,6 +192,7 @@ class OptionsList extends Component {
             });
             e.target[0].value = "";
             this.getPlaylist();
+            this.props.setMyPlaylistCount(this.props.myPlaylistCount + 1);
           }
           if (res.data.error)
             toast({
@@ -236,7 +259,7 @@ class OptionsList extends Component {
     });
   };
 
-  comment = () => {};
+  // comment = () => {};
 
   remove = () => {
     const { currentIndex, listPlaying, song } = this.props;
@@ -286,6 +309,37 @@ class OptionsList extends Component {
 
   download = () => {
     window.open(this.props.song.url);
+  };
+
+  deleteMyPlaylist = () => {
+    if (this.props.playlist) {
+      const { playlist, user, myPlaylistCount } = this.props;
+      axios
+        .get(`/user/${user.userId}/my-playlist/delete/${playlist._id}`, {
+          headers: {
+            Authorization: `Bearer ${user.userToken}`,
+          },
+        })
+        .then((res) => {
+          toast({
+            title: "Thành công!",
+            message: res.data.success,
+            type: "success",
+          });
+          this.props.setMyPlaylistCount(myPlaylistCount - 1);
+        })
+        .catch((error) =>
+          toast({
+            title: "Thất bại!",
+            message: `${
+              error.response.data.message
+                ? error.response.data.message
+                : "Có lỗi xảy ra!"
+            }`,
+            type: "error",
+          })
+        );
+    }
   };
 
   render() {
@@ -351,7 +405,7 @@ class OptionsList extends Component {
         ) : (
           ""
         )}
-        {this.props.comment ? (
+        {/* {this.props.comment ? (
           <Dropdown.Item className="options-list__item" onClick={this.comment}>
             <div className="option-list__item--icon">
               <FontAwesomeIcon icon={faCommentDots} />
@@ -360,7 +414,7 @@ class OptionsList extends Component {
           </Dropdown.Item>
         ) : (
           ""
-        )}
+        )} */}
         {this.props.info ? (
           <Dropdown.Item className="options-list__item" onClick={this.getInfo}>
             <div className="option-list__item--icon">
@@ -394,7 +448,22 @@ class OptionsList extends Component {
         ) : (
           ""
         )}
+        {this.props.location.pathname === "/user/my-playlist" &&
+        this.props.deleteMyPlaylist ? (
+          <Dropdown.Item
+            className="options-list__item"
+            onClick={() => this.setState({ showDeleteModal: true })}
+          >
+            <div className="option-list__item--icon">
+              <FontAwesomeIcon icon={faTrashAlt} />
+            </div>
+            <span>Xóa playlist</span>
+          </Dropdown.Item>
+        ) : (
+          ""
+        )}
 
+        {/* Playlist modal */}
         <Modal
           show={this.state.showPlaylistModal}
           onHide={() => this.setState({ showPlaylistModal: false })}
@@ -451,6 +520,28 @@ class OptionsList extends Component {
             </form>
           </Modal.Body>
         </Modal>
+
+        {/* Confirm delete modal */}
+        <Modal
+          show={this.state.showDeleteModal}
+          onHide={() => this.setState({ showDeleteModal: false })}
+        >
+          <Modal.Header closeButton>
+            <Modal.Title>Xác nhận</Modal.Title>
+          </Modal.Header>
+          <Modal.Body>Bạn có chắc chắn muốn xóa playlist?</Modal.Body>
+          <Modal.Footer>
+            <Button
+              variant="secondary"
+              onClick={() => this.setState({ showDeleteModal: false })}
+            >
+              Trở lại
+            </Button>
+            <Button variant="danger" onClick={this.deleteMyPlaylist}>
+              Xóa
+            </Button>
+          </Modal.Footer>
+        </Modal>
       </div>
     );
   }
@@ -460,11 +551,15 @@ const mapStateToProps = (state) => ({
   currentIndex: state.player.currentIndex,
   listPlaying: state.player.listPlaying,
   user: state.user,
+  likedSongCount: state.song.likedSongCount,
+  myPlaylistCount: state.playlist.myPlaylistCount,
 });
 
 const mapDispatchToProps = (dispatch) => ({
   setCurrentIndex: (newIndex) => dispatch(setCurrentIndex(newIndex)),
   setListPlaying: (listPlaying) => dispatch(setListPlaying(listPlaying)),
+  setLikedSongCount: (count) => dispatch(setLikedSongCount(count)),
+  setMyPlaylistCount: (count) => dispatch(setMyPlaylistCount(count)),
 });
 
 const OptionsListWithRouter = withRouter(OptionsList);

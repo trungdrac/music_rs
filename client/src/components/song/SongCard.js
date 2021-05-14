@@ -35,7 +35,6 @@ class SongCard extends Component {
                 <DropdownButton
                   className="btn-ellipsis"
                   id="dropdown-options"
-                  key={item._id}
                   drop="left"
                   title={<FontAwesomeIcon icon={faEllipsisV} />}
                 >
@@ -45,7 +44,6 @@ class SongCard extends Component {
                     addToPlaylist
                     playNext
                     playLast
-                    comment
                     info
                     copyLink
                     download

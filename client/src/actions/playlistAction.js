@@ -14,6 +14,13 @@ export const setMyPlaylist = (playlists) => {
   };
 };
 
+export const setMyPlaylistCount = (count) => {
+  return {
+    type: types.SET_MY_PLAYLIST_COUNT,
+    count,
+  };
+};
+
 export const setPlaylistDetail = (playlist) => {
   return {
     type: types.SET_PLAYLIST_DETAIL,

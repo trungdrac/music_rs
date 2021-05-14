@@ -18,7 +18,7 @@ class MyPlaylist extends Component {
     };
   }
 
-  componentDidMount() {
+  getMyPlaylist = () => {
     const { user } = this.props;
     const { search } = this.props.history.location;
     const query = new URLSearchParams(search);
@@ -64,6 +64,15 @@ class MyPlaylist extends Component {
           type: "error",
         })
       );
+  };
+
+  componentDidMount() {
+    this.getMyPlaylist();
+  }
+
+  componentDidUpdate(prevProps) {
+    if (prevProps.myPlaylistCount !== this.props.myPlaylistCount)
+      this.getMyPlaylist();
   }
 
   render() {
@@ -99,6 +108,7 @@ class MyPlaylist extends Component {
 const mapStateToProps = (state) => ({
   myPlaylist: state.playlist.myPlaylist,
   user: state.user,
+  myPlaylistCount: state.playlist.myPlaylistCount,
 });
 
 const mapDispatchToProps = (dispatch) => ({

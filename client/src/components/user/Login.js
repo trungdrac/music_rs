@@ -4,6 +4,8 @@ import { connect } from "react-redux";
 import { setCurrentUser } from "../../actions/userAction";
 import axios from "axios";
 import Validator from "../../helpers/validator";
+import { setLikedSongCount } from "../../actions/songAction";
+import { setMyPlaylistCount } from "../../actions/playlistAction";
 import toast from "../../helpers/toast";
 
 class Login extends Component {
@@ -31,6 +33,40 @@ class Login extends Component {
           .then((res) => {
             const user = res.data;
             this.props.setCurrentUser(user);
+
+            function getLikedSongCount() {
+              return axios.get(`/user/${user.userId}/liked-song/count`, {
+                headers: {
+                  Authorization: `Bearer ${user.userToken}`,
+                },
+              });
+            }
+            function getMyPlaylistCount() {
+              return axios.get(`/user/${user.userId}/my-playlist/count`, {
+                headers: {
+                  Authorization: `Bearer ${user.userToken}`,
+                },
+              });
+            }
+
+            Promise.all([getLikedSongCount(), getMyPlaylistCount()])
+              .then((results) => {
+                this.props.setLikedSongCount(results[0].data);
+                this.props.setMyPlaylistCount(results[1].data);
+              })
+              .catch((error) =>
+                toast({
+                  title: "Thất bại!",
+                  message: `${
+                    error.response.data.message
+                      ? error.response.data.message
+                      : "Có lỗi xảy ra!"
+                  }`,
+                  type: "error",
+                })
+              );
+          })
+          .then(() => {
             const nextPath = this.props.location.state
               ? this.props.location.state.prevPath
               : "/";
@@ -123,6 +159,8 @@ class Login extends Component {
 
 const mapDispatchToProps = (dispatch) => ({
   setCurrentUser: (user) => dispatch(setCurrentUser(user)),
+  setLikedSongCount: (count) => dispatch(setLikedSongCount(count)),
+  setMyPlaylistCount: (count) => dispatch(setMyPlaylistCount(count)),
 });
 
 export default connect(null, mapDispatchToProps)(Login);

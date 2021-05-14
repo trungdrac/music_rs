@@ -4,7 +4,8 @@ const initialState = {
   songs: [],
   songDetail: {},
   songCategory: [],
-  likedSong: [],
+  likedSong: null,
+  likedSongCount: null,
 };
 
 const song = (state = initialState, action) => {
@@ -17,6 +18,8 @@ const song = (state = initialState, action) => {
       return { ...state, songCategory: action.songs };
     case types.SET_LIKED_SONG:
       return { ...state, likedSong: action.songs };
+    case types.SET_LIKED_SONG_COUNT:
+      return { ...state, likedSongCount: action.count };
     default:
       return state;
   }
