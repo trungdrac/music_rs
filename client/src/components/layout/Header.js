@@ -22,7 +22,7 @@ import { Button, Dropdown, DropdownButton, Modal } from "react-bootstrap";
 import debounce from "../../helpers/debounce";
 import axios from "axios";
 import toast from "../../helpers/toast";
-import handleKeyboardEvent from "../../helpers/handelKeyboardEvent";
+import handleKeyboardEvent from "../../helpers/handleKeyboardEvent";
 
 class Header extends Component {
   constructor(props) {

@@ -35,9 +35,32 @@ class InteractionController {
         result.like = !result.like;
         result
           .save()
-          .then((newResult) => res.json(newResult.like
-          ))
+          .then((newResult) => res.json(newResult.like))
           .catch(next);
+      })
+      .catch(next);
+  };
+
+  // [PUT] /interaction/playing?user=song=
+  updatePlaying = (req, res, next) => {
+    const userId = req.query.user;
+    const songId = req.query.song;
+    Interaction.findOne({
+      user: mongoose.Types.ObjectId(userId),
+      song: mongoose.Types.ObjectId(songId),
+    })
+      .then((result) => {
+        if (result) {
+          result.playing++;
+          result
+            .save()
+            .then((newResult) => res.json(newResult.playing))
+            .catch(next);
+        } else {
+          Interaction.create({ user: userId, song: songId, playing: 1 })
+            .then((newResult) => res.json(newResult.playing))
+            .catch(next);
+        }
       })
       .catch(next);
   };

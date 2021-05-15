@@ -7,4 +7,6 @@ router.get("/detail", requireLogin, InteractionController.getDetail);
 
 router.get("/like", requireLogin, InteractionController.toggleLike);
 
+router.get("/playing", requireLogin, InteractionController.updatePlaying);
+
 module.exports = router;

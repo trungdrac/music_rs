@@ -5,6 +5,7 @@ import { msToISO } from "../../helpers/convertTime";
 import * as playerActions from "../../actions/playerAction";
 import RightSidebar from "./RightSidebar";
 import OptionsList from "./OptionsList";
+import { setHistoryListen } from "../../actions/songAction";
 import { DropdownButton } from "react-bootstrap";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
@@ -19,13 +20,14 @@ import {
   faVolumeMute,
   faVolumeUp,
 } from "@fortawesome/free-solid-svg-icons";
-import handleKeyboardEvent from "../../helpers/handelKeyboardEvent";
-import { setHistoryListen } from "../../actions/songAction";
+import handleKeyboardEvent from "../../helpers/handleKeyboardEvent";
+import axios from "axios";
 
 class Player extends Component {
   constructor(props) {
     super(props);
     this.state = {
+      listenTime: 0,
       prevVolume: 1,
       originalListPlaying: [],
     };
@@ -48,14 +50,17 @@ class Player extends Component {
     window.addEventListener("keydown", handleKeyboardEvent);
   }
 
-  componentDidUpdate(prevProps) {
+  componentDidUpdate(prevProps, prevState) {
     const audio = this.audioRef.current;
-    const { currentSongId, listPlaying, volume } = this.props;
+    const { currentSongId, listPlaying, volume, user } = this.props;
 
+    // play audio if audio is changed
     if (prevProps.currentSongId !== currentSongId) audio.play();
 
+    // update audio volume
     if (prevProps.volume !== volume) audio.volume = volume;
 
+    // update list playing when add an audio to it
     if (
       prevProps.listPlaying.length &&
       prevProps.listPlaying.length < listPlaying.length
@@ -68,6 +73,7 @@ class Player extends Component {
       this.setState({ originalListPlaying: newList });
     }
 
+    // update list playing when remove an audio from it
     if (prevProps.listPlaying.length > listPlaying.length) {
       const newListId = listPlaying.map((song) => song._id);
       const removedSong = prevProps.listPlaying.filter(
@@ -80,15 +86,48 @@ class Player extends Component {
       newList.splice(removedSongIndex, 1);
       this.setState({ originalListPlaying: newList });
     }
+
+    // audio is played at least 15s
+    if (
+      prevState.listenTime !== this.state.listenTime &&
+      this.state.listenTime === 15
+    ) {
+      if (user.userToken) {
+        axios
+          .get(
+            `/interaction/playing?user=${user.userId}&song=${currentSongId}`,
+            {
+              headers: {
+                Authorization: `Bearer ${user.userToken}`,
+              },
+            }
+          )
+          .catch(console.log);
+      }
+    }
   }
 
-  handlePlayPause = () => {
+  handleTogglePlay = () => {
     const audio = this.audioRef.current;
     if (this.props.isPlaying) {
       audio.pause();
     } else {
       audio.play();
     }
+  };
+
+  handlePlay = () => {
+    let timeCounter = setInterval(
+      () => this.setState({ listenTime: this.state.listenTime + 1 }),
+      1000
+    );
+    this.setState({ timeCounter });
+    this.props.playAudio();
+  };
+
+  handlePause = () => {
+    clearInterval(this.state.timeCounter);
+    this.props.pauseAudio();
   };
 
   handleTimeUpdate = () => {
@@ -113,6 +152,10 @@ class Player extends Component {
   handleLoadedData = () => {
     const audio = this.audioRef.current;
     const { listPlaying, currentIndex, historyListen } = this.props;
+
+    //reset playing time counter
+    this.setState({ listenTime: 0 });
+    clearInterval(this.state.timeCounter);
 
     //set duration
     this.props.setDuration(audio.duration);
@@ -297,7 +340,7 @@ class Player extends Component {
                 <FontAwesomeIcon icon={faStepBackward} />
               </div>
             )}
-            <div className="btn-toggle-play" onClick={this.handlePlayPause}>
+            <div className="btn-toggle-play" onClick={this.handleTogglePlay}>
               {isPlaying ? (
                 <FontAwesomeIcon icon={faPause} />
               ) : (
@@ -320,8 +363,8 @@ class Player extends Component {
               ref={this.audioRef}
               src={listPlaying[currentIndex].url}
               onLoadedData={this.handleLoadedData}
-              onPlay={() => this.props.playAudio()}
-              onPause={() => this.props.pauseAudio()}
+              onPlay={this.handlePlay}
+              onPause={this.handlePause}
               onTimeUpdate={this.handleTimeUpdate}
               onEnded={this.handleEnded}
               onVolumeChange={() => this.props.setVolume(audio.volume)}

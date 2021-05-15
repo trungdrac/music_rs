@@ -20,7 +20,7 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import toast from "../../helpers/toast";
 import { convertTZ } from "../../helpers/convertTime";
-import handleKeyboardEvent from "../../helpers/handelKeyboardEvent";
+import handleKeyboardEvent from "../../helpers/handleKeyboardEvent";
 
 class OptionsList extends Component {
   constructor(props) {
