@@ -52,7 +52,6 @@ class PlaylistDetail extends Component {
     if (this.state.isLoading) return "";
 
     const { title, own, image, song, area } = this.props.playlistDetail;
-    const { currentSongId } = this.props;
 
     return (
       <React.Fragment>
@@ -80,7 +79,6 @@ class PlaylistDetail extends Component {
               <div className="col-lg-4 d-flex flex-column align-items-center">
                 <button
                   className="detail-btn btn btn-danger box-shadow"
-                  disabled={currentSongId === song[0]._id}
                   onClick={this.playPlaylist}
                 >
                   <FontAwesomeIcon icon={faPlay} />
@@ -125,7 +123,6 @@ class PlaylistDetail extends Component {
 
 const mapStateToProps = (state) => ({
   playlistDetail: state.playlist.playlistDetail,
-  currentSongId: state.player.currentSongId,
   isPlaying: state.player.isPlaying,
   isRandom: state.player.isRandom,
 });

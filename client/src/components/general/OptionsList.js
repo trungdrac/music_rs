@@ -5,7 +5,7 @@ import axios from "axios";
 import { setListPlaying, setCurrentIndex } from "../../actions/playerAction";
 import { setLikedSongCount } from "../../actions/songAction";
 import { setMyPlaylistCount } from "../../actions/playlistAction";
-import { Button, Dropdown, Modal } from "react-bootstrap";
+import { Button, Dropdown, Form, Modal } from "react-bootstrap";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faDownload,
@@ -17,10 +17,13 @@ import {
   faStepForward,
   faTrashAlt,
   faChevronRight,
+  faEdit,
 } from "@fortawesome/free-solid-svg-icons";
 import toast from "../../helpers/toast";
 import { convertTZ } from "../../helpers/convertTime";
 import handleKeyboardEvent from "../../helpers/handleKeyboardEvent";
+import debounce from "../../helpers/debounce";
+import { setFilterResult } from "../../actions/searchAction";
 
 class OptionsList extends Component {
   constructor(props) {
@@ -28,13 +31,17 @@ class OptionsList extends Component {
     this.state = {
       like: false,
       showPlaylistModal: false,
+      showEditModal: false,
       showDeleteModal: false,
       listPlaylist: [],
+      songs: [],
     };
+    this.editFormRef = React.createRef();
   }
 
   componentDidMount() {
     this.getLike();
+    if (this.props.playlist) this.setState({ songs: this.props.playlist.song });
   }
 
   componentDidUpdate(prevProps) {
@@ -45,7 +52,7 @@ class OptionsList extends Component {
     if (this.props.song) {
       const songId = this.props.song._id;
       const { user } = this.props;
-      if (user.userId) {
+      if (user.userToken) {
         axios
           .get(`/interaction/detail?user=${user.userId}&song=${songId}`, {
             headers: {
@@ -316,7 +323,7 @@ class OptionsList extends Component {
     if (this.props.playlist) {
       const { playlist, user, myPlaylistCount } = this.props;
       axios
-        .get(`/user/${user.userId}/my-playlist/delete/${playlist._id}`, {
+        .get(`/user/my-playlist/delete/${playlist._id}`, {
           headers: {
             Authorization: `Bearer ${user.userToken}`,
           },
@@ -343,9 +350,93 @@ class OptionsList extends Component {
     }
   };
 
+  filter = debounce((e) => {
+    axios
+      .get(`/search?q=${e.target.value}`)
+      .then((res) => this.props.setFilterResult(res.data[0]))
+      .catch((error) =>
+        toast({
+          title: "Thất bại!",
+          message: `${
+            error.response.data.message
+              ? error.response.data.message
+              : "Có lỗi xảy ra!"
+          }`,
+          type: "error",
+        })
+      );
+  }, 500);
+
+  selectSong = (e) => {
+    const selectedNode = e.target.closest(".list-song__item.list-group-item");
+    const { id } = selectedNode.dataset;
+    let songs = [...this.state.songs];
+    const indexExisted = songs.findIndex((item) => item._id === id);
+
+    if (indexExisted === -1) {
+      axios
+        .get(`/song/detail/${id}`)
+        .then((res) => songs.push(res.data))
+        .then(() => this.setState({ songs }))
+        .catch((error) =>
+          toast({
+            title: "Thất bại!",
+            message: `${
+              error.response.data.message
+                ? error.response.data.message
+                : "Có lỗi xảy ra!"
+            }`,
+            type: "error",
+          })
+        );
+    }
+  };
+
+  editPlaylist = () => {
+    if (this.props.playlist) {
+      const form = this.editFormRef.current;
+      let songIds = [];
+      for (let i = 0; i < form.length; i++) {
+        if (form[i].checked) songIds.push(form[i].id);
+      }
+      const { user, playlist } = this.props;
+      axios
+        .post(
+          `/user/my-playlist/update/${playlist._id}`,
+          { songIds },
+          {
+            headers: {
+              Authorization: `Bearer ${user.userToken}`,
+            },
+          }
+        )
+        .then((res) => this.setState({ songs: res.data.song }))
+        .then(() => {
+          toast({
+            title: "Thành công!",
+            message: "Đã cập nhật playlist!",
+            type: "success",
+          });
+          this.setState({ showEditModal: false });
+        })
+        .catch((error) =>
+          toast({
+            title: "Thất bại!",
+            message: `${
+              error.response.data.message
+                ? error.response.data.message
+                : "Có lỗi xảy ra!"
+            }`,
+            type: "error",
+          })
+        );
+    }
+  };
+
   render() {
     const { userId } = this.props.user;
     const { like, listPlaylist } = this.state;
+    const { filterResult } = this.props;
 
     return (
       <div className="options-list">
@@ -416,6 +507,34 @@ class OptionsList extends Component {
         ) : (
           ""
         )} */}
+        {this.props.location.pathname === "/user/my-playlist" &&
+        this.props.editMyPlaylist ? (
+          <Dropdown.Item
+            className="options-list__item"
+            onClick={() => this.setState({ showEditModal: true })}
+          >
+            <div className="option-list__item--icon">
+              <FontAwesomeIcon icon={faEdit} />
+            </div>
+            <span>Chỉnh sửa</span>
+          </Dropdown.Item>
+        ) : (
+          ""
+        )}
+        {this.props.location.pathname === "/user/my-playlist" &&
+        this.props.deleteMyPlaylist ? (
+          <Dropdown.Item
+            className="options-list__item"
+            onClick={() => this.setState({ showDeleteModal: true })}
+          >
+            <div className="option-list__item--icon">
+              <FontAwesomeIcon icon={faTrashAlt} />
+            </div>
+            <span>Xóa playlist</span>
+          </Dropdown.Item>
+        ) : (
+          ""
+        )}
         {this.props.info ? (
           <Dropdown.Item className="options-list__item" onClick={this.getInfo}>
             <div className="option-list__item--icon">
@@ -445,20 +564,6 @@ class OptionsList extends Component {
               <FontAwesomeIcon icon={faDownload} />
             </div>
             <span>Tải xuống</span>
-          </Dropdown.Item>
-        ) : (
-          ""
-        )}
-        {this.props.location.pathname === "/user/my-playlist" &&
-        this.props.deleteMyPlaylist ? (
-          <Dropdown.Item
-            className="options-list__item"
-            onClick={() => this.setState({ showDeleteModal: true })}
-          >
-            <div className="option-list__item--icon">
-              <FontAwesomeIcon icon={faTrashAlt} />
-            </div>
-            <span>Xóa playlist</span>
           </Dropdown.Item>
         ) : (
           ""
@@ -528,6 +633,98 @@ class OptionsList extends Component {
           </Modal.Body>
         </Modal>
 
+        {/* Edit my playlist modal */}
+        <Modal
+          show={this.state.showEditModal}
+          onHide={() => this.setState({ showEditModal: false })}
+          aria-labelledby="contained-modal-title-vcenter"
+          centered
+        >
+          <Modal.Header closeButton className="bg-light">
+            <h5 className="mb-0">Chỉnh sửa playlist</h5>
+          </Modal.Header>
+          <Modal.Body className="playlist-modal-body bg-light">
+            <div className="m-3">
+              <input
+                type="text"
+                placeholder="Nhập tên bài hát..."
+                className="filter-input bg-light form-control"
+                onChange={this.filter}
+                onFocus={() =>
+                  window.removeEventListener("keydown", handleKeyboardEvent)
+                }
+                onBlur={(e) => {
+                  this.props.setFilterResult([]);
+                  e.target.value = "";
+                  window.addEventListener("keydown", handleKeyboardEvent);
+                }}
+              />
+
+              <div className="filter-suggest box-shadow">
+                <ul className="list-group list-group-flush">
+                  {filterResult.length !== 0 ? (
+                    <React.Fragment>
+                      {filterResult.map((song) => (
+                        <li
+                          className="list-song__item list-group-item"
+                          key={song._id}
+                          onMouseDown={this.selectSong}
+                          data-id={song._id}
+                        >
+                          <div className="search-suggest__item">
+                            <div
+                              className="search-suggest__item--img"
+                              style={{
+                                backgroundImage: `url(${song.image})`,
+                              }}
+                            ></div>
+                            <p className="search-suggest__item--info">
+                              {song.title}
+                            </p>
+                          </div>
+                        </li>
+                      ))}
+                    </React.Fragment>
+                  ) : (
+                    ""
+                  )}
+                </ul>
+              </div>
+            </div>
+            <div className="m-3">
+              <form
+                ref={this.editFormRef}
+                method="POST"
+                id="edit-playlist-form"
+                className="list-playlist-modal mb-3 d-flex flex-column"
+              >
+                {this.props.playlist ? (
+                  <React.Fragment>
+                    {this.state.songs.map((song) => (
+                      <Form.Check
+                        type="checkbox"
+                        className="pl-5 pr-5 pt-3"
+                        key={song._id}
+                        id={song._id}
+                        label={song.title}
+                        defaultChecked
+                      />
+                    ))}
+                  </React.Fragment>
+                ) : (
+                  ""
+                )}
+              </form>
+              <button
+                className="form-submit mt-auto"
+                onClick={this.editPlaylist}
+              >
+                Lưu thay đổi
+              </button>
+            </div>
+          </Modal.Body>
+        </Modal>
+
         {/* Confirm delete modal */}
         <Modal
           show={this.state.showDeleteModal}
@@ -560,6 +757,7 @@ const mapStateToProps = (state) => ({
   user: state.user,
   likedSongCount: state.song.likedSongCount,
   myPlaylistCount: state.playlist.myPlaylistCount,
+  filterResult: state.search.filterResult,
 });
 
 const mapDispatchToProps = (dispatch) => ({
@@ -567,6 +765,7 @@ const mapDispatchToProps = (dispatch) => ({
   setListPlaying: (listPlaying) => dispatch(setListPlaying(listPlaying)),
   setLikedSongCount: (count) => dispatch(setLikedSongCount(count)),
   setMyPlaylistCount: (count) => dispatch(setMyPlaylistCount(count)),
+  setFilterResult: (result) => dispatch(setFilterResult(result)),
 });
 
 const OptionsListWithRouter = withRouter(OptionsList);

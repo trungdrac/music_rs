@@ -43,10 +43,16 @@ router.get(
   UserController.addToPlaylist
 );
 
-router.get(
-  "/:userId/my-playlist/delete/:playlistId",
+router.post(
+  "/my-playlist/update/:playlistId",
   requireLogin,
-  UserController.deleteMyPlaylist
+  UserController.updatePlaylist
+);
+
+router.get(
+  "/my-playlist/delete/:playlistId",
+  requireLogin,
+  UserController.deletePlaylist
 );
 
 module.exports = router;

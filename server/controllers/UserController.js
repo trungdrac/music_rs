@@ -276,12 +276,34 @@ class UserController {
       .catch(next);
   };
 
-  // [DELETE] /user/:userId/my-playlist/delete/:playlistId
-  deleteMyPlaylist = (req, res, next) => {
-    const { userId, playlistId } = req.params;
+  // [PUT] /user/my-playlist/update/:playlistId
+  updatePlaylist = (req, res, next) => {
+    const { playlistId } = req.params;
+    const data = req.body;
+    Playlist.findById(playlistId)
+      .then((result) => {
+        result.song = data.songIds;
+        result
+          .save()
+          .then(() => {
+            Playlist.findById(playlistId)
+              .populate({
+                path: "song",
+                select: "title artist image url",
+              })
+              .then((result) => res.json(result))
+              .catch(next);
+          })
+          .catch(next);
+      })
+      .catch(next);
+  };
+
+  // [DELETE] /user/my-playlist/delete/:playlistId
+  deletePlaylist = (req, res, next) => {
+    const { playlistId } = req.params;
     Playlist.deleteOne({
       _id: mongoose.Types.ObjectId(playlistId),
-      own: mongoose.Types.ObjectId(userId),
     })
       .then(() => res.json({ success: "Đã xóa playlist!" }))
       .catch(next);

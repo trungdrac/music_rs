@@ -801,7 +801,7 @@
   outline: none;
   background-color: var(--btn-color);
   margin-top: 12px;
-  padding: 12px 16px;
+  padding: 10px 16px;
   font-weight: 600;
   color: var(--white-color);
   border: none;
@@ -998,7 +998,7 @@
 }
 
 .list-playlist-modal {
-  height: 25rem;
+  height: 24rem;
   overflow-y: auto;
 }
 
@@ -1029,6 +1029,22 @@
 
 #create-playlist-form {
   padding: 1rem;
+}
+
+.filter-input:focus ~ .filter-suggest {
+  display: block;
+}
+
+.filter-suggest {
+  background-color: var(--item-header-color);
+  position: absolute;
+  width: 94%;
+  top: 3.8rem;
+  left: 3%;
+  color: var(--text-color);
+  border-radius: 2px;
+  display: none;
+  z-index: 2000;
 }
 /* Playlist modal end */
 

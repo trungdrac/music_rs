@@ -16,7 +16,7 @@ class SearchController {
       { select: "title image" }
     )
       .sort({ score: { $meta: "textScore" } })
-      .limit(4)
+      .limit(5)
       .exec();
     const playlistPromise = Playlist.find(
       {
@@ -27,7 +27,7 @@ class SearchController {
       { select: "title image" }
     )
       .sort({ score: { $meta: "textScore" } })
-      .limit(4)
+      .limit(5)
       .exec();
     const artistPromise = Artist.find(
       { $text: { $search: q } },
@@ -35,7 +35,7 @@ class SearchController {
       { select: "name image" }
     )
       .sort({ score: { $meta: "textScore" } })
-      .limit(4)
+      .limit(5)
       .exec();
     Promise.all([songPromise, playlistPromise, artistPromise])
       .then((suggestion) => res.json(suggestion))

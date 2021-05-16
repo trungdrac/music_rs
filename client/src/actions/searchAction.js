@@ -13,3 +13,10 @@ export const setResult = (result) => {
     result,
   };
 };
+
+export const setFilterResult = (result) => {
+  return {
+    type: types.SET_FILTER_RESULT,
+    result,
+  };
+};
