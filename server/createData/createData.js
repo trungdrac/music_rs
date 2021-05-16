@@ -6,6 +6,7 @@ const Artist = require("../models/Artist");
 const Song = require("../models/Song");
 const Playlist = require("../models/Playlist");
 const Interaction = require("../models/Interaction");
+const User = require("../models/User");
 
 async function connect() {
   try {
@@ -17,17 +18,33 @@ async function connect() {
     });
     console.log("Connect DB successfully !!!");
 
-    // crawl and insert categorys
+    // // crawl and insert categorys
     // crawlCategory();
 
-    //create area
-    //createArea();
+    // // create area
+    // createArea();
 
-    //crawl and insert songs and artists
+    // // crawl and insert songs and artists
     // crawlSongAndArtist();
 
-    //create playlist
+    // //create playlist
     // createPlaylist();
+
+    // //create user
+    // createUser();
+
+    // //create interaction
+    // createInteraction();
+
+    // // fake the number of listens
+    // Song.find({}).then((songs) => {
+    //   for (let song of songs) {
+    //     song.playing = Math.floor(Math.random() * 10000 + 4000);
+    //     song.save((err) => {
+    //       if (err) return handleError(err);
+    //     });
+    //   }
+    // });
   } catch (error) {
     console.log("Connect DB failure !!!");
   }
@@ -77,7 +94,7 @@ async function crawlSongAndArtist() {
   await page.setDefaultNavigationTimeout(0);
 
   // need changing
-  await page.goto("https://www.nhaccuatui.com/bai-hat/nhac-hoa-moi.4.html");
+  await page.goto("https://www.nhaccuatui.com/bai-hat/nhac-thai-moi.11.html");
 
   const songUrls = await page.evaluate(() => {
     let items = document.querySelectorAll(".avatar_song");
@@ -162,7 +179,7 @@ async function crawlSongAndArtist() {
     });
     songInfo.lyrics = songXml.lyrics;
     // need changing
-    songInfo.category = "607e437e9d94f224bfdb57f3";
+    songInfo.category = "607e437e9d94f224bfdb57f5";
     songs.push(songInfo);
   }
 
@@ -271,6 +288,55 @@ function createPlaylist() {
         })
         .then(() => console.log("DONE"));
     });
+}
+
+function createUser() {
+  let users = [];
+  for (let i = 1001; i <= 1040; i++) {
+    users.push({
+      username: `user${i}`,
+      password: "123456",
+      email: `user${i}@gmail.com`,
+      role: "user",
+    });
+  }
+  User.insertMany(users, function (err) {
+    if (err) console.log(err);
+    else console.log("DONE");
+  });
+}
+
+function createInteraction() {
+  const userPromise = User.find({ role: "user" }, "_id").exec();
+  const categoryPromise = Category.find({}, "_id").exec();
+
+  Promise.all([userPromise, categoryPromise])
+    .then((result) => {
+      const users = result[0];
+      const categories = result[1];
+      for (let cIndex = 0; cIndex < categories.length; cIndex++) {
+        Song.find(
+          { category: mongoose.Types.ObjectId(categories[cIndex]._id) },
+          "_id"
+        ).then((songs) => {
+          for (let sIndex = 0; sIndex < songs.length; sIndex++) {
+            for (
+              let uIndex = 40 * cIndex;
+              uIndex < 40 * (cIndex + 1);
+              uIndex++
+            ) {
+              Interaction.create({
+                user: users[uIndex]._id,
+                song: songs[sIndex]._id,
+                playing: Math.floor(Math.random() * 80 + 20),
+              });
+            }
+          }
+        });
+      }
+    })
+    .then(() => console.log("DONE"))
+    .catch((err) => console.log(err));
 }
 
 connect();

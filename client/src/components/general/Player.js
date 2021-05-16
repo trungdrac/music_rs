@@ -104,6 +104,7 @@ class Player extends Component {
           )
           .catch(console.log);
       }
+      axios.get(`/song/${currentSongId}/playing/update`).catch(console.log);
     }
   }
 
@@ -262,11 +263,10 @@ class Player extends Component {
       duration,
       repeat,
       isRandom,
+      volume,
     } = this.props;
 
     const audio = this.audioRef.current;
-    let volume = this.props.volume;
-    if (audio) volume = audio.volume;
 
     return (
       <div className="player box-shadow">
@@ -367,7 +367,9 @@ class Player extends Component {
               onPause={this.handlePause}
               onTimeUpdate={this.handleTimeUpdate}
               onEnded={this.handleEnded}
-              onVolumeChange={() => this.props.setVolume(audio.volume)}
+              onVolumeChange={() =>
+                this.props.setVolume(audio ? audio.volume : volume)
+              }
             />
             <div className="progress-time">{msToISO(currentTime)}</div>
             <input

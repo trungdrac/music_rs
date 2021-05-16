@@ -47,6 +47,20 @@ class SongController {
       .then((count) => res.json(count))
       .catch(next);
   };
+
+  // [PUT] /song/:id/playing/update
+  updatePlaying = (req, res, next) => {
+    const songId = req.params.id;
+    Song.findById(songId)
+      .then((result) => {
+        result.playing++;
+        result
+          .save()
+          .then((newResult) => res.json(newResult.playing))
+          .catch(next);
+      })
+      .catch(next);
+  };
 }
 
 module.exports = new SongController();

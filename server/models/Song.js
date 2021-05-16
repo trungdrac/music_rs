@@ -9,6 +9,7 @@ const songSchema = new Schema(
     image: { type: String, required: true },
     url: { type: String, required: true },
     lyrics: { type: String },
+    playing: { type: Number, default: 0 },
   },
   { timestamps: true }
 );
