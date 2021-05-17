@@ -15,8 +15,8 @@ const userSchema = new Schema(
     password: { type: String, required: true, minLength: 6 },
     email: { type: String, unique: true, required: true, trim: true },
     role: { type: String, default: "user" },
-    resetToken: String,
-    expireToken: Date,
+    resettoken: String,
+    expiretoken: Date,
   },
   {
     timestamps: true,

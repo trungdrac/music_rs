@@ -36,15 +36,6 @@ async function connect() {
     // //create interaction
     // createInteraction();
 
-    // // fake the number of listens
-    // Song.find({}).then((songs) => {
-    //   for (let song of songs) {
-    //     song.playing = Math.floor(Math.random() * 10000 + 4000);
-    //     song.save((err) => {
-    //       if (err) return handleError(err);
-    //     });
-    //   }
-    // });
   } catch (error) {
     console.log("Connect DB failure !!!");
   }

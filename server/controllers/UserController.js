@@ -109,8 +109,8 @@ class UserController {
       const token = buffer.toString("hex");
       User.findOne({ email: req.body.email })
         .then((user) => {
-          user.resetToken = token;
-          user.expireToken = Date.now() + 3600000; // 1 hours
+          user.resettoken = token;
+          user.expiretoken = Date.now() + 3600000; // 1 hours
           user
             .save()
             .then(() => {
@@ -134,8 +134,8 @@ class UserController {
   // [POST] user/reset-password
   resetPassword = (req, res, next) => {
     const newPassword = req.body.password;
-    const token = req.body.resetToken;
-    User.findOne({ resetToken: token, expireToken: { $gt: Date.now() } })
+    const token = req.body.resettoken;
+    User.findOne({ resettoken: token, expiretoken: { $gt: Date.now() } })
       .then((user) => {
         if (!user) {
           return res
@@ -144,8 +144,8 @@ class UserController {
         }
 
         user.password = newPassword;
-        user.resetToken = undefined;
-        user.expireToken = undefined;
+        user.resettoken = undefined;
+        user.expiretoken = undefined;
         user
           .save()
           .then(() => {

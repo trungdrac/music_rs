@@ -12,7 +12,7 @@ class ResetPassword extends Component {
     };
   }
   componentDidMount() {
-    const resetToken = this.props.match.params.token;
+    const resettoken = this.props.match.params.token;
     Validator({
       form: "#reset-password-form",
       formGroupSelector: ".form-group",
@@ -29,7 +29,7 @@ class ResetPassword extends Component {
       ],
       onSubmit: (data) => {
         delete data.password_confirmation;
-        data.resetToken = resetToken;
+        data.resettoken = resettoken;
         axios
           .post("/user/reset-password", data)
           .then(() => {

@@ -10,6 +10,8 @@ const songSchema = new Schema(
     url: { type: String, required: true },
     lyrics: { type: String },
     playing: { type: Number, default: 0 },
+    prevcount: { type: Number, default: 0 },
+    chartcount: { type: Number, default: 0 },
   },
   { timestamps: true }
 );

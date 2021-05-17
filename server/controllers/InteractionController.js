@@ -4,6 +4,14 @@ require("../models/User");
 require("../models/Song");
 
 class InteractionController {
+  // [GET] /interaction/recommend/:id
+  getAll = (req, res, next) => {
+    const userId = req.params.id;
+    Interaction.find({ user: { $ne: userId } }, "user song playing -_id")
+      .then((result) => res.json(result))
+      .catch(next);
+  };
+
   // [GET] /interaction/detail?user=song=
   getDetail = (req, res, next) => {
     const userId = req.query.user;

@@ -9,4 +9,6 @@ router.get("/like", requireLogin, InteractionController.toggleLike);
 
 router.get("/playing", requireLogin, InteractionController.updatePlaying);
 
+router.get("/recommend/:id", InteractionController.getAll);
+
 module.exports = router;
