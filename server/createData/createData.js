@@ -35,7 +35,6 @@ async function connect() {
 
     // //create interaction
     // createInteraction();
-
   } catch (error) {
     console.log("Connect DB failure !!!");
   }
@@ -319,7 +318,7 @@ function createInteraction() {
               Interaction.create({
                 user: users[uIndex]._id,
                 song: songs[sIndex]._id,
-                playing: Math.floor(Math.random() * 80 + 20),
+                playing: Math.floor(Math.random() * 9 + 1),
               });
             }
           }

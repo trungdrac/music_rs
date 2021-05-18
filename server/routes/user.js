@@ -55,4 +55,6 @@ router.get(
   UserController.deletePlaylist
 );
 
+router.get("/:id/recommend", UserController.recommend);
+
 module.exports = router;

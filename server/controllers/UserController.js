@@ -308,6 +308,14 @@ class UserController {
       .then(() => res.json({ success: "Đã xóa playlist!" }))
       .catch(next);
   };
+
+  // [GET] /user/:id/recommend
+  recommend = (req, res, next) => {
+    const userId = req.params.id;
+    Interaction.find({}, "user song playing -_id")
+      .then((result) => res.json(result))
+      .catch(next);
+  };
 }
 
 module.exports = new UserController();

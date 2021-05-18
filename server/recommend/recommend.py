@@ -1,118 +1,91 @@
-import os
-from math import sqrt
-
-import numpy as np
 import pandas as pd
+import numpy as np
 from scipy.sparse.linalg import svds
-from sklearn.metrics import mean_squared_error
-from sklearn.metrics.pairwise import pairwise_distances
-from sklearn.model_selection import train_test_split
+
+df_movies = pd.read_csv('data/song.csv')
+
+df_ratings = pd.read_csv('data/interactions.csv')
+
+df_movie_features = df_ratings.pivot(
+    index='user',
+    columns='song',
+    values='playing'
+).fillna(0)
+
+R = df_movie_features.values
+user_ratings_mean = np.mean(R, axis=1)
+R_demeaned = R - user_ratings_mean.reshape(-1, 1)
+
+U, sigma, Vt = svds(R_demeaned, k=50)
 
 
-def load_music_data(file_name):
-    """Get reviews data, from local csv."""
-    if os.path.exists(file_name):
-        print("-- " + file_name + " found locally")
-        df = pd.read_csv(file_name)
 
-    return df
+# # test
+# def values_to_map_index(values):
+#     map_index = {}
+#     idx = 0
+#     for val in values:
+#         map_index[val] = idx
+#         idx += 1
 
+#     return map_index
+# test_data = df_ratings[df_ratings['user'] == "60a133ddbd26dd29687bc3da"]
+# user_idx = values_to_map_index(df_ratings.user.unique())
+# song_idx = values_to_map_index(df_ratings.song.unique())
 
-def values_to_map_index(values):
-    map_index = {}
-    idx = 0
-    for val in values:
-        map_index[val] = idx
-        idx += 1
+# n_users = df_ratings.user.unique().shape[0]
+# n_items = df_ratings.song.unique().shape[0]
 
-    return map_index
+# test_data_matrix = np.zeros((n_users, n_items))
+# for line in test_data.itertuples():
+#         test_data_matrix[user_idx[line[2]], song_idx[line[3]]] = line[1]
 
-
-def print_most_popular_songs(song):
-    # Take a look at the words in the vocabulary
-    vocab = vectorizer.get_feature_names()
-    print("Words in vocabulary:", vocab)
-
-    # Sum up the counts of each vocabulary word
-    dist = np.sum(song, axis=0)
-
-    # For each, print the vocabulary word and the number of times it
-    # appears in the training set
-    print("Words frequency...")
-    for tag, count in zip(vocab, dist):
-        print(count, tag)
-
-
-def predict(ratings, similarity, type='user'):
-    if type == 'user':
-        mean_user_rating = ratings.mean(axis=1)
-        # You use np.newaxis so that mean_user_rating has same format as ratings
-        ratings_diff = (ratings - mean_user_rating[:, np.newaxis])
-        pred = mean_user_rating[:, np.newaxis] + similarity.dot(ratings_diff) / np.array(
-            [np.abs(similarity).sum(axis=1)]).T
-    elif type == 'item':
-        pred = ratings.dot(similarity) / \
-            np.array([np.abs(similarity).sum(axis=1)])
-    return pred
+# from sklearn.metrics import mean_squared_error
+# from math import sqrt
+# def rmse(prediction, ground_truth):
+#     prediction = prediction[ground_truth.nonzero()].flatten()
+#     ground_truth = ground_truth[ground_truth.nonzero()].flatten()
+#     return sqrt(mean_squared_error(prediction, ground_truth))
+# s_diag_matrix = np.diag(sigma)
+# X_pred = np.dot(np.dot(U, s_diag_matrix), Vt)
+# print ('User-based CF MSE: ' + str(rmse(X_pred, test_data_matrix)))
+# # end test
 
 
-def rmse(prediction, ground_truth):
-    prediction = prediction[ground_truth.nonzero()].flatten()
-    ground_truth = ground_truth[ground_truth.nonzero()].flatten()
-    return sqrt(mean_squared_error(prediction, ground_truth))
+# Done.
+# that the Sigma$ returned is just the values instead of a diagonal matrix.
+# This is useful, but since I'm going to leverage matrix multiplication to get predictions
+# I'll convert it to the diagonal matrix form.
+
+sigma = np.diag(sigma)
+
+all_user_predicted_ratings = np.dot(
+    np.dot(U, sigma), Vt) + user_ratings_mean.reshape(-1, 1)
+
+preds_df = pd.DataFrame(all_user_predicted_ratings, index=df_movie_features.index,
+                        columns=df_movie_features.columns)
+
+# print(preds_df)
 
 
-if __name__ == "__main__":
+def recommend_movies(preds_df, userID, movies_df, original_ratings_df, num_recommendations=5):
 
-    # Load music data
-    song_data = load_music_data("song_data.csv")
+    # Get and sort the user's predictions
+    sorted_user_predictions = preds_df.loc[userID].sort_values(
+        ascending=False)
+    user_data = original_ratings_df[original_ratings_df.user == (userID)]
+    user_full = (user_data.merge(movies_df, how='left', left_on='song', right_on='song').
+                 sort_values(['playing'], ascending=False)
+                 )
+    recommendations = (movies_df[~movies_df['song'].isin(user_full['song'])]).merge(pd.DataFrame(sorted_user_predictions).reset_index(), how='left', left_on='song',
+                                                                                    right_on='song').rename(columns={userID: 'Predictions'}).sort_values('Predictions', ascending=False).iloc[:num_recommendations, :-1]
 
-    # Reduce complexity by getting first n elements
-    n = 10000
-    song_data = song_data.head(n)
-    user_idx = values_to_map_index(song_data.user_id.unique())
-    song_idx = values_to_map_index(song_data.song_id.unique())
+    return user_full, recommendations
 
-    print("-- Explore data")
-    print(song_data.head())
 
-    print("-- Showing the most popular songs in the dataset")
-    unique, counts = np.unique(song_data["song"], return_counts=True)
-    popular_songs = dict(zip(unique, counts))
-    df_popular_songs = pd.DataFrame(
-        popular_songs.items(), columns=["Song", "Count"])
-    df_popular_songs = df_popular_songs.sort_values(
-        by=["Count"], ascending=False)
-    print(df_popular_songs.head())
+already_rated, predictions = recommend_movies(
+    preds_df, '60a133ddbd26dd29687bc3da', df_movies, df_ratings, 10)
 
-    n_users = song_data.user_id.unique().shape[0]
-    n_items = song_data.song_id.unique().shape[0]
-    print("Number of users = " + str(n_users) +
-          " | Number of songs = " + str(n_items))
+print(already_rated.head(10))
 
-    train_data, test_data = train_test_split(song_data, test_size=0.25)
-    train_data_matrix = np.zeros((n_users, n_items))
-    for line in train_data.itertuples():
-        train_data_matrix[user_idx[line[1]], song_idx[line[2]]] = line[3]
-
-    test_data_matrix = np.zeros((n_users, n_items))
-    for line in test_data.itertuples():
-        test_data_matrix[user_idx[line[1]], song_idx[line[2]]] = line[3]
-
-    user_similarity = pairwise_distances(train_data_matrix, metric='cosine')
-    item_similarity = pairwise_distances(train_data_matrix.T, metric='cosine')
-
-    item_prediction = predict(train_data_matrix, item_similarity, type='item')
-    user_prediction = predict(train_data_matrix, user_similarity, type='user')
-
-    print('User-based CF RMSE: ' + str(rmse(user_prediction, test_data_matrix)))
-    print('Item-based CF RMSE: ' + str(rmse(item_prediction, test_data_matrix)))
-
-    sparsity = round(1.0 - len(song_data) / float(n_users * n_items), 3)
-    print('The sparsity level is ' + str(sparsity * 100) + '%')
-
-    # get SVD components from train matrix. Choose k.
-    u, s, vt = svds(train_data_matrix, k=20)
-    s_diag_matrix = np.diag(s)
-    X_pred = np.dot(np.dot(u, s_diag_matrix), vt)
-    print('User-based CF MSE: ' + str(rmse(X_pred, test_data_matrix)))
+print(predictions)
