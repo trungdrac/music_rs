@@ -12,6 +12,7 @@ import {
   faMicrophone,
   faMusic,
   faListAlt,
+  faHandPointRight,
 } from "@fortawesome/free-solid-svg-icons";
 
 class Sidebar extends Component {
@@ -136,6 +137,20 @@ class Sidebar extends Component {
             {userToken ? (
               <React.Fragment>
                 <li className="sidebar__nav--header">Cá nhân</li>
+                <li onClick={this.slideOff}>
+                  <NavLink
+                    exact
+                    to={`/user/recommend`}
+                    className="sidebar__nav--link"
+                    activeClassName="active"
+                  >
+                    <FontAwesomeIcon
+                      icon={faHandPointRight}
+                      className="sidebar-icon"
+                    />
+                    <span>Gợi ý cho bạn</span>
+                  </NavLink>
+                </li>
                 <li onClick={this.slideOff}>
                   <NavLink
                     exact

@@ -41,3 +41,10 @@ export const setHistoryListen = (songs) => {
     songs,
   };
 };
+
+export const setRecommendation = (songs) => {
+  return {
+    type: types.SET_RECOMMENDATION,
+    songs,
+  };
+};

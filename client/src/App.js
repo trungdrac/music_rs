@@ -7,6 +7,7 @@ import {
 } from "react-router-dom";
 import { connect } from "react-redux";
 import { setAreas } from "./actions/areaAction";
+import { setRecommendation } from "./actions/songAction";
 import axios from "axios";
 import ArtistDetail from "./components/artist/ArtistDetail";
 import Artists from "./components/artist/Artists";
@@ -24,6 +25,7 @@ import Register from "./components/user/Register";
 import ForgotPassword from "./components/user/ForgotPassword";
 import ResetPassword from "./components/user/ResetPassword";
 import SearchResult from "./components/search/SearchResult";
+import Recommendation from "./components/user/Recommendation";
 import LikedSong from "./components/user/LikedSong";
 import MyPlaylist from "./components/user/MyPlaylist";
 import History from "./components/user/History";
@@ -73,6 +75,28 @@ class App extends Component {
           type: "error",
         })
       );
+
+    const { user, recommendation } = this.props;
+    if (user.userToken && !recommendation) {
+      axios
+        .get(`/user/${user.userId}/recommend`, {
+          headers: {
+            Authorization: `Bearer ${user.userToken}`,
+          },
+        })
+        .then((result) => this.props.setRecommendation(result.data))
+        .catch((error) =>
+          toast({
+            title: "Thất bại!",
+            message: `${
+              error.response.data.message
+                ? error.response.data.message
+                : "Có lỗi xảy ra!"
+            }`,
+            type: "error",
+          })
+        );
+    }
   }
 
   render() {
@@ -162,6 +186,12 @@ class App extends Component {
                 />
                 <PrivateRoute
                   exact
+                  path="/user/recommend"
+                  token={user.userToken}
+                  component={Recommendation}
+                />
+                <PrivateRoute
+                  exact
                   path="/user/liked-song"
                   token={user.userToken}
                   component={LikedSong}
@@ -193,10 +223,12 @@ class App extends Component {
 const mapStateToProps = (state) => ({
   areas: state.area,
   user: state.user,
+  recommendation: state.song.recommendation,
 });
 
 const mapDispatchToProps = (dispatch) => ({
   setAreas: (areas) => dispatch(setAreas(areas)),
+  setRecommendation: (songs) => dispatch(setRecommendation(songs)),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(App);

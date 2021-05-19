@@ -2,6 +2,7 @@ const mongoose = require("mongoose");
 const User = require("../models/User");
 const Playlist = require("../models/Playlist");
 const Interaction = require("../models/Interaction");
+const Song = require("../models/Song");
 const {
   NUMBER_OF_ITEM_PER_PAGE,
 } = require("../../client/src/constants/Config");
@@ -312,9 +313,25 @@ class UserController {
   // [GET] /user/:id/recommend
   recommend = (req, res, next) => {
     const userId = req.params.id;
-    Interaction.find({}, "user song playing -_id")
-      .then((result) => res.json(result))
-      .catch(next);
+    const spawn = require("child_process").spawn;
+    const recommend = spawn(
+      `${process.env.RECOMMEND_URI}/${process.env.VIRTUALENV}/bin/python`,
+      [`${process.env.RECOMMEND_URI}/recommend.py`, userId]
+    );
+    recommend.stdout.on("data", (data) => {
+      const recommendation = Object.values(JSON.parse(data.toString()).song);
+      Song.find({ _id: { $in: recommendation } }, "title artist image url")
+        .then((result) => res.json(result))
+        .catch(next);
+    });
+
+    recommend.stderr.on("data", (data) => {
+      console.error(`stderr: ${data}`);
+    });
+
+    recommend.on("close", (code) => {
+      console.log(`child process exited with code ${code}`);
+    });
   };
 }
 
