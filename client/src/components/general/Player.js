@@ -289,7 +289,7 @@ class Player extends Component {
             </p>
             <p className="player-song-artist">
               {listPlaying[currentIndex].artist.map((artist, index) => (
-                <Link to="/" key={artist._id}>
+                <Link to={`/artist/detail/${artist._id}`} key={artist._id}>
                   {index > 0 && ", "}
                   {artist.name}
                 </Link>

@@ -44,6 +44,11 @@ app.use((req, res, next) => {
 const db = require("./config/db");
 db.connect();
 
+// Schedule
+const Schedule = require("./config/schedule");
+Schedule.updateRecommendationData();
+Schedule.updateCountForChart();
+
 // Routes init
 const route = require("./routes");
 route(app);

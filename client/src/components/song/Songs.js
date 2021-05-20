@@ -4,7 +4,7 @@ import { Tab, Tabs } from "react-bootstrap";
 import { connect } from "react-redux";
 import ListSong from "./ListSong";
 
-export class Playlists extends Component {
+class Playlists extends Component {
   render() {
     const { areas } = this.props;
     return (

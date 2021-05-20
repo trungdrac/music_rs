@@ -10,6 +10,6 @@ router.get("/:area/:category", SongController.getSongCategory);
 
 router.get("/:id/playing/update", SongController.updatePlaying);
 
-router.get("/", SongController.getAll);
+router.get("/chart", SongController.chart);
 
 module.exports = router;

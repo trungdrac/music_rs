@@ -17,6 +17,7 @@ class SongCard extends Component {
     this.props.setListPlaying(listPlaying);
     this.props.setCurrentIndex(0);
   };
+
   render() {
     const { item, currentSongId } = this.props;
     return (
@@ -66,7 +67,7 @@ class SongCard extends Component {
             </h6>
             <h6 className="card-artist">
               {item.artist.map((artist, index) => (
-                <Link to="/" key={artist._id}>
+                <Link to={`/artist/detail/${artist._id}`} key={artist._id}>
                   {index > 0 && ", "}
                   {artist.name}
                 </Link>

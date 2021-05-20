@@ -321,6 +321,7 @@ class UserController {
     recommend.stdout.on("data", (data) => {
       const recommendation = Object.values(JSON.parse(data.toString()).song);
       Song.find({ _id: { $in: recommendation } }, "title artist image url")
+        .populate({ path: "artist", select: "name" })
         .then((result) => res.json(result))
         .catch(next);
     });

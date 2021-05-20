@@ -86,7 +86,7 @@ class SongDetail extends Component {
                 <h3>{title}</h3>
                 <h6 className="font-weight-normal">
                   {artist.map((artist, index) => (
-                    <Link to="/" key={artist._id}>
+                    <Link to={`/artist/detail/${artist._id}`} key={artist._id}>
                       {index > 0 && ", "}
                       {artist.name}
                     </Link>

@@ -4,7 +4,7 @@ import { Tab, Tabs } from "react-bootstrap";
 import { connect } from "react-redux";
 import ListArtist from "./ListArtist";
 
-export class Artists extends Component {
+class Artists extends Component {
   render() {
     const { areas } = this.props;
     return (

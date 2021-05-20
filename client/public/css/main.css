@@ -613,7 +613,7 @@
 }
 /* Audio player end */
 
-/* Right sidebar start */
+/* Right sidebar - list song inline start */
 .right-sidebar {
   position: fixed;
   top: 6rem;
@@ -716,7 +716,34 @@
 .song-options {
   margin-left: 2.5rem;
 }
-/* Right sidebar end */
+
+.list-song-inline__item:hover {
+  background-color: var(--li-hover-color) !important;
+}
+
+.list-song-inline__info {
+  width: 18rem;
+  padding-left: 1rem;
+}
+
+.list-song-inline__info--title {
+  margin: 4px 0;
+  font-size: 0.9rem;
+  font-weight: 500;
+  text-overflow: ellipsis;
+  overflow: hidden;
+  white-space: nowrap;
+}
+
+.list-song-inline__info--artist {
+  margin: 4px 0;
+  font-size: 0.85rem;
+  font-weight: 300;
+  text-overflow: ellipsis;
+  overflow: hidden;
+  white-space: nowrap;
+}
+/* Right sidebar - list song inline end */
 
 /* Authentication form start*/
 .auth {
@@ -1067,7 +1094,8 @@
   .header__content--sidebar-icon {
     display: block;
   }
-  .player__song--info {
+  .player__song--info,
+  .list-song-inline__info {
     width: 12rem;
   }
   .my-toast {

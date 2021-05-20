@@ -7,7 +7,6 @@ import {
 } from "react-router-dom";
 import { connect } from "react-redux";
 import { setAreas } from "./actions/areaAction";
-import { setRecommendation } from "./actions/songAction";
 import axios from "axios";
 import ArtistDetail from "./components/artist/ArtistDetail";
 import Artists from "./components/artist/Artists";
@@ -75,28 +74,6 @@ class App extends Component {
           type: "error",
         })
       );
-
-    const { user, recommendation } = this.props;
-    if (user.userToken && !recommendation) {
-      axios
-        .get(`/user/${user.userId}/recommend`, {
-          headers: {
-            Authorization: `Bearer ${user.userToken}`,
-          },
-        })
-        .then((result) => this.props.setRecommendation(result.data))
-        .catch((error) =>
-          toast({
-            title: "Thất bại!",
-            message: `${
-              error.response.data.message
-                ? error.response.data.message
-                : "Có lỗi xảy ra!"
-            }`,
-            type: "error",
-          })
-        );
-    }
   }
 
   render() {
@@ -223,12 +200,10 @@ class App extends Component {
 const mapStateToProps = (state) => ({
   areas: state.area,
   user: state.user,
-  recommendation: state.song.recommendation,
 });
 
 const mapDispatchToProps = (dispatch) => ({
   setAreas: (areas) => dispatch(setAreas(areas)),
-  setRecommendation: (songs) => dispatch(setRecommendation(songs)),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(App);

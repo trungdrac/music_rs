@@ -54,7 +54,7 @@ class RightSidebar extends Component {
                       <p className="song-inline__info--title">{song.title}</p>
                       <p className="song-inline__info--artist">
                         {song.artist.map((artist, index) => (
-                          <span to="/" key={artist._id}>
+                          <span key={artist._id}>
                             {index > 0 && ", "}
                             {artist.name}
                           </span>

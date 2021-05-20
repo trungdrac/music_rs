@@ -17,8 +17,10 @@ class Recommendation extends Component {
     this.props.setCurrentIndex(0);
     if (this.props.isRandom) this.props.toggleRandom();
   };
+
   render() {
     const { recommendation } = this.props;
+    if (!recommendation) return "";
 
     return (
       <div className="section">

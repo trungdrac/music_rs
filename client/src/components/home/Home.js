@@ -1,11 +1,11 @@
 import React, { Component } from "react";
-import Section from "../general/Section";
+import Chart from "../song/Chart";
 
 class Home extends Component {
   render() {
     return (
       <React.Fragment>
-        <Section />
+        <Chart />
       </React.Fragment>
     );
   }

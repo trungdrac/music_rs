@@ -4,7 +4,7 @@ import { connect } from "react-redux";
 import { setCurrentUser } from "../../actions/userAction";
 import axios from "axios";
 import Validator from "../../helpers/validator";
-import { setLikedSongCount } from "../../actions/songAction";
+import { setLikedSongCount, setRecommendation } from "../../actions/songAction";
 import { setMyPlaylistCount } from "../../actions/playlistAction";
 import toast from "../../helpers/toast";
 
@@ -34,6 +34,13 @@ class Login extends Component {
             const user = res.data;
             this.props.setCurrentUser(user);
 
+            function getRecommendation() {
+              return axios.get(`/user/${user.userId}/recommend`, {
+                headers: {
+                  Authorization: `Bearer ${user.userToken}`,
+                },
+              });
+            }
             function getLikedSongCount() {
               return axios.get(`/user/${user.userId}/liked-song/count`, {
                 headers: {
@@ -49,10 +56,15 @@ class Login extends Component {
               });
             }
 
-            Promise.all([getLikedSongCount(), getMyPlaylistCount()])
-              .then((results) => {
-                this.props.setLikedSongCount(results[0].data);
-                this.props.setMyPlaylistCount(results[1].data);
+            Promise.all([
+              getRecommendation(),
+              getLikedSongCount(),
+              getMyPlaylistCount(),
+            ])
+              .then((result) => {
+                this.props.setRecommendation(result[0].data);
+                this.props.setLikedSongCount(result[1].data);
+                this.props.setMyPlaylistCount(result[2].data);
               })
               .catch((error) =>
                 toast({
@@ -161,6 +173,7 @@ const mapDispatchToProps = (dispatch) => ({
   setCurrentUser: (user) => dispatch(setCurrentUser(user)),
   setLikedSongCount: (count) => dispatch(setLikedSongCount(count)),
   setMyPlaylistCount: (count) => dispatch(setMyPlaylistCount(count)),
+  setRecommendation: (songs) => dispatch(setRecommendation(songs)),
 });
 
 export default connect(null, mapDispatchToProps)(Login);
