@@ -7,6 +7,7 @@ import {
 } from "react-router-dom";
 import { connect } from "react-redux";
 import { setAreas } from "./actions/areaAction";
+import { setChart, setRecommendation } from "./actions/songAction";
 import axios from "axios";
 import ArtistDetail from "./components/artist/ArtistDetail";
 import Artists from "./components/artist/Artists";
@@ -29,6 +30,7 @@ import LikedSong from "./components/user/LikedSong";
 import MyPlaylist from "./components/user/MyPlaylist";
 import History from "./components/user/History";
 import toast from "./helpers/toast";
+import cronjob from "./helpers/cronjob";
 
 function PrivateRoute({ component: Component, token, ...rest }) {
   return (
@@ -57,10 +59,17 @@ class App extends Component {
   }
 
   componentDidMount() {
-    axios
-      .get("/area")
-      .then((res) => {
-        this.props.setAreas(res.data);
+    function getArea() {
+      return axios.get("/area");
+    }
+    function getChart() {
+      return axios.get("/song/chart");
+    }
+
+    Promise.all([getArea(), getChart()])
+      .then((result) => {
+        this.props.setAreas(result[0].data);
+        this.props.setChart(result[1].data);
       })
       .then(() => this.setState({ isLoading: false }))
       .catch((error) =>
@@ -74,7 +83,31 @@ class App extends Component {
           type: "error",
         })
       );
+    
+    // get recommendation every hour
+    cronjob(new Date().setMinutes(0), 3600000, this.getRecommendation);
   }
+
+  getRecommendation = () => {
+    const { user } = this.props;
+    if (user.userToken)
+      axios
+        .get(`/user/${user.userId}/recommend`, {
+          headers: {
+            Authorization: `Bearer ${user.userToken}`,
+          },
+        })
+        .then((result) => {
+          if (result.data) this.props.setRecommendation(result.data);
+        })
+        .catch(() =>
+          toast({
+            title: "Thất bại!",
+            message: "Không thể lấy gợi ý!",
+            type: "error",
+          })
+        );
+  };
 
   render() {
     if (this.state.isLoading) return <Loading />;
@@ -204,6 +237,8 @@ const mapStateToProps = (state) => ({
 
 const mapDispatchToProps = (dispatch) => ({
   setAreas: (areas) => dispatch(setAreas(areas)),
+  setChart: (songs) => dispatch(setChart(songs)),
+  setRecommendation: (songs) => dispatch(setRecommendation(songs)),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(App);

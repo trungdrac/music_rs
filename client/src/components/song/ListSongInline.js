@@ -17,7 +17,7 @@ import { DropdownButton, ListGroup } from "react-bootstrap";
 class ListSongInline extends Component {
   playAudio = (e) => {
     const songNode = e.target.closest(".list-song-inline__item");
-    const songOption = e.target.closest("#dropdown-options");
+    const songOption = e.target.closest(".song-options");
     const songTitle = e.target.closest("#song-title");
     const songArtist = e.target.closest("#song-artist");
     if (songNode && !songTitle && !songArtist && !songOption) {
@@ -68,27 +68,29 @@ class ListSongInline extends Component {
                   </h6>
                 </div>
               </div>
-              <div className="song-options d-flex align-items-center">
+              <div className="d-flex align-items-center">
                 <FontAwesomeIcon icon={faHeadphonesAlt} />
-                <div className="ml-2 mr-4 pt-1">{`${Number(
+                <div className="ml-2 pt-1">{`${Number(
                   song.chartcount / 1000
                 ).toFixed(2)}K`}</div>
-                <DropdownButton
-                  id="dropdown-options"
-                  drop="left"
-                  title={<FontAwesomeIcon icon={faEllipsisV} />}
-                >
-                  <OptionsList
-                    song={song}
-                    like
-                    addToPlaylist
-                    playNext
-                    playLast
-                    info
-                    copyLink
-                    download
-                  />
-                </DropdownButton>
+                <div className="song-options">
+                  <DropdownButton
+                    id="dropdown-options"
+                    drop="left"
+                    title={<FontAwesomeIcon icon={faEllipsisV} />}
+                  >
+                    <OptionsList
+                      song={song}
+                      like
+                      addToPlaylist
+                      playNext
+                      playLast
+                      info
+                      copyLink
+                      download
+                    />
+                  </DropdownButton>
+                </div>
               </div>
             </div>
           </ListGroup.Item>

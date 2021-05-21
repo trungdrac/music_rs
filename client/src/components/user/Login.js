@@ -62,21 +62,12 @@ class Login extends Component {
               getMyPlaylistCount(),
             ])
               .then((result) => {
-                this.props.setRecommendation(result[0].data);
+                if (result[0].data)
+                  this.props.setRecommendation(result[0].data);
                 this.props.setLikedSongCount(result[1].data);
                 this.props.setMyPlaylistCount(result[2].data);
               })
-              .catch((error) =>
-                toast({
-                  title: "Thất bại!",
-                  message: `${
-                    error.response.data.message
-                      ? error.response.data.message
-                      : "Có lỗi xảy ra!"
-                  }`,
-                  type: "error",
-                })
-              );
+              .catch(console.log);
           })
           .then(() => {
             const nextPath = this.props.location.state

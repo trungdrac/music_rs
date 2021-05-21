@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
 import SongCard from "../song/SongCard";
-import Blank from "../general/Blank";
+import Chart from "../song/Chart";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPlay } from "@fortawesome/free-solid-svg-icons";
 import {
@@ -20,13 +20,22 @@ class Recommendation extends Component {
 
   render() {
     const { recommendation } = this.props;
-    if (!recommendation) return "";
+    if (!recommendation)
+      return (
+        <React.Fragment>
+          <p className="mt-5 pt-3 mb-5 text-danger text-center">
+            Dữ liệu nghe nhạc của bạn chưa đủ để sử dụng tính năng này, tiếp tục
+            nghe nhạc để chúng tôi có thể hiểu bạn nhiều hơn!
+          </p>
+          <Chart />
+        </React.Fragment>
+      );
 
     return (
       <div className="section">
         <div className="heading">
           <div className="d-flex align-items-end justify-content-between">
-            <h4 className="mb-0 p-2 rounded box-shadow">Có thể bạn quan tâm</h4>
+            <h4 className="mb-0 p-2 rounded box-shadow">Cập nhật mỗi giờ</h4>
             <button
               className="btn btn-danger box-shadow"
               onClick={this.playAll}
@@ -37,17 +46,11 @@ class Recommendation extends Component {
           </div>
           <hr />
         </div>
-        {recommendation.length === 0 ? (
-          <Blank />
-        ) : (
-          <React.Fragment>
-            <div className="row">
-              {recommendation.map((song) => (
-                <SongCard key={song._id} item={song} />
-              ))}
-            </div>
-          </React.Fragment>
-        )}
+        <div className="row">
+          {recommendation.map((song) => (
+            <SongCard key={song._id} item={song} />
+          ))}
+        </div>
       </div>
     );
   }

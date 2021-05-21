@@ -1,8 +1,6 @@
 import React, { Component } from "react";
 import { Tab, Tabs } from "react-bootstrap";
 import { connect } from "react-redux";
-import axios from "axios";
-import toast from "../../helpers/toast";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPlay } from "@fortawesome/free-solid-svg-icons";
 import {
@@ -16,27 +14,8 @@ class Chart extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      chart: [],
-      isLoading: true,
       tab: 0,
     };
-  }
-  componentDidMount() {
-    axios
-      .get("/song/chart")
-      .then((res) => this.setState({ chart: res.data }))
-      .then(() => this.setState({ isLoading: false }))
-      .catch((error) =>
-        toast({
-          title: "Thất bại!",
-          message: `${
-            error.response.data.message
-              ? error.response.data.message
-              : "Có lỗi xảy ra!"
-          }`,
-          type: "error",
-        })
-      );
   }
 
   handleSelect = (nextTab) => {
@@ -56,7 +35,8 @@ class Chart extends Component {
   };
 
   playAll = () => {
-    const { chart, tab } = this.state;
+    const { chart } = this.props;
+    const { tab } = this.state;
     const listPlaying = chart[tab];
     this.props.setListPlaying(listPlaying);
     this.props.setCurrentIndex(0);
@@ -64,8 +44,7 @@ class Chart extends Component {
   };
 
   render() {
-    if (this.state.isLoading) return "";
-    const { chart } = this.state;
+    const { chart } = this.props;
 
     return (
       <div className="section">
@@ -109,6 +88,7 @@ class Chart extends Component {
 
 const mapStateToProps = (state) => ({
   isRandom: state.player.isRandom,
+  chart: state.song.chart,
 });
 
 const mapDispatchToProps = (dispatch) => ({

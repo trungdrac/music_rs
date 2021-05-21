@@ -6,9 +6,9 @@ const Song = require("../../models/Song");
 
 class Schedule {
   updateRecommendationData = () => {
-    // run at the start of every day
+    // run at 55th minute
     const rule = new schedule.RecurrenceRule();
-    rule.hour = 0;
+    rule.minute = 55;
     rule.tz = "Asia/Ho_Chi_Minh";
     const job = schedule.scheduleJob(rule, (fireDate) => {
       const iPromise = Interaction.find({}, "user song playing -_id")
@@ -43,9 +43,11 @@ class Schedule {
   };
 
   updateCountForChart = () => {
-    // run at the start of Monday
+    // run at 23h55 in Sunday
     const rule = new schedule.RecurrenceRule();
-    rule.dayOfWeek = 1;
+    rule.dayOfWeek = 0;
+    rule.dayOfWeek = 23;
+    rule.minute = 55;
     rule.tz = "Asia/Ho_Chi_Minh";
     const job = schedule.scheduleJob(rule, (fireDate) => {
       Song.find({})

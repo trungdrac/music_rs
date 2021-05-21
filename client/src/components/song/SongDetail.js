@@ -17,6 +17,7 @@ import axios from "axios";
 import toast from "../../helpers/toast";
 import { DropdownButton } from "react-bootstrap";
 import OptionsList from "../general/OptionsList";
+import Recommendation from "../user/Recommendation";
 
 class SongDetail extends Component {
   constructor(props) {
@@ -71,7 +72,7 @@ class SongDetail extends Component {
 
     const { _id, title, artist, image, lyrics, category } =
       this.props.songDetail;
-    const { currentSongId, isPlaying } = this.props;
+    const { currentSongId, isPlaying, user } = this.props;
     const { showMore } = this.state;
 
     return (
@@ -160,6 +161,7 @@ class SongDetail extends Component {
             <div className="lyrics__header">Chưa có lời cho bài hát này</div>
           </div>
         )}
+        {user.userToken ? <Recommendation /> : ""}
       </React.Fragment>
     );
   }
@@ -169,6 +171,7 @@ const mapStateToProps = (state) => ({
   isPlaying: state.player.isPlaying,
   songDetail: state.song.songDetail,
   currentSongId: state.player.currentSongId,
+  user: state.user,
 });
 
 const mapDispatchToProps = (dispatch) => ({

@@ -8,6 +8,7 @@ const initialState = {
   likedSong: null,
   likedSongCount: null,
   recommendation: null,
+  chart: [],
 };
 
 const song = (state = initialState, action) => {
@@ -26,6 +27,8 @@ const song = (state = initialState, action) => {
       return { ...state, historyListen: action.songs };
     case types.SET_RECOMMENDATION:
       return { ...state, recommendation: action.songs };
+    case types.SET_CHART:
+      return { ...state, chart: action.songs };
     default:
       return state;
   }

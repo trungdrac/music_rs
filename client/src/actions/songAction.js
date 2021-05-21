@@ -48,3 +48,10 @@ export const setRecommendation = (songs) => {
     songs,
   };
 };
+
+export const setChart = (songs) => {
+  return {
+    type: types.SET_CHART,
+    songs,
+  };
+};

@@ -313,26 +313,38 @@ class UserController {
   // [GET] /user/:id/recommend
   recommend = (req, res, next) => {
     const userId = req.params.id;
-    const spawn = require("child_process").spawn;
-    const recommend = spawn(
-      `${process.env.RECOMMEND_URI}/${process.env.VIRTUALENV}/bin/python`,
-      [`${process.env.RECOMMEND_URI}/recommend.py`, userId]
-    );
-    recommend.stdout.on("data", (data) => {
-      const recommendation = Object.values(JSON.parse(data.toString()).song);
-      Song.find({ _id: { $in: recommendation } }, "title artist image url")
-        .populate({ path: "artist", select: "name" })
-        .then((result) => res.json(result))
-        .catch(next);
-    });
+    Interaction.find({ user: userId, playing: { $gt: 0 } })
+      .then((result) => {
+        if (!result.length) next();
+        else {
+          const spawn = require("child_process").spawn;
+          const recommend = spawn(
+            `${process.env.RECOMMEND_URI}/${process.env.VIRTUALENV}/bin/python`,
+            [`${process.env.RECOMMEND_URI}/recommend.py`, userId]
+          );
+          recommend.stdout.on("data", (data) => {
+            const recommendation = Object.values(
+              JSON.parse(data.toString()).song
+            );
+            Song.find(
+              { _id: { $in: recommendation } },
+              "title artist image url"
+            )
+              .populate({ path: "artist", select: "name" })
+              .then((result) => res.json(result))
+              .catch(next);
+          });
 
-    recommend.stderr.on("data", (data) => {
-      console.error(`stderr: ${data}`);
-    });
+          recommend.stderr.on("data", (data) => {
+            console.error(`stderr: ${data}`);
+          });
 
-    recommend.on("close", (code) => {
-      console.log(`child process exited with code ${code}`);
-    });
+          recommend.on("close", (code) => {
+            console.log(`recommend.py exited with code ${code}`);
+          });
+        }
+      })
+      .catch(next);
   };
 }
 
