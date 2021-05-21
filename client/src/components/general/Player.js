@@ -33,6 +33,8 @@ class Player extends Component {
     };
     this.audioRef = React.createRef();
     this.progressRef = React.createRef();
+    this.wrapperRef = React.createRef();
+    this.rightSidebarRef = React.createRef();
   }
 
   componentDidMount() {
@@ -48,6 +50,16 @@ class Player extends Component {
     }
 
     window.addEventListener("keydown", handleKeyboardEvent);
+
+    // hide right sidebar when click outside player
+    document.addEventListener("click", (e) => {
+      if (
+        this.wrapperRef.current &&
+        !this.wrapperRef.current.contains(e.target)
+      ) {
+        this.rightSidebarRef.current.checked = false;
+      }
+    });
   }
 
   componentDidUpdate(prevProps, prevState) {
@@ -269,7 +281,7 @@ class Player extends Component {
     const audio = this.audioRef.current;
 
     return (
-      <div className="player box-shadow">
+      <div ref={this.wrapperRef} className="player box-shadow">
         <div className="player__song">
           <Link to={`/song/detail/${currentSongId}`}>
             <div
@@ -425,6 +437,7 @@ class Player extends Component {
             hidden
             className="list-songs-input"
             id="list-songs-checkbox"
+            ref={this.rightSidebarRef}
           />
           <label
             htmlFor="list-songs-checkbox"

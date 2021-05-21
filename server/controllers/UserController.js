@@ -23,6 +23,7 @@ class UserController {
         res.status(200).json({
           userId: user._id,
           username: user.username,
+          email: user.email,
           userToken,
         });
       })
@@ -70,6 +71,7 @@ class UserController {
           res.status(200).json({
             userId: user._id,
             username: user.username,
+            email: user.email,
             userToken,
           });
         } else {
@@ -79,12 +81,44 @@ class UserController {
           });
         }
       })
-      .catch((error) => {
+      .catch(() => {
         res.status(401).json({
           message: "Tên đăng nhập không chính xác!",
           field: "username",
         });
       });
+  };
+
+  // [POST] /user/:id/update-profile
+  updateProfile = (req, res, next) => {
+    const userId = req.params.id;
+    User.findOne({ _id: userId })
+      .then((user) => {
+        if (bcrypt.compareSync(req.body.password, user.password)) {
+          user.username = req.body.username;
+          user.email = req.body.email;
+          user.password = req.body.password;
+          const { authorization } = req.headers;
+          const userToken = authorization.split(" ")[1];
+          user
+            .save()
+            .then((user) => {
+              res.status(200).json({
+                userId: user._id,
+                username: user.username,
+                email: user.email,
+                userToken,
+              });
+            })
+            .catch(next);
+        } else {
+          res.status(401).json({
+            message: "Mật khẩu không chính xác!",
+            field: "password",
+          });
+        }
+      })
+      .catch(next);
   };
 
   // [POST] /user/forgot-password

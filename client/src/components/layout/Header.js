@@ -18,7 +18,7 @@ import {
   faBars,
   faSearch,
   faSignOutAlt,
-  faUnlockAlt,
+  faUser,
   faUserCircle,
 } from "@fortawesome/free-solid-svg-icons";
 import Sidebar from "./Sidebar";
@@ -27,15 +27,94 @@ import debounce from "../../helpers/debounce";
 import axios from "axios";
 import toast from "../../helpers/toast";
 import handleKeyboardEvent from "../../helpers/handleKeyboardEvent";
+import Validator from "../../helpers/validator";
 
 class Header extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      showDialog: false,
+      showLogoutModal: false,
+      showProfileModal: false,
+      usernameMessage: "",
+      emailMessage: "",
+      passwordMessage: "",
+      update: false,
     };
     this.searchRef = React.createRef();
   }
+
+  componentDidUpdate(prevProps, prevState) {
+    if (
+      (prevState.showProfileModal !== this.state.showProfileModal) &
+      !this.state.showProfileModal
+    )
+      this.setState({ update: false });
+    if (prevState.update !== this.state.update && this.state.update)
+      Validator({
+        form: "#update-profile-form",
+        formGroupSelector: ".form-group",
+        errorSelector: ".form-message",
+        rules: [
+          Validator.isRequired("#username"),
+          Validator.isRequired("#email"),
+          Validator.isRequired("#password"),
+          Validator.minLength("#username", 4),
+          Validator.isEmail("#email"),
+          Validator.minLength("#password", 6),
+        ],
+        onSubmit: (data) => {
+          if (!this.state.usernameMessage && !this.state.emailMessage) {
+            const { user } = this.props;
+            axios
+              .post(`/user/${user.userId}/update-profile/`, data, {
+                headers: {
+                  Authorization: `Bearer ${user.userToken}`,
+                },
+              })
+              .then((res) => {
+                const user = res.data;
+                this.props.setCurrentUser(user);
+                this.setState({ showProfileModal: false });
+                toast({
+                  title: "Thành công!",
+                  message: "Cập nhật tài khoản thành công!",
+                  type: "success",
+                });
+              })
+              .catch((error) => {
+                const errorData = error.response.data;
+                if (errorData.field === "password")
+                  this.setState({ passwordMessage: errorData.message });
+              });
+          }
+        },
+      });
+  }
+
+  checkExisted = (e) => {
+    let data = {};
+    data[e.target.name] = e.target.value;
+    axios
+      .post("/user/register/existed", data)
+      .then((res) => {
+        const result = res.data;
+        if (result.field === "username")
+          this.setState({ usernameMessage: result.message });
+        if (result.field === "email")
+          this.setState({ emailMessage: result.message });
+      })
+      .catch((error) =>
+        toast({
+          title: "Thất bại!",
+          message: `${
+            error.response.data.message
+              ? error.response.data.message
+              : "Có lỗi xảy ra!"
+          }`,
+          type: "error",
+        })
+      );
+  };
 
   suggest = debounce((e) => {
     axios
@@ -82,7 +161,7 @@ class Header extends Component {
     this.props.setLikedSongCount(null);
     this.props.setMyPlaylist(null);
     this.props.setMyPlaylistCount(null);
-    this.setState({ showDialog: false });
+    this.setState({ showLogoutModal: false });
     this.props.history.push("/");
     toast({
       title: "Thành công!",
@@ -92,7 +171,7 @@ class Header extends Component {
   };
 
   render() {
-    const { username, suggestion, location } = this.props;
+    const { user, suggestion, location } = this.props;
 
     return (
       <div className="header">
@@ -219,7 +298,7 @@ class Header extends Component {
             </div>
           </div>
           <div className="header__content--auth">
-            {username ? (
+            {user.userToken ? (
               <DropdownButton
                 id="dropdown-auth"
                 title={
@@ -228,26 +307,24 @@ class Header extends Component {
                       icon={faUserCircle}
                       className="user-circle-icon"
                     />
-                    <span className="ml-2 d-none d-xl-block">{username}</span>
+                    <span className="ml-2 d-none d-xl-block">
+                      {user.username}
+                    </span>
                   </div>
                 }
               >
-                <Dropdown.Item href="#/action-1" className="options-list__item">
+                <Dropdown.Item
+                  className="options-list__item"
+                  onClick={() => this.setState({ showProfileModal: true })}
+                >
                   <div className="option-list__item--icon">
-                    <FontAwesomeIcon icon={faSignOutAlt} />
+                    <FontAwesomeIcon icon={faUser} />
                   </div>
                   <span>Thông tin</span>
                 </Dropdown.Item>
-                <Dropdown.Item href="#/action-2" className="options-list__item">
-                  <div className="option-list__item--icon">
-                    <FontAwesomeIcon icon={faUnlockAlt} />
-                  </div>
-                  <span>Cập nhật</span>
-                </Dropdown.Item>
-                <Dropdown.Divider />
                 <Dropdown.Item
                   className="options-list__item"
-                  onClick={() => this.setState({ showDialog: true })}
+                  onClick={() => this.setState({ showLogoutModal: true })}
                 >
                   <div className="option-list__item--icon">
                     <FontAwesomeIcon icon={faSignOutAlt} />
@@ -273,9 +350,122 @@ class Header extends Component {
           </div>
         </div>
         <div className="header__banner"></div>
+
+        {/* profile */}
         <Modal
-          show={this.state.showDialog}
-          onHide={() => this.setState({ showDialog: false })}
+          show={this.state.showProfileModal}
+          onHide={() => this.setState({ showProfileModal: false })}
+          aria-labelledby="contained-modal-title-vcenter"
+          centered
+        >
+          <Modal.Header closeButton className="bg-light">
+            <Modal.Title>Thông tin cá nhân</Modal.Title>
+          </Modal.Header>
+          <Modal.Body className="bg-light">
+            {this.state.update ? (
+              <form action="true" method="POST" id="update-profile-form">
+                <div
+                  className={`form-group ${
+                    this.state.usernameMessage ? "api-invalid" : ""
+                  }`}
+                >
+                  <label htmlFor="username" className="form-label">
+                    Tên đăng nhập
+                  </label>
+                  <input
+                    autoFocus
+                    defaultValue={user.username}
+                    id="username"
+                    name="username"
+                    type="text"
+                    className="form-control"
+                    onBlur={(e) => {
+                      if (e.target.value !== user.username)
+                        this.checkExisted(e);
+                    }}
+                    onInput={() => this.setState({ usernameMessage: "" })}
+                  />
+                  <span className="form-message" />
+                  <span className="api-message">
+                    {this.state.usernameMessage}
+                  </span>
+                </div>
+                <div
+                  className={`form-group ${
+                    this.state.emailMessage ? "api-invalid" : ""
+                  }`}
+                >
+                  <label htmlFor="email" className="form-label">
+                    Email
+                  </label>
+                  <input
+                    defaultValue={user.email}
+                    id="email"
+                    name="email"
+                    type="text"
+                    className="form-control"
+                    onBlur={(e) => {
+                      if (e.target.value !== user.email) this.checkExisted(e);
+                    }}
+                    onInput={() => this.setState({ emailMessage: "" })}
+                  />
+                  <span className="form-message" />
+                  <span className="api-message">{this.state.emailMessage}</span>
+                </div>
+                <div
+                  className={`form-group ${
+                    this.state.passwordMessage ? "api-invalid" : ""
+                  }`}
+                >
+                  <label htmlFor="password" className="form-label">
+                    Mật khẩu
+                  </label>
+                  <input
+                    autoComplete="new-password"
+                    id="password"
+                    name="password"
+                    type="password"
+                    placeholder="Nhập mật khẩu để xác nhận"
+                    className="form-control"
+                    onChange={() => this.setState({ passwordMessage: "" })}
+                  />
+                  <span className="form-message" />
+                  <span className="api-message">
+                    {this.state.passwordMessage}
+                  </span>
+                </div>
+
+                <button className="form-submit">Lưu thay đổi</button>
+              </form>
+            ) : (
+              <div>
+                <table className="table table-borderless">
+                  <tbody>
+                    <tr>
+                      <th scope="row">Tên đăng nhập:</th>
+                      <td>{user.username}</td>
+                    </tr>
+                    <tr>
+                      <th scope="row">Email:</th>
+                      <td>{user.email}</td>
+                    </tr>
+                  </tbody>
+                </table>
+                <button
+                  className="form-submit"
+                  onClick={() => this.setState({ update: true })}
+                >
+                  Cập nhật
+                </button>
+              </div>
+            )}
+          </Modal.Body>
+        </Modal>
+
+        {/* logout confirmation */}
+        <Modal
+          show={this.state.showLogoutModal}
+          onHide={() => this.setState({ showLogoutModal: false })}
         >
           <Modal.Header closeButton>
             <Modal.Title>Đăng xuất</Modal.Title>
@@ -284,7 +474,7 @@ class Header extends Component {
           <Modal.Footer>
             <Button
               variant="secondary"
-              onClick={() => this.setState({ showDialog: false })}
+              onClick={() => this.setState({ showLogoutModal: false })}
             >
               Trở lại
             </Button>
@@ -299,7 +489,7 @@ class Header extends Component {
 }
 
 const mapStateToProps = (state) => ({
-  username: state.user.username,
+  user: state.user,
   suggestion: state.search.suggestion,
 });
 

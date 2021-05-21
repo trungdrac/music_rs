@@ -5,12 +5,12 @@ import Recommendation from "../user/Recommendation";
 
 class Home extends Component {
   render() {
-    const { user } = this.props;
+    const { user, recommendation } = this.props;
 
     return (
       <React.Fragment>
         <Chart />
-        {user.userToken ? <Recommendation /> : ""}
+        {user.userToken && recommendation ? <Recommendation /> : ""}
       </React.Fragment>
     );
   }
@@ -18,6 +18,7 @@ class Home extends Component {
 
 const mapStateToProps = (state) => ({
   user: state.user,
+  recommendation: state.song.recommendation,
 });
 
 export default connect(mapStateToProps)(Home);

@@ -9,6 +9,8 @@ router.post("/register/existed", UserController.checkExisted);
 
 router.post("/login", UserController.login);
 
+router.post("/:id/update-profile", requireLogin, UserController.updateProfile);
+
 router.post("/forgot-password", UserController.forgotPassWord);
 
 router.post("/reset-password", UserController.resetPassword);

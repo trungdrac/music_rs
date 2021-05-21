@@ -116,6 +116,7 @@ class Login extends Component {
               Tên đăng nhập
             </label>
             <input
+              autoFocus
               id="username"
               name="username"
               type="text"
