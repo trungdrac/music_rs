@@ -57,9 +57,7 @@ class LikedSong extends Component {
         toast({
           title: "Thất bại!",
           message: `${
-            error.response.data.message
-              ? error.response.data.message
-              : "Có lỗi xảy ra!"
+            error.response ? error.response.data.message : "Có lỗi xảy ra!"
           }`,
           type: "error",
         })
@@ -83,8 +81,12 @@ class LikedSong extends Component {
       <div className="section">
         <div className="heading">
           <div className="d-flex align-items-end justify-content-between">
-            <h4 className="mb-0 p-2 rounded box-shadow">Bài hát yêu thích</h4>
-            <p className="p-2 rounded box-shadow">{this.state.count} bài hát</p>
+            <h4 className="mb-0 p-2 rounded bg-light box-shadow">
+              Bài hát yêu thích
+            </h4>
+            <p className="p-2 rounded bg-light box-shadow">
+              {this.state.count} bài hát
+            </p>
           </div>
           <hr />
         </div>

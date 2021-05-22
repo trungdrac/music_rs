@@ -35,7 +35,7 @@ class Recommendation extends Component {
       <div className="section">
         <div className="heading">
           <div className="d-flex align-items-end justify-content-between">
-            <h4 className="mb-0 p-2 rounded box-shadow">Gợi ý cho bạn</h4>
+            <h4 className="mb-0 p-2 rounded bg-light box-shadow">Gợi ý cho bạn</h4>
             <button
               className="btn btn-danger box-shadow"
               onClick={this.playAll}

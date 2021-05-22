@@ -11,15 +11,16 @@ class History extends Component {
       <div className="section">
         <div className="heading">
           <div className="d-flex align-items-end justify-content-between">
-            <h4 className="mb-0 p-2 rounded box-shadow">
+            <h4 className="mb-0 p-2 rounded bg-light box-shadow">
               Bài hát nghe gần đây
             </h4>
-            <p className="p-2 rounded box-shadow">
+            <p className="p-2 rounded bg-light box-shadow">
               {historyListen.length} bài hát
             </p>
           </div>
           <hr />
         </div>
+        
         {historyListen.length === 0 ? (
           <Blank />
         ) : (

@@ -39,9 +39,7 @@ class SongDetail extends Component {
         toast({
           title: "Thất bại!",
           message: `${
-            error.response.data.message
-              ? error.response.data.message
-              : "Có lỗi xảy ra!"
+            error.response ? error.response.data.message : "Có lỗi xảy ra!"
           }`,
           type: "error",
         })

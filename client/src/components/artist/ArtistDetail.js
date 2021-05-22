@@ -33,9 +33,7 @@ class ArtistDetail extends Component {
         toast({
           title: "Thất bại!",
           message: `${
-            error.response.data.message
-              ? error.response.data.message
-              : "Có lỗi xảy ra!"
+            error.response ? error.response.data.message : "Có lỗi xảy ra!"
           }`,
           type: "error",
         })
@@ -77,7 +75,9 @@ class ArtistDetail extends Component {
         <div className="section">
           <div className="heading">
             <div className="d-flex align-items-end justify-content-between">
-              <h4 className="mb-0 p-2 rounded box-shadow">Danh sách bài hát</h4>
+              <h4 className="mb-0 p-2 rounded bg-light box-shadow">
+                Danh sách bài hát
+              </h4>
               <p className="p-2 rounded box-shadow">{song.length} bài hát</p>
             </div>
             <hr />
