@@ -7,10 +7,10 @@ const persistedState = loadState();
 
 const middleware = [thunk];
 const devTools =
-  process.env.NODE_ENV === "development"
-    ? window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ &&
-      window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__()
-    : null;
+  process.env.NODE_ENV === "development" &&
+  window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__
+    ? window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__()
+    : (func) => func;
 const store = createStore(
   rootReducer,
   persistedState,
