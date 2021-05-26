@@ -76,7 +76,7 @@ class ArtistDetail extends Component {
           <div className="heading">
             <div className="d-flex align-items-end justify-content-between">
               <h4 className="mb-0 p-2 rounded bg-light box-shadow">
-                Danh sách bài hát
+                Bài hát gần đây
               </h4>
               <p className="p-2 rounded box-shadow">{song.length} bài hát</p>
             </div>

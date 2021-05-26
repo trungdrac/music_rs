@@ -306,7 +306,24 @@ class OptionsList extends Component {
   };
 
   download = () => {
-    window.open(this.props.song.url);
+    const { user, song } = this.props;
+    const data = { link: song.url };
+    axios
+      .post(`/user/download`, data, {
+        headers: {
+          Authorization: `Bearer ${user.userToken}`,
+        },
+      })
+      .then((res) => window.open(res.data))
+      .catch((error) =>
+        toast({
+          title: "Thất bại!",
+          message: `${
+            error.response ? error.response.data.message : "Có lỗi xảy ra!"
+          }`,
+          type: "error",
+        })
+      );
   };
 
   deleteMyPlaylist = () => {

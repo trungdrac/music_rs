@@ -68,7 +68,7 @@ class SongDetail extends Component {
   render() {
     if (this.state.isLoading) return "";
 
-    const { _id, title, artist, image, lyrics, category } =
+    const { _id, title, artist, image, lyrics, category, playing } =
       this.props.songDetail;
     const { currentSongId, isPlaying, user } = this.props;
     const { showMore } = this.state;
@@ -94,6 +94,10 @@ class SongDetail extends Component {
                 <p className="mt-4">
                   <b>Thể loại: </b>
                   {category.name}
+                </p>
+                <p className="mt-2 mb-2">
+                  <b>Lượt nghe: </b>
+                  {`${Number(playing / 1000).toFixed(2)}K`}
                 </p>
               </div>
               <div className="col-lg-4 d-flex flex-column align-items-center">

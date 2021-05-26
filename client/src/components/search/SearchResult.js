@@ -37,7 +37,7 @@ export class SearchTabs extends Component {
                     )}
                   </div>
                 </Tab>
-                <Tab eventKey="artist" title="Nghệ sỹ">
+                <Tab eventKey="artist" title="Nghệ sĩ">
                   <div className="mt-4 mb-4">
                     {type === "artist" ? (
                       <SearchArtist history={history} />

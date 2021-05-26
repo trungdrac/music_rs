@@ -217,5 +217,68 @@
           window.location.href = `/admin/${type}/${id}/delete`;
         });
     });
+
+    // Chart
+    const ctx = document.getElementById("userChart");
+    fetch(`/admin/chart-user`)
+      .then((response) => response.json())
+      .then((result) => {
+        const months = result.map((item) => item.month);
+        const counts = result.map((item) => item.count);
+        const myLineChart = new Chart(ctx, {
+          type: "line",
+          data: {
+            labels: months,
+            datasets: [
+              {
+                label: "Số lượng",
+                lineTension: 0.3,
+                backgroundColor: "rgba(2,117,216,0.2)",
+                borderColor: "rgba(2,117,216,1)",
+                pointRadius: 5,
+                pointBackgroundColor: "rgba(2,117,216,1)",
+                pointBorderColor: "rgba(255,255,255,0.8)",
+                pointHoverRadius: 5,
+                pointHoverBackgroundColor: "rgba(2,117,216,1)",
+                pointHitRadius: 50,
+                pointBorderWidth: 2,
+                data: counts,
+              },
+            ],
+          },
+          options: {
+            scales: {
+              xAxes: [
+                {
+                  time: {
+                    unit: "date",
+                  },
+                  gridLines: {
+                    display: false,
+                  },
+                  ticks: {
+                    maxTicksLimit: 12,
+                  },
+                },
+              ],
+              yAxes: [
+                {
+                  ticks: {
+                    min: 0,
+                    max: Math.max(...counts),
+                    maxTicksLimit: 5,
+                  },
+                  gridLines: {
+                    color: "rgba(0, 0, 0, .125)",
+                  },
+                },
+              ],
+            },
+            legend: {
+              display: false,
+            },
+          },
+        });
+      });
   });
 })(jQuery);

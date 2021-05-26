@@ -59,4 +59,6 @@ router.get(
 
 router.get("/:id/recommend", requireLogin, UserController.recommend);
 
+router.post("/download", requireLogin, UserController.download);
+
 module.exports = router;

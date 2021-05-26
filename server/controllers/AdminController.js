@@ -21,7 +21,72 @@ class AdminController {
 
   // [GET] /admin
   index = (req, res, next) => {
-    res.render("layout", { page: "dashboard" });
+    const countUser = User.countDocuments({ role: "user" }).exec();
+    const countSong = Song.countDocuments({}).exec();
+    const countPlaylist = Playlist.countDocuments({
+      own: mongoose.Types.ObjectId(process.env.MUSICRS_ID),
+    }).exec();
+    const countArtist = Artist.countDocuments({}).exec();
+    Promise.all([countUser, countSong, countPlaylist, countArtist])
+      .then((result) => {
+        const statistics = {
+          countUser: result[0],
+          countSong: result[1],
+          countPlaylist: result[2],
+          countArtist: result[3],
+        };
+        res.render("layout", { page: "dashboard", statistics });
+      })
+      .catch(next);
+  };
+
+  // [GET] /admin/chart-user
+  chartUser = (req, res, next) => {
+    const currentMonth = new Date().getMonth();
+    let labels = [];
+    let months = [];
+    let start, end;
+    for (let i = 0; i < 12; i++) {
+      const d = new Date();
+      d.setMonth(currentMonth - i);
+      labels.unshift(
+        `${
+          d.getMonth() + 1 < 10 ? `0${d.getMonth() + 1}` : d.getMonth() + 1
+        }/${d.getFullYear()}`
+      );
+      months.unshift(
+        `${d.getFullYear()}-${
+          d.getMonth() + 1 < 10 ? `0${d.getMonth() + 1}` : d.getMonth() + 1
+        }`
+      );
+      if (i === 0) end = new Date(d.getFullYear(), d.getMonth() + 1, 0);
+      if (i === 11) start = new Date(d.getFullYear(), d.getMonth(), 1);
+    }
+    User.aggregate([
+      {
+        $match: {
+          createdAt: { $gte: start, $lte: end },
+        },
+      },
+      {
+        $group: {
+          _id: { month: { $substrCP: ["$createdAt", 0, 7] } },
+          count: { $sum: 1 },
+        },
+      },
+    ])
+      .sort({ _id: 1 })
+      .then((result) => {
+        const count = months.map((month, index) => {
+          for (let item of result) {
+            if (month === item._id.month)
+              return { month: labels[index], count: item.count };
+          }
+          return { month: labels[index], count: 0 };
+        });
+        res.json(count);
+      })
+      .catch(next);
   };
 
   // [GET] /admin/user
@@ -196,7 +261,7 @@ class AdminController {
         } else {
           req.flash(
             "error",
-            "Dữ liệu có liên quan đến playlist và nghệ sỹ. Không thể xóa!"
+            "Dữ liệu có liên quan đến playlist và nghệ sĩ. Không thể xóa!"
           );
           res.redirect("/admin/area");
         }
@@ -286,7 +351,9 @@ class AdminController {
 
   // [GET] /admin/playlist
   indexPlaylist = (req, res, next) => {
-    const playlistPromise = Playlist.find({})
+    const playlistPromise = Playlist.find({
+      own: mongoose.Types.ObjectId(process.env.MUSICRS_ID),
+    })
       .populate({ path: "area", select: "name" })
       .populate({ path: "own", select: "username" })
       .populate({ path: "song", select: "title" })

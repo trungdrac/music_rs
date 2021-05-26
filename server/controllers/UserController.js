@@ -380,6 +380,11 @@ class UserController {
       })
       .catch(next);
   };
+
+  // [POST] /user/download
+  download = (req, res, next) => {
+    res.json(req.body.link);
+  };
 }
 
 module.exports = new UserController();

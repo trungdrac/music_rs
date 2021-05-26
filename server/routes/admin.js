@@ -122,6 +122,7 @@ router.get("/artist/:id/delete", requireAdmin, AdminController.deleteArtist);
 router.get("/artist/detail/:id", requireAdmin, AdminController.detailArtist);
 router.get("/artist", requireAdmin, AdminController.indexArtist);
 
+router.get("/chart-user", requireAdmin, AdminController.chartUser);
 router.get("/", requireAdmin, AdminController.index);
 
 module.exports = router;

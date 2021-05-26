@@ -128,7 +128,7 @@ class Sidebar extends Component {
                         icon={faMicrophone}
                         className="sidebar-icon"
                       />
-                      <span>Nghệ sỹ</span>
+                      <span>Nghệ sĩ</span>
                     </NavLink>
                   );
                 }}

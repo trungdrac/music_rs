@@ -21,6 +21,7 @@ class ArtistController {
     )
       .populate({ path: "artist", select: "name" })
       .sort({ createdAt: -1 })
+      .limit(24)
       .exec();
     Promise.all([artistPromise, songPromise])
       .then((artistDetail) => res.json(artistDetail))
