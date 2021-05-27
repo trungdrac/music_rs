@@ -97,7 +97,6 @@ class UserController {
         if (bcrypt.compareSync(req.body.password, user.password)) {
           user.username = req.body.username;
           user.email = req.body.email;
-          user.password = req.body.password;
           const { authorization } = req.headers;
           const userToken = authorization.split(" ")[1];
           user

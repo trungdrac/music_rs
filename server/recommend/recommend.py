@@ -3,6 +3,10 @@ import numpy as np
 import sys
 from scipy.sparse.linalg import svds
 
+import logging
+from math import sqrt
+from sklearn.metrics import mean_squared_error
+
 df_songs = pd.read_csv('recommend/data/songs.csv')
 
 df_interactions = pd.read_csv('recommend/data/interactions.csv')
@@ -18,37 +22,6 @@ user_playings_mean = np.mean(R, axis=1)
 R_demeaned = R - user_playings_mean.reshape(-1, 1)
 
 U, sigma, Vt = svds(R_demeaned, k=50)
-
-
-# # get MSE
-# def values_to_map_index(values):
-#     map_index = {}
-#     idx = 0
-#     for val in values:
-#         map_index[val] = idx
-#         idx += 1
-
-#     return map_index
-# test_data = df_interactions[df_interactions['user'] == sys.argv[1]]
-# user_idx = values_to_map_index(df_interactions.user.unique())
-# song_idx = values_to_map_index(df_interactions.song.unique())
-
-# n_users = df_interactions.user.unique().shape[0]
-# n_items = df_interactions.song.unique().shape[0]
-
-# test_data_matrix = np.zeros((n_users, n_items))
-# for line in test_data.itertuples():
-#         test_data_matrix[user_idx[line[2]], song_idx[line[3]]] = line[1]
-
-# from sklearn.metrics import mean_squared_error
-# from math import sqrt
-# def rmse(prediction, ground_truth):
-#     prediction = prediction[ground_truth.nonzero()].flatten()
-#     ground_truth = ground_truth[ground_truth.nonzero()].flatten()
-#     return sqrt(mean_squared_error(prediction, ground_truth))
-# s_diag_matrix = np.diag(sigma)
-# X_pred = np.dot(np.dot(U, s_diag_matrix), Vt)
-# print ('User-based CF MSE: ' + str(rmse(X_pred, test_data_matrix)))
 
 sigma = np.diag(sigma)
 
@@ -79,3 +52,38 @@ already_rated, predictions = recommend_songs(
 
 # print(already_rated.head(10))
 print(predictions.to_json())
+
+
+# get MSE
+
+
+def values_to_map_index(values):
+    map_index = {}
+    idx = 0
+    for val in values:
+        map_index[val] = idx
+        idx += 1
+
+    return map_index
+
+
+test_data = df_interactions[df_interactions['user'] == sys.argv[1]]
+user_idx = values_to_map_index(df_interactions.user.unique())
+song_idx = values_to_map_index(df_interactions.song.unique())
+
+n_users = df_interactions.user.unique().shape[0]
+n_items = df_interactions.song.unique().shape[0]
+
+test_data_matrix = np.zeros((n_users, n_items))
+for line in test_data.itertuples():
+    test_data_matrix[user_idx[line[2]], song_idx[line[3]]] = line[1]
+
+
+def rmse(prediction, ground_truth):
+    prediction = prediction[ground_truth.nonzero()].flatten()
+    ground_truth = ground_truth[ground_truth.nonzero()].flatten()
+    return sqrt(mean_squared_error(prediction, ground_truth))
+
+
+X_pred = np.dot(np.dot(U, sigma), Vt)
+logging.warning('User-based CF MSE: ' + str(rmse(X_pred, test_data_matrix)))
