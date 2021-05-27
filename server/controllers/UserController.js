@@ -300,7 +300,7 @@ class UserController {
       .then((result) => {
         if (result) res.json({ error: "Tên playlist đã tồn tại!" });
         else {
-          playlist.image = "/images/song-image-default/default.jpg";
+          playlist.image = process.env.DEFAULT_IMAGE;
           playlist.own = userId;
           Playlist.create(playlist)
             .then(() => res.json({ success: "Tạo playlist mới thành công!" }))

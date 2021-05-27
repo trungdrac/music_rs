@@ -93,7 +93,12 @@
         </button>
       </div>
       <div class="modal-body">
-        <form action="/admin/song/create" method="POST" id="create-song-form">
+        <form
+          action="/admin/song/create"
+          method="POST"
+          enctype="multipart/form-data"
+          id="create-song-form"
+        >
           <div class="form-group">
             <label for="create-title" class="form-label">Tiêu đề</label>
             <input
@@ -132,9 +137,10 @@
           <div class="form-group">
             <label for="create-image" class="form-label">Ảnh</label>
             <input
+              type="file"
               id="create-image"
               name="image"
-              type="text"
+              accept="image/*"
               class="form-control"
             />
             <span class="form-message"></span>
@@ -191,7 +197,7 @@
         </button>
       </div>
       <div class="modal-body">
-        <form method="POST" id="update-song-form">
+        <form method="POST" enctype="multipart/form-data" id="update-song-form">
           <div class="form-group">
             <label for="update-title" class="form-label">Tiêu đề</label>
             <input
@@ -230,9 +236,10 @@
           <div class="form-group">
             <label for="update-image" class="form-label">Ảnh</label>
             <input
+              type="file"
               id="update-image"
               name="image"
-              type="text"
+              accept="image/*"
               class="form-control"
             />
             <span class="form-message"></span>

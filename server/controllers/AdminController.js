@@ -300,6 +300,9 @@ class AdminController {
   // [POST] /admin/song/create
   createSong = (req, res, next) => {
     const song = req.body;
+    song.image = req.file
+      ? `${process.env.PROXY}/uploads/${req.file.filename}`
+      : process.env.DEFAULT_IMAGE;
     Song.create(song)
       .then(() => {
         req.flash("success", "Thêm thành công!");
@@ -312,6 +315,8 @@ class AdminController {
   updateSong = (req, res, next) => {
     const songId = req.params.id;
     const song = req.body;
+    if (req.file)
+      song.image = `${process.env.PROXY}/uploads/${req.file.filename}`;
     Song.updateOne({ _id: songId }, song)
       .then(() => {
         req.flash("success", "Cập nhật thành công!");
@@ -383,6 +388,9 @@ class AdminController {
   // [POST] /admin/playlist/create
   createPlaylist = (req, res, next) => {
     const playlist = req.body;
+    playlist.image = req.file
+      ? `${process.env.PROXY}/uploads/${req.file.filename}`
+      : process.env.DEFAULT_IMAGE;
     Playlist.create(playlist)
       .then(() => {
         req.flash("success", "Thêm thành công!");
@@ -395,6 +403,8 @@ class AdminController {
   updatePlaylist = (req, res, next) => {
     const playlistId = req.params.id;
     const playlist = req.body;
+    if (req.file)
+      playlist.image = `${process.env.PROXY}/uploads/${req.file.filename}`;
     Playlist.updateOne({ _id: playlistId }, playlist)
       .then(() => {
         req.flash("success", "Cập nhật thành công!");
@@ -442,6 +452,9 @@ class AdminController {
   // [POST] /admin/artist/create
   createArtist = (req, res, next) => {
     const artist = req.body;
+    artist.image = req.file
+      ? `${process.env.PROXY}/uploads/${req.file.filename}`
+      : process.env.DEFAULT_IMAGE;
     Artist.create(artist)
       .then(() => {
         req.flash("success", "Thêm thành công!");
@@ -454,6 +467,8 @@ class AdminController {
   updateArtist = (req, res, next) => {
     const artistId = req.params.id;
     const artist = req.body;
+    if (req.file)
+      artist.image = `${process.env.PROXY}/uploads/${req.file.filename}`;
     Artist.updateOne({ _id: artistId }, artist)
       .then(() => {
         req.flash("success", "Cập nhật thành công!");

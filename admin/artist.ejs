@@ -92,6 +92,7 @@
       <div class="modal-body">
         <form
           action="/admin/artist/create"
+          enctype="multipart/form-data"
           method="POST"
           id="create-artist-form"
         >
@@ -108,9 +109,10 @@
           <div class="form-group">
             <label for="create-image" class="form-label">Ảnh</label>
             <input
+              type="file"
               id="create-image"
               name="image"
-              type="text"
+              accept="image/*"
               class="form-control"
             />
             <span class="form-message"></span>
@@ -160,7 +162,11 @@
         </button>
       </div>
       <div class="modal-body">
-        <form method="POST" id="update-artist-form">
+        <form
+          method="POST"
+          enctype="multipart/form-data"
+          id="update-artist-form"
+        >
           <div class="form-group">
             <label for="update-name" class="form-label">Nghệ sĩ</label>
             <input
@@ -174,9 +180,10 @@
           <div class="form-group">
             <label for="update-image" class="form-label">Ảnh</label>
             <input
+              type="file"
               id="update-image"
               name="image"
-              type="text"
+              accept="image/*"
               class="form-control"
             />
             <span class="form-message"></span>

@@ -104,7 +104,6 @@
       rules: [
         Validator.isRequired("#update-title"),
         Validator.isRequired("#update-url"),
-        Validator.isRequired("#update-image"),
         Validator.isRequired("#update-artist-select"),
         Validator.isRequired("#update-category-select"),
       ],
@@ -126,7 +125,6 @@
       errorSelector: ".form-message",
       rules: [
         Validator.isRequired("#update-title"),
-        Validator.isRequired("#update-image"),
         Validator.isRequired("#update-song-select"),
         Validator.isRequired("#update-area-select"),
       ],
@@ -147,7 +145,6 @@
       errorSelector: ".form-message",
       rules: [
         Validator.isRequired("#update-name"),
-        Validator.isRequired("#update-image"),
         Validator.isRequired("#update-area-select"),
       ],
     });
@@ -163,7 +160,6 @@
           var modal = $(this);
           modal.find('.modal-body input[name="name"]').val(item.name);
           modal.find('.modal-body input[name="title"]').val(item.title);
-          modal.find('.modal-body input[name="image"]').val(item.image);
           modal.find('.modal-body input[name="url"]').val(item.url);
           modal.find('.modal-body textarea[name="lyrics"]').val(item.lyrics);
           if (item.category) {

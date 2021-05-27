@@ -5,6 +5,7 @@ const passport = require("passport");
 const LocalStrategy = require("passport-local").Strategy;
 const bcrypt = require("bcryptjs");
 const User = require("../models/User");
+const upload = require("../middleware/multerUpload");
 
 function requireAdmin(req, res, next) {
   if (req.isAuthenticated()) {
@@ -92,16 +93,32 @@ router.get("/area/:id/delete", requireAdmin, AdminController.deleteArea);
 router.get("/area/detail/:id", requireAdmin, AdminController.detailArea);
 router.get("/area", requireAdmin, AdminController.indexArea);
 
-router.post("/song/create", requireAdmin, AdminController.createSong);
-router.post("/song/:id/update", requireAdmin, AdminController.updateSong);
+router.post(
+  "/song/create",
+  requireAdmin,
+  upload.single("image"),
+  AdminController.createSong
+);
+router.post(
+  "/song/:id/update",
+  requireAdmin,
+  upload.single("image"),
+  AdminController.updateSong
+);
 router.get("/song/:id/delete", requireAdmin, AdminController.deleteSong);
 router.get("/song/detail/:id", requireAdmin, AdminController.detailSong);
 router.get("/song", requireAdmin, AdminController.indexSong);
 
-router.post("/playlist/create", requireAdmin, AdminController.createPlaylist);
+router.post(
+  "/playlist/create",
+  requireAdmin,
+  upload.single("image"),
+  AdminController.createPlaylist
+);
 router.post(
   "/playlist/:id/update",
   requireAdmin,
+  upload.single("image"),
   AdminController.updatePlaylist
 );
 router.get(
@@ -116,8 +133,18 @@ router.get(
 );
 router.get("/playlist", requireAdmin, AdminController.indexPlaylist);
 
-router.post("/artist/create", requireAdmin, AdminController.createArtist);
-router.post("/artist/:id/update", requireAdmin, AdminController.updateArtist);
+router.post(
+  "/artist/create",
+  requireAdmin,
+  upload.single("image"),
+  AdminController.createArtist
+);
+router.post(
+  "/artist/:id/update",
+  requireAdmin,
+  upload.single("image"),
+  AdminController.updateArtist
+);
 router.get("/artist/:id/delete", requireAdmin, AdminController.deleteArtist);
 router.get("/artist/detail/:id", requireAdmin, AdminController.detailArtist);
 router.get("/artist", requireAdmin, AdminController.indexArtist);
