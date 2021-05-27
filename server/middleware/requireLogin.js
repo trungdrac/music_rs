@@ -13,10 +13,17 @@ module.exports = (req, res, next) => {
     if (err) {
       return res.status(401).json({ message: "Bạn phải đăng nhập trước!" });
     }
-    const { _id } = payload;
-    User.findById(_id).then((userdata) => {
-      req.user = userdata;
-      next();
-    });
+    const { userId } = payload;
+    User.findById(userId)
+      .then((userdata) => {
+        if (userdata) {
+          req.user = userdata;
+          next();
+        } else
+          return res
+            .status(401)
+            .json({ message: "Tài khoản không tồn tại hoặc đã bị xóa!" });
+      })
+      .catch(next);
   });
 };

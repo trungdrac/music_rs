@@ -45,7 +45,11 @@ class OptionsList extends Component {
   }
 
   componentDidUpdate(prevProps) {
-    if (prevProps.likedSongCount !== this.props.likedSongCount) this.getLike();
+    if (
+      prevProps.likedSongCount !== this.props.likedSongCount ||
+      prevProps.currentSongId !== this.props.currentSongId
+    )
+      this.getLike();
   }
 
   getLike = () => {
@@ -757,6 +761,7 @@ const mapStateToProps = (state) => ({
   likedSongCount: state.song.likedSongCount,
   myPlaylistCount: state.playlist.myPlaylistCount,
   filterResult: state.search.filterResult,
+  currentSongId: state.player.currentSongId,
 });
 
 const mapDispatchToProps = (dispatch) => ({

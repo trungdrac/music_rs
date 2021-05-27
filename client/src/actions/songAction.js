@@ -21,13 +21,6 @@ export const setSongCategory = (songs) => {
   };
 };
 
-export const setLikedSong = (songs) => {
-  return {
-    type: types.SET_LIKED_SONG,
-    songs,
-  };
-};
-
 export const setLikedSongCount = (count) => {
   return {
     type: types.SET_LIKED_SONG_COUNT,

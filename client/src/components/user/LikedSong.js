@@ -1,7 +1,6 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
 import axios from "axios";
-import { setLikedSong } from "../../actions/songAction";
 import SongCard from "../song/SongCard";
 import MyPagination from "../general/MyPagination";
 import Blank from "../general/Blank";
@@ -15,6 +14,7 @@ class LikedSong extends Component {
       isLoading: true,
       pageNums: null,
       count: null,
+      likedSong: [],
     };
   }
 
@@ -46,8 +46,8 @@ class LikedSong extends Component {
       .then((results) => {
         const likedSong = results[0].data;
         const count = results[1].data;
-        this.props.setLikedSong(likedSong);
         this.setState({
+          likedSong,
           pageNums: Math.ceil(count / NUMBER_OF_ITEM_PER_PAGE),
           count,
         });
@@ -75,7 +75,7 @@ class LikedSong extends Component {
 
   render() {
     if (this.state.isLoading || this.state.pageNums === null) return "";
-    const { likedSong } = this.props;
+    const { likedSong } = this.state;
 
     return (
       <div className="section">
@@ -111,13 +111,8 @@ class LikedSong extends Component {
 }
 
 const mapStateToProps = (state) => ({
-  likedSong: state.song.likedSong,
   user: state.user,
   likedSongCount: state.song.likedSongCount,
 });
 
-const mapDispatchToProps = (dispatch) => ({
-  setLikedSong: (songs) => dispatch(setLikedSong(songs)),
-});
-
-export default connect(mapStateToProps, mapDispatchToProps)(LikedSong);
+export default connect(mapStateToProps)(LikedSong);
