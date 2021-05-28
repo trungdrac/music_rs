@@ -75,5 +75,11 @@
       toastr.error(`<%= error %>`);
     </script>
     <% } %>
+    <!-- prettier-ignore -->
+    <% if (success.length > 0) { %>
+    <script>
+      toastr.success(`<%= success %>`);
+    </script>
+    <% } %>
   </body>
 </html>

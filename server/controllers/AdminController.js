@@ -16,6 +16,7 @@ class AdminController {
   // [GET] /admin/logout
   logout = (req, res, next) => {
     req.logout();
+    req.flash("success", "Đăng xuất thành công!");
     res.redirect("/admin/login");
   };
 
