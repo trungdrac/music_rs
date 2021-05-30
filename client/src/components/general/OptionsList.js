@@ -445,14 +445,21 @@ class OptionsList extends Component {
       <div className="options-list">
         {this.props.like ? (
           <Dropdown.ItemText className="options-list__item" onClick={this.like}>
-            <div
-              className={`option-list__item--icon ${
-                userId && like === true ? "active" : ""
-              }`}
-            >
-              <FontAwesomeIcon icon={faHeart} />
-            </div>
-            <span>Yêu thích</span>
+            {userId && like === true ? (
+              <React.Fragment>
+                <div className="option-list__item--icon active">
+                  <FontAwesomeIcon icon={faHeart} />
+                </div>
+                <span>Bỏ thích</span>
+              </React.Fragment>
+            ) : (
+              <React.Fragment>
+                <div className="option-list__item--icon">
+                  <FontAwesomeIcon icon={faHeart} />
+                </div>
+                <span>Yêu thích</span>
+              </React.Fragment>
+            )}
           </Dropdown.ItemText>
         ) : (
           ""
