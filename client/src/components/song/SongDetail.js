@@ -70,7 +70,7 @@ class SongDetail extends Component {
 
     const { _id, title, artist, image, lyrics, category, playing } =
       this.props.songDetail;
-    const { currentSongId, isPlaying, user } = this.props;
+    const { currentSongId, isPlaying, user, recommendation } = this.props;
     const { showMore } = this.state;
 
     return (
@@ -163,7 +163,7 @@ class SongDetail extends Component {
             <div className="lyrics__header">Chưa có lời cho bài hát này</div>
           </div>
         )}
-        {user.userToken ? <Recommendation /> : ""}
+        {user.userToken && recommendation ? <Recommendation /> : ""}
       </React.Fragment>
     );
   }
@@ -174,6 +174,7 @@ const mapStateToProps = (state) => ({
   songDetail: state.song.songDetail,
   currentSongId: state.player.currentSongId,
   user: state.user,
+  recommendation: state.song.recommendation,
 });
 
 const mapDispatchToProps = (dispatch) => ({
