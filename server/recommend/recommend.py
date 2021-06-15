@@ -3,31 +3,35 @@ import numpy as np
 import sys
 from scipy.sparse.linalg import svds
 
-import logging
-from math import sqrt
-from sklearn.metrics import mean_squared_error
-
 df_songs = pd.read_csv('recommend/data/songs.csv')
 
 df_interactions = pd.read_csv('recommend/data/interactions.csv')
 
+# fill 0 to blank values
 df_song_features = df_interactions.pivot(
     index='user',
     columns='song',
     values='playing'
 ).fillna(0)
 
-R = df_song_features.values
+R = df_song_features.to_numpy()
+
+# calculate average value per row
 user_playings_mean = np.mean(R, axis=1)
+
+# recalculate the numpy array with the value minus the mean
 R_demeaned = R - user_playings_mean.reshape(-1, 1)
 
-U, sigma, Vt = svds(R_demeaned, k=50)
+U, sigma, Vt = svds(R_demeaned, k=30)
 
+# to a diagonal array
 sigma = np.diag(sigma)
 
+# predict
 all_user_predicted_playings = np.dot(
     np.dot(U, sigma), Vt) + user_playings_mean.reshape(-1, 1)
 
+# to data frame
 preds_df = pd.DataFrame(all_user_predicted_playings, index=df_song_features.index,
                         columns=df_song_features.columns)
 
@@ -52,38 +56,3 @@ already_rated, predictions = recommend_songs(
 
 # print(already_rated.head(10))
 print(predictions.to_json())
-
-
-# get MSE
-
-
-def values_to_map_index(values):
-    map_index = {}
-    idx = 0
-    for val in values:
-        map_index[val] = idx
-        idx += 1
-
-    return map_index
-
-
-test_data = df_interactions[df_interactions['user'] == sys.argv[1]]
-user_idx = values_to_map_index(df_interactions.user.unique())
-song_idx = values_to_map_index(df_interactions.song.unique())
-
-n_users = df_interactions.user.unique().shape[0]
-n_items = df_interactions.song.unique().shape[0]
-
-test_data_matrix = np.zeros((n_users, n_items))
-for line in test_data.itertuples():
-    test_data_matrix[user_idx[line[2]], song_idx[line[3]]] = line[1]
-
-
-def rmse(prediction, ground_truth):
-    prediction = prediction[ground_truth.nonzero()].flatten()
-    ground_truth = ground_truth[ground_truth.nonzero()].flatten()
-    return sqrt(mean_squared_error(prediction, ground_truth))
-
-
-X_pred = np.dot(np.dot(U, sigma), Vt)
-logging.warning('User-based CF MSE: ' + str(rmse(X_pred, test_data_matrix)))
