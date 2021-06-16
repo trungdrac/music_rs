@@ -1,4 +1,5 @@
 server/node_modules/
+server/build/
 server/.env
 server/recommend/data/
 server/recommend/musicrs_env/
