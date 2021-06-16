@@ -24,7 +24,7 @@ R_demeaned = R - user_playings_mean.reshape(-1, 1)
 
 train_data, test_data = train_test_split(R_demeaned, test_size=0.2)
 
-U, sigma, Vt = svds(train_data, k=30)
+U, sigma, Vt = svds(train_data, k=50)
 
 sigma = np.diag(sigma)
 

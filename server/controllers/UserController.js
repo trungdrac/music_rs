@@ -348,7 +348,7 @@ class UserController {
     const userId = req.params.id;
     Interaction.find({ user: userId, playing: { $gt: 0 } })
       .then((result) => {
-        if (!result.length) next();
+        if (result.length<5) next();
         else {
           const spawn = require("child_process").spawn;
           const recommend = spawn(

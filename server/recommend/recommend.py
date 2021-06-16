@@ -22,7 +22,7 @@ user_playings_mean = np.mean(R, axis=1)
 # recalculate the numpy array with the value minus the mean
 R_demeaned = R - user_playings_mean.reshape(-1, 1)
 
-U, sigma, Vt = svds(R_demeaned, k=30)
+U, sigma, Vt = svds(R_demeaned, k=50)
 
 # to a diagonal array
 sigma = np.diag(sigma)
