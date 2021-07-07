@@ -14,5 +14,4 @@
 1. [start mongodb server: mongod]
 2. ./run.sh
 
-
-
+Some videos about using MusicRS: https://drive.google.com/drive/folders/1HQFYmhczWVBkc9iSoD58lrxTUPTwQnM4?usp=sharing
